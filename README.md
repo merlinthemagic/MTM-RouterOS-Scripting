@@ -28,7 +28,10 @@ Upload the 'src/flash' folder into the root of the device storage
 
 ##Debugging:
 
+```
 [($MtmFacts->"setDebug") true];
+
+```
 
 Lots of function calls are handed off to separate process for better performance, setting the debug to true 
 makes (almost) everything run in the same foreground pipeline and echos step by step as well as errors
@@ -48,9 +51,14 @@ Then run: /import file-name=flash/MTM/Factories/Test.rsc
 
 Note: If you want to expand/fix errors in the MTM classes then load MTM like so:
 
+```
 :global MtmFacts;
 :set MtmFacts; #clears cache, will rebuild automatically
 /import flash/MTM/Facts.rsc;
 
-...use MTM again
+##...use MTM again
+
+```
+
+
 
