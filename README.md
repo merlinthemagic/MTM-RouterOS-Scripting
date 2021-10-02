@@ -21,9 +21,18 @@ Upload the 'src/flash' folder into the root of the device storage
 /import flash/MTM/Facts.rsc;
 :global MtmFacts;
 
-:local nsStr "getTools()->getTime()->getEpoch()->getCurrent()";
-:local result [($MtmFacts->"execute") nsStr=$nsStr];
-:put ($result); #epoch time
+##epoch example
+:local epoch [($MtmFacts->"execute") nsStr="getTools()->getTime()->getEpoch()->getCurrent()"];
+:put ($epoch); #1633175531
+
+##md5 hash example
+:local md5Tool [($MtmFacts->"execute") nsStr="getTools()->getHashing()->getMD5()"];
+:put ([($md5Tool->"hash") "my string data"]); ##"8240143bd807e5a52b1f9d7dd5e21ef3"
+
+##trim string example
+:local strTool [($MtmFacts->"execute") nsStr="getTools()->getStrings()"];
+:local myStr " My string with leading and traling spaces and line breaks and chr returns \n\r";
+:put [($strTool->"trim") str=$myStr]; #"My string with leading and traling spaces and line breaks and chr returns";
 ```
 
 ## Debugging:
