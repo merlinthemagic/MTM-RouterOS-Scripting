@@ -26,24 +26,23 @@ Upload the 'src/flash' folder into the root of the device storage
 :put ($result); #epoch time
 ```
 
-##Debugging:
+## Debugging:
 
 ```
 [($MtmFacts->"setDebug") true];
-
 ```
 
 Lots of function calls are handed off to separate process for better performance, setting the debug to true 
 makes (almost) everything run in the same foreground pipeline and echos step by step as well as errors
 
-##Documentation:
+## Documentation:
 
 Yes, its lacking there are tons of functions that are not documented, but many of the common ones are.
 The api is likely to change.
 
 Check out the Documentations folder for example code
 
-## You try:
+## Your turn:
 
 Change: flash/MTM/Factories/Test.rsc
 
@@ -57,7 +56,6 @@ Note: If you want to expand/fix errors in the MTM classes then load MTM like so:
 /import flash/MTM/Facts.rsc;
 
 ##...use MTM again
-
 ```
 
 
