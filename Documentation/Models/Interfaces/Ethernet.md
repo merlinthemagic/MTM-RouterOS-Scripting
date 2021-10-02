@@ -1,4 +1,4 @@
-#initialize
+# Initialize
 
 ```
 /import flash/MTM/Facts.rsc;
