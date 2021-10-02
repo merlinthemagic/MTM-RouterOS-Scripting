@@ -10,21 +10,6 @@
 ## Methods:
 
 
-### setFetchUser:
-
-Sets a service, port and credentials for a user able to fetch local files 
-
-```
-:local uName "someUsername"; 
-:local uPass "verySecretPassword";
-:local address "127.0.0.1";
-:local serviceName "ftp"; ## ftp, http, https
-:local servicePort 21; 
-
-[($toolObj->"setFetchUser") $uName $uPass $address $serviceName $servicePort];
-:put ($result); #obj;
-
-```
 
 ### exists:
 
@@ -94,4 +79,20 @@ Note: adds a "\r\n" after the content of each input
 
 :local result [($toolObj->"join") $paths $output];
 :put ($result);  #nil for now, reserved for object in the future
+```
+
+### setFetchUser:
+
+Sets a service, port and credentials for a user able to fetch local files 
+
+```
+:local uName "someUsername"; 
+:local uPass "verySecretPassword";
+:local address "127.0.0.1";
+:local serviceName "ftp"; ## ftp, http, https
+:local servicePort 21; 
+
+[($toolObj->"setFetchUser") $uName $uPass $address $serviceName $servicePort];
+:put ($result); #obj;
+
 ```
