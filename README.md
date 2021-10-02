@@ -46,10 +46,12 @@ makes (almost) everything run in the same foreground pipeline and echos step by 
 
 ## Documentation:
 
-Yes, its lacking there are tons of functions that are not documented, but many of the common ones are.
-The api is likely to change.
+Check out the Documentations folder for example code: https://github.com/merlinthemagic/MTM-RouterOS-Scripting/tree/main/Documentation
 
-Check out the Documentations folder for example code
+Yes, its lacking there are tons of functions that are not documented, but many of the common ones are.
+
+Yes, the api is likely to change.
+
 
 ## Your turn:
 
