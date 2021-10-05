@@ -1,7 +1,3 @@
-:local s [:toarray ""];
-:set ($s->"getId") do={
-	:return "|MTMD|";
-}
 :set ($s->"getName") do={
 	:return [/ip dhcp-server get |MTMD| name];
 }

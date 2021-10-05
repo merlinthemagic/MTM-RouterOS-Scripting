@@ -18,10 +18,15 @@
 		:global MtmO;
 		:local classId ("model-if-lte-".$0);
 		:if ($MtmO->$classId = nil) do={
-			:local path "Models/Interfaces";
-			:local paths [:toarray "$path/Astance.rsc,$path/LTE/Base.rsc,$path/Zstance.rsc"];
-			:local objTool [($MtmFacts->"execute") nsStr="getTools()->getObjects()" ];
-			[($objTool->"getInstanceV1") paths=$paths id=$0 classId=$classId];
+		
+			:local paths [:toarray ""];
+			:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Models/Base.rsc");
+			:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Models/Interfaces/Base.rsc");
+			:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Models/Interfaces/LTE/Base.rsc");
+			:set ($paths->3) ([($MtmFacts->"getMtmPath")]."Models/Zstance.rsc");
+
+			:local objTool [($MtmFacts->"execute") nsStr="getTools()->getObjects()"];
+			:return [($objTool->"getInstanceV3") $paths $classId $0 $MtmO "MtmO"];
 		}
 		:return ($MtmO->$classId);
 	}

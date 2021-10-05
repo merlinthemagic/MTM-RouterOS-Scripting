@@ -5,8 +5,8 @@
 		#count registrations on virtual interfaces that use this interface as master
 		:set inclVirtual true;
 	}
-	:global MtmO;
-	:local self ($MtmO->"|MTMC|");
+	:global |MTMS|;
+	:local self ($|MTMS|->"|MTMC|");
 	:local regCount [:len [/interface wireless registration-table find where interface=[($self->"getName")]]];
 	:if ($inclVirtual = true && [($self->"isVirtual")] = false) do={
 		:local ifObj;

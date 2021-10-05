@@ -17,12 +17,16 @@
 			[($MtmFacts->"throwException") method=$method msg="Id is mandatory"];
 		}
 		:global MtmO;
-		:local classId ("model-ip-addr-v4-".$0);
+		:local classId ("mtm-ip-addr-v4-".$0);
 		:if ($MtmO->$classId = nil) do={
-			:local path "Models/IP/Address/V4";
-			:local paths [:toarray "$path/Base.rsc,$path/Zstance.rsc"];
+		
+			:local paths [:toarray ""];
+			:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Models/Base.rsc");
+			:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Models/IP/Address/V4/Base.rsc");
+			:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Models/Zstance.rsc");
+
 			:local objTool [($MtmFacts->"execute") nsStr="getTools()->getObjects()"];
-			[($objTool->"getInstanceV1") paths=$paths id=$0 classId=$classId];
+			:return [($objTool->"getInstanceV3") $paths $classId $0 $MtmO "MtmO"];
 		}
 		:return ($MtmO->$classId);
 	}
@@ -34,12 +38,15 @@
 			[($MtmFacts->"throwException") method=$method msg="Id is mandatory"];
 		}
 		:global MtmO;
-		:local classId ("model-ip-addr-v6-".$0);
+		:local classId ("mtm-ip-addr-v6-".$0);
 		:if ($MtmFacts->"c"->$classId = nil) do={
-			:local path "Models/IP/Address/V6";
-			:local paths [:toarray "$path/Base.rsc,$path/Zstance.rsc"];
+			:local paths [:toarray ""];
+			:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Models/Base.rsc");
+			:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Models/IP/Address/V6/Base.rsc");
+			:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Models/Zstance.rsc");
+
 			:local objTool [($MtmFacts->"execute") nsStr="getTools()->getObjects()"];
-			[($objTool->"getInstanceV1") paths=$paths id=$0 classId=$classId];
+			:return [($objTool->"getInstanceV3") $paths $classId $0 $MtmO "MtmO"];
 		}
 		:return ($MtmO->$classId);
 	}

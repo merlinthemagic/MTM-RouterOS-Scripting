@@ -7,6 +7,7 @@
 :if (($MtmT->$classId) = nil) do={
 	
 	:local s [:toarray ""];
+	:set ($s->"srcFiles") [:toarray ""];
 	:set ($s->"jobs") [:toarray ""];
 	:set ($s->"busy") false;
 	:set ($s->"count") 0;
@@ -188,6 +189,84 @@
 		}
 		:if ($MtmFacts->"debug" = true) do={
 			[($MtmFacts->"setDebugMsg") ("Object is ready: ".$instanceId.", ".[:typeof ($storeObj->$instanceId)])];
+		}
+		:return ($storeObj->$instanceId);
+	}
+	:set ($s->"getInstanceV3") do={
+	
+		##templates
+		:global MtmFacts;
+		:global MtmCache;
+		:local method "Facts->Tools->Objects->getInstanceV3";
+		
+		:if ($0 = nil) do={
+			[($MtmFacts->"throwException") method=$method msg="Paths are mandatory"];
+		}
+		:if ($1 = nil) do={
+			[($MtmFacts->"throwException") method=$method msg="Instance id is mandatory"];
+		}
+		:if ($2 = nil) do={
+			[($MtmFacts->"throwException") method=$method msg="Object id is mandatory"];
+		}
+		:if ($3 = nil) do={
+			[($MtmFacts->"throwException") method=$method msg="Store obj is mandatory"];
+		}
+		:if ($4 = nil) do={
+			[($MtmFacts->"throwException") method=$method msg="Store name is mandatory"];
+		}
+		:local paths $0;
+		:local instanceId $1;
+		:local objId $2;
+		:local storeObj $3;
+		:local storeName $4;
+		
+		:if (($storeObj->$instanceId) = nil) do={
+			:local tData "";
+			:local srcHash "";
+			:local hashTool [($MtmFacts->"execute") nsStr="getTools()->getHashing()->getMD5()"];
+			:local fsTool "";
+			:local self [($MtmFacts->"execute") nsStr="getTools()->getObjects()"];
+			:local srcFiles ($self->"srcFiles");
+			:foreach path in=$paths do={
+				:set srcHash [($hashTool->"hash") $path];
+				:if (($srcFiles->$srcHash) = nil) do={
+					:if ($fsTool = "") do={
+						:set fsTool [($MtmFacts->"execute") nsStr="getTools()->getFiles()"];
+					}
+					:set ($srcFiles->$srcHash) [($fsTool->"getContent") $path];
+				}
+				##add a line break after each file, makes our life easier than tons or errors because file ends in a "}"
+				:set tData ($tData."\n".($srcFiles->$srcHash));
+			}
+			:set tData [($MtmCache->"strReplace") str=$tData find="|MTMD|" replace=$objId];
+			:set tData [($MtmCache->"strReplace") str=$tData find="|MTMC|" replace=$instanceId];
+			:set tData [($MtmCache->"strReplace") str=$tData find="|MTMS|" replace=$storeName];
+			:local jobId [:execute script=$tData file=([($MtmFacts->"getMtmObjFile")])];
+			
+			:if ($MtmFacts->"debug" = true) do={
+				[($MtmFacts->"setDebugMsg") ("Waiting for object: ".$instanceId)];
+			}
+			:local tCount 50;
+			:while ($tCount > 0) do={
+			
+				:if ([($MtmCache->"isEmpty") ($storeObj->$instanceId)] = false) do= {
+					:set tCount 0;
+				} else={
+					:if ($tCount > 1) do={
+						:set tCount ($tCount - 1);
+						:delay 0.25s;
+					} else={
+						:local log ("Waiting for class to instanciate: '$instanceId' did not finish in time");
+						:if ($MtmFacts->"debug" = true) do={
+							[($MtmFacts->"setDebugMsg") $log];
+						}
+						[($MtmFacts->"throwException") method=$method msg=$log];
+					}
+				}
+			}
+		}
+		:if ($MtmFacts->"debug" = true) do={
+			[($MtmFacts->"setDebugMsg") ("Object is ready: ".$instanceId)];
 		}
 		:return ($storeObj->$instanceId);
 	}

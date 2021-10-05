@@ -18,10 +18,14 @@
 		:global MtmO;
 		:local classId ("model-if-list-member-".$0);
 		:if ($MtmO->$classId = nil) do={
-			:local path "Models/Interfaces/ListMember";
-			:local paths [:toarray "$path/Part1.rsc,$path/Part2.rsc"];
-			:local objTool [($MtmFacts->"execute") nsStr="getTools()->getObjects()" ];
-			[($objTool->"getInstanceV1") paths=$paths id=$0 classId=$classId];
+			
+			:local paths [:toarray ""];
+			:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Models/Base.rsc");
+			:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Models/Interfaces/ListMember/Base.rsc");
+			:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Models/Zstance.rsc");
+
+			:local objTool [($MtmFacts->"execute") nsStr="getTools()->getObjects()"];
+			:return [($objTool->"getInstanceV3") $paths $classId $0 $MtmO "MtmO"];
 		}
 		:return ($MtmO->$classId);
 	}

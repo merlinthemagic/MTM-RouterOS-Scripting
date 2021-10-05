@@ -14,12 +14,19 @@
 			[($MtmFacts->"throwException") method=$method msg="Id is mandatory"];
 		}
 		:global MtmO2;
-		:local classId ("model-if-eth-".$0);
+		:local classId ("mtm-if-eth-".$0);
 		:if ($MtmO2->$classId = nil) do={
-			:local path "Models/Interfaces";
-			:local paths [:toarray "$path/Astance.rsc,$path/Ethernet/Base.rsc,$path/Ethernet/Attrs.rsc,$path/Ethernet/PoE.rsc,$path/Ethernet/Traffic.rsc,$path/Zstance.rsc"];
+			:local paths [:toarray ""];
+			:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Models/Base.rsc");
+			:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Models/Interfaces/Base.rsc");
+			:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Models/Interfaces/Ethernet/Base.rsc");
+			:set ($paths->3) ([($MtmFacts->"getMtmPath")]."Models/Interfaces/Ethernet/Attrs.rsc");
+			:set ($paths->4) ([($MtmFacts->"getMtmPath")]."Models/Interfaces/Ethernet/PoE.rsc");
+			:set ($paths->5) ([($MtmFacts->"getMtmPath")]."Models/Interfaces/Ethernet/Traffic.rsc");
+			:set ($paths->6) ([($MtmFacts->"getMtmPath")]."Models/Zstance.rsc");
+
 			:local objTool [($MtmFacts->"execute") nsStr="getTools()->getObjects()"];
-			[($objTool->"getInstanceV1") paths=$paths id=$0 classId=$classId objCacheId=2];
+			:return [($objTool->"getInstanceV3") $paths $classId $0 $MtmO2 "MtmO2"];
 		}
 		:return ($MtmO2->$classId);
 	}

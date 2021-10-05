@@ -15,12 +15,16 @@
 			[($MtmFacts->"throwException") method=$method msg="Id is mandatory"];
 		}
 		:global MtmO3;
-		:local classId ("model-ip-dhcp-serv-".$0);
+		:local classId ("mtm-ip-dhcp-serv-".$0);
 		:if ($MtmO3->$classId = nil) do={
-			:local path "Models/IP/DHCP/Server";
-			:local paths [:toarray "$path/Base.rsc,$path/Zstance.rsc"];
+		
+			:local paths [:toarray ""];
+			:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Models/Base.rsc");
+			:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Models/IP/DHCP/Server/Base.rsc");
+			:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Models/Zstance.rsc");
+
 			:local objTool [($MtmFacts->"execute") nsStr="getTools()->getObjects()"];
-			[($objTool->"getInstanceV1") paths=$paths id=$0 classId=$classId objCacheId=3];
+			:return [($objTool->"getInstanceV3") $paths $classId $0 $MtmO3 "MtmO3"];
 		}
 		:return ($MtmO3->$classId);
 	}

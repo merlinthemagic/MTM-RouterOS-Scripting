@@ -14,12 +14,20 @@
 			[($MtmFacts->"throwException") method=$method msg="Id is mandatory"];
 		}
 		:global MtmO;
-		:local classId ("model-if-wlan-".$0);
+		:local classId ("mtm-if-wlan-".$0);
 		:if ($MtmO->$classId = nil) do={
-			:local path "Models/Interfaces";
-			:local paths [:toarray "$path/Astance.rsc,$path/Wireless/Base.rsc,$path/Wireless/Attrs.rsc,$path/Wireless/Clients.rsc,$path/Wireless/Traffic.rsc,$path/Zstance.rsc"];
-			:local objTool [($MtmFacts->"execute") nsStr="getTools()->getObjects()" ];
-			[($objTool->"getInstanceV1") paths=$paths id=$0 classId=$classId];
+		
+			:local paths [:toarray ""];
+			:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Models/Base.rsc");
+			:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Models/Interfaces/Base.rsc");
+			:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Models/Interfaces/Wireless/Base.rsc");
+			:set ($paths->3) ([($MtmFacts->"getMtmPath")]."Models/Interfaces/Wireless/Attrs.rsc");
+			:set ($paths->4) ([($MtmFacts->"getMtmPath")]."Models/Interfaces/Wireless/Clients.rsc");
+			:set ($paths->5) ([($MtmFacts->"getMtmPath")]."Models/Interfaces/Wireless/Traffic.rsc");
+			:set ($paths->6) ([($MtmFacts->"getMtmPath")]."Models/Zstance.rsc");
+
+			:local objTool [($MtmFacts->"execute") nsStr="getTools()->getObjects()"];
+			:return [($objTool->"getInstanceV3") $paths $classId $0 $MtmO "MtmO"];
 		}
 		:return ($MtmO->$classId);
 	}

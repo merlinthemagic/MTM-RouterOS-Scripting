@@ -2,8 +2,8 @@
 	:global MtmCache;
 	:local val [($MtmCache->"strReplace") ([/interface ethernet get |MTMD| tx-unicast]) " " ""];
 	:if ([:len $val] = 0) do={
-		:global MtmO2; #not counting unicast
-		:local self ($MtmO2->"|MTMC|");
+		:global |MTMS|;
+		:local self ($|MTMS|->"|MTMC|");
 		:set val ([($self->"getTxPackets")] - ([($self->"getTxMulticast")] + [($self->"getTxBroadcast")]));
 	}
 	:return [:tonum $val];
@@ -12,8 +12,8 @@
 	:global MtmCache;
 	:local val [($MtmCache->"strReplace") ([/interface ethernet get |MTMD| rx-unicast]) " " ""];
 	:if ([:len $val] = 0) do={
-		:global MtmO2; #not counting unicast
-		:local self ($MtmO2->"|MTMC|");
+		:global |MTMS|;
+		:local self ($|MTMS|->"|MTMC|");
 		:set val ([($self->"getRxPackets")] - ([($self->"getRxMulticast")] + [($self->"getRxBroadcast")]));
 	}
 	:return [:tonum $val];
@@ -35,8 +35,8 @@
 	:return [:tonum [($MtmCache->"strReplace") ([/interface ethernet get |MTMD| rx-broadcast]) " " ""]];
 }
 :set ($s->"getTxErrorCount") do={
-	:global MtmO2;
-	:local self ($MtmO2->"|MTMC|");
+	:global |MTMS|;
+	:local self ($|MTMS|->"|MTMC|");
 	:local v [:toarray ""];
 	:set ($v->0) [/interface ethernet get |MTMD| rx-align-error];
 	:set ($v->1) [/interface ethernet get |MTMD| rx-code-error];
@@ -57,8 +57,8 @@
 	:return $count;
 }
 :set ($s->"getRxErrorCount") do={
-	:global MtmO2;
-	:local self ($MtmO2->"|MTMC|");
+	:global |MTMS|;
+	:local self ($|MTMS|->"|MTMC|");
 	:local v [:toarray ""];
 	:set ($v->0) [/interface ethernet get |MTMD| tx-drop];
 	:set ($v->1) [/interface ethernet get |MTMD| tx-fcs-error];

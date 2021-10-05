@@ -12,8 +12,8 @@
 	:local rObjs [:toarray ""];
 	:local rObj [:toarray ""];
 	:local count 0;
-	:global MtmO1;
-	:local self ($MtmO1->"|MTMC|");
+	:global |MTMS|;
+	:local self ($|MTMS|->"|MTMC|");
 	:local ids;
 	:if ($inclLocal = true) do={
 		:set ids [/interface bridge host find bridge=[($self->"getName")]];

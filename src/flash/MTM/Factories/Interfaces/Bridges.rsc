@@ -14,12 +14,18 @@
 			[($MtmFacts->"throwException") method=$method msg="Id is mandatory"];
 		}
 		:global MtmO1;
-		:local classId ("model-if-brd-".$0);
+		:local classId ("mtm-if-brd-".$0);
 		:if ($MtmO1->$classId = nil) do={
-			:local path "Models/Interfaces";
-			:local paths [:toarray "$path/Astance.rsc,$path/Bridge/Base.rsc,$path/Bridge/Hosts.rsc,$path/Bridge/Zstance.rsc"];
+		
+			:local paths [:toarray ""];
+			:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Models/Base.rsc");
+			:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Models/Interfaces/Base.rsc");
+			:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Models/Interfaces/Bridge/Base.rsc");
+			:set ($paths->3) ([($MtmFacts->"getMtmPath")]."Models/Interfaces/Bridge/Hosts.rsc");
+			:set ($paths->4) ([($MtmFacts->"getMtmPath")]."Models/Zstance.rsc");
+
 			:local objTool [($MtmFacts->"execute") nsStr="getTools()->getObjects()"];
-			[($objTool->"getInstanceV1") paths=$paths id=$0 classId=$classId objCacheId=1];
+			:return [($objTool->"getInstanceV3") $paths $classId $0 $MtmO1 "MtmO1"];
 		}
 		:return ($MtmO1->$classId);
 	}

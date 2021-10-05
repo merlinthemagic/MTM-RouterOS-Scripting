@@ -1,7 +1,3 @@
-:local s [:toarray ""];
-:set ($s->"getId") do={
-	:return "|MTMD|";
-}
 :set ($s->"getVersion") do={
 	:return 6;
 }
