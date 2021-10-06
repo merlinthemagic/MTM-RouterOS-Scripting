@@ -17,7 +17,7 @@
 			[($MtmFacts->"throwException") method=$method msg="Id is mandatory"];
 		}
 		:global MtmO;
-		:local classId ("mtm-ip-addr-v4-".$0);
+		:local classId ("mtm-ip-v4-".$0);
 		:if ($MtmO->$classId = nil) do={
 		
 			:local paths [:toarray ""];
@@ -38,7 +38,7 @@
 			[($MtmFacts->"throwException") method=$method msg="Id is mandatory"];
 		}
 		:global MtmO;
-		:local classId ("mtm-ip-addr-v6-".$0);
+		:local classId ("mtm-ip-v6-".$0);
 		:if ($MtmFacts->"c"->$classId = nil) do={
 			:local paths [:toarray ""];
 			:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Models/Base.rsc");

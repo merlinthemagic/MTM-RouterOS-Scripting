@@ -111,12 +111,16 @@
 				[($MtmFacts->"throwException") method=$method msg="String is mandatory"];
 			}
 		}
-		
+
 		:local rData [:toarray ""];
-		:local lData "";
-		:local splitLen [:len $param2];
-		:local rLen [:len $param1];
 		:local rCount 0;
+		:local splitLen [:len $param2];
+		:if ($splitLen = 0) do={
+			:set ($rData->$rCount) $param1;
+			:return $rData;
+		}
+		:local lData "";
+		:local rLen [:len $param1];
 		:local pos;
 		:local isDone 0;
 		:while ($isDone = 0) do={
@@ -132,6 +136,42 @@
 			:set ($rData->$rCount) $lData;
 			:set rCount ($rCount + 1);
 		}
+		:return $rData;
+	}
+	:set ($s->"chunk") do={
+		
+		:global MtmFacts;
+		:local method "Tools->Strings->chunk";
+		:local param1; #input
+		:local param2 76; #chunk length
+		:if ($0 != nil) do={
+			:set param1 $0;
+		} else={
+			[($MtmFacts->"throwException") method=$method msg="String is mandatory"];
+		}
+		:if ($1 != nil) do={
+			:set param2 $1;
+		}
+		:local rData [:toarray ""];
+		:local rCount 0;
+		:if ($param2 = 0) do={
+			:set ($rData->$rCount) $param1;
+			:return $rData;
+		}
+		:local chunk "";
+		:local clen;
+		:local rLen [:len $param1];
+		:for x from=0 to=($rLen - 1) do={
+			:set clen [:len $chunk];
+			:if ($clen = $param2) do={
+				:set ($rData->$rCount) $chunk;
+				:set rCount ($rCount + 1);
+				:set chunk "";
+			}
+			:set chunk ($chunk.[:pick $param1 $x]);
+		}
+		##add the last
+		:set ($rData->$rCount) $chunk;
 		:return $rData;
 	}
 	:set ($s->"toLower") do={

@@ -19,3 +19,6 @@
 :set ($s->"getMode") do={
 	:return [/interface wireless get |MTMD| mode];
 }
+:set ($s->"getSsid") do={
+	:return [/interface wireless get |MTMD| ssid];
+}

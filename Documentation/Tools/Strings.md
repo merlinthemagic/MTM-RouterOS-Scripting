@@ -58,3 +58,12 @@ NOTE: If trying to echo the result via :put ($result) you might not see the line
 :put ($result); #string "HELLO WORLD"
 ```
 
+### chunk:
+
+```
+:local myStr "HelloWorld";
+:local chunkLen 5; #optional, default 76
+
+:local result [($toolObj->"chunk") $myStr $chunkLen];
+:put ($result); #array e.g. ["Hello", "World"]
+```

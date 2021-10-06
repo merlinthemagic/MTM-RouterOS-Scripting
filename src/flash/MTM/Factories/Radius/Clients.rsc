@@ -14,7 +14,7 @@
 			[($MtmFacts->"throwException") method=$method msg="Id is mandatory"];
 		}
 		:global MtmO;
-		:local classId ("model-radius-cli-".$0);
+		:local classId ("mtm-radius-client-".$0);
 		:if ($MtmO->$classId = nil) do={
 			
 			:local paths [:toarray ""];
