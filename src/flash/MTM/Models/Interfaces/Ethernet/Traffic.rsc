@@ -6,7 +6,7 @@
 		:local self ($|MTMS|->"|MTMC|");
 		:set val ([($self->"getTxPackets")] - ([($self->"getTxMulticast")] + [($self->"getTxBroadcast")]));
 	}
-	:return [:tonum $val];
+	:return [:tonum $val]; ##returns nil when not supported e.g. CHR
 }
 :set ($s->"getRxUnicast") do={
 	:global MtmCache;
@@ -16,23 +16,23 @@
 		:local self ($|MTMS|->"|MTMC|");
 		:set val ([($self->"getRxPackets")] - ([($self->"getRxMulticast")] + [($self->"getRxBroadcast")]));
 	}
-	:return [:tonum $val];
+	:return [:tonum $val]; ##returns nil when not supported e.g. CHR
 }
 :set ($s->"getTxMulticast") do={
 	:global MtmCache;
-	:return [:tonum [($MtmCache->"strReplace") ([/interface ethernet get |MTMD| tx-multicast]) " " ""]];
+	:return [:tonum [($MtmCache->"strReplace") ([/interface ethernet get |MTMD| tx-multicast]) " " ""]]; ##returns nil when not supported e.g. CHR
 }
 :set ($s->"getRxMulticast") do={
 	:global MtmCache;
-	:return [:tonum [($MtmCache->"strReplace") ([/interface ethernet get |MTMD| rx-multicast]) " " ""]];
+	:return [:tonum [($MtmCache->"strReplace") ([/interface ethernet get |MTMD| rx-multicast]) " " ""]]; ##returns nil when not supported e.g. CHR
 }
 :set ($s->"getTxBroadcast") do={
 	:global MtmCache;
-	:return [:tonum [($MtmCache->"strReplace") ([/interface ethernet get |MTMD| tx-broadcast]) " " ""]];
+	:return [:tonum [($MtmCache->"strReplace") ([/interface ethernet get |MTMD| tx-broadcast]) " " ""]]; ##returns nil when not supported e.g. CHR
 }
 :set ($s->"getRxBroadcast") do={
 	:global MtmCache;
-	:return [:tonum [($MtmCache->"strReplace") ([/interface ethernet get |MTMD| rx-broadcast]) " " ""]];
+	:return [:tonum [($MtmCache->"strReplace") ([/interface ethernet get |MTMD| rx-broadcast]) " " ""]]; ##returns nil when not supported e.g. CHR
 }
 :set ($s->"getTxErrorCount") do={
 	:global |MTMS|;

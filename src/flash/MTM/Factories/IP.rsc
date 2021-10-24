@@ -17,6 +17,16 @@
 		}
 		:return ($MtmI->$classId);
 	}
+	:set ($s->"getDhcpClients") do={
+		:global MtmI;
+		:local classId "fact-ip-dhcp-clients";
+		:if ($MtmI->$classId = nil) do={
+			:global MtmFacts;
+			:local path ([($MtmFacts->"getMtmPath")]."Factories/IP/DhcpClients.rsc");
+			[($MtmFacts->"importFile") $path];
+		}
+		:return ($MtmI->$classId);
+	}
 	:set ($s->"getAddresses") do={
 		:global MtmI;
 		:local classId "fact-ip-addrs";

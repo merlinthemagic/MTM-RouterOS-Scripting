@@ -34,7 +34,7 @@ NOTE: If trying to echo the result via :put ($result) you might not see the line
 
 ```
 :local myStr "Hello World\nMy World";
-:local delimitor "\n"; #use a variable for the delimitor, funky results with inline args
+:local delimitor "\n"; #use a variable for the delimitor, funky results with inline args or use ("\n") for inline args
 
 :local result [($toolObj->"split") str=$myStr delimitor=$delimitor];
 :put ($result); #array of lines broken up by the delimitor, delimitor removed

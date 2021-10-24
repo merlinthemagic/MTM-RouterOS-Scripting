@@ -25,7 +25,11 @@
 	:return true;
 }
 :set ($s->"getBootpSupport") do={
-	:return [/ip dhcp-server get |MTMD| bootp-support];
+	:local val [/ip dhcp-server get |MTMD| bootp-support];
+	:if ([:typeof $val] = "nil") do={
+		:set val "static"; ##seems to be a bug on 6.48.4 powerpc at least
+	}
+	:return $val;
 }
 :set ($s->"setBootpSupport") do={
 	:if ($0 != "dynamic" && $0 != "none" && $0 != "static") do={
