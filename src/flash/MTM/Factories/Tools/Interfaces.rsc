@@ -1,47 +1,47 @@
-:local classId "fact-tool-ifs";
-:global MtmFacts;
-:if ($MtmFacts = nil) do={
-	:error ($classId.": MTM Factories not loaded");
+:set ($s->"getEthernet") do={
+	:global MtmFacts;
+	:local sysId "tool-ifs-eth";
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") $sysId];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Tools/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Tools/Interfaces/Common/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Tools/Interfaces/Ethernet/Part1.rsc");
+		:set ($paths->3) ([($MtmFacts->"getMtmPath")]."Tools/Interfaces/Ethernet/Part2.rsc");
+		:set ($paths->4) ([($MtmFacts->"getMtmPath")]."Tools/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
+	}
+	:return ($sObj->"obj"->($sObj->"hash"));
 }
-:global MtmT;
-:if (($MtmT->$classId) = nil) do={
-	
-	:local s [:toarray ""];	
-	:set ($s->"getEthernet") do={
-		:global MtmFacts;
-		:local classId "tool-ifs-eth";
-		:if ($MtmFacts->"c"->$classId = nil) do={
-			:local path ([($MtmFacts->"getMtmPath")]."Tools/Interfaces/Ethernet.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmFacts->"c"->$classId);
+:set ($s->"getWireless") do={
+	:global MtmFacts;
+	:local sysId "tool-ifs-wlan";
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") $sysId];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Tools/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Tools/Interfaces/Common/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Tools/Interfaces/Wireless/Part1.rsc");
+		:set ($paths->3) ([($MtmFacts->"getMtmPath")]."Tools/Interfaces/Wireless/Part2.rsc");
+		:set ($paths->4) ([($MtmFacts->"getMtmPath")]."Tools/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
 	}
-	:set ($s->"getWireless") do={
-		:global MtmFacts;
-		:local classId "tool-ifs-wlan";
-		:if ($MtmFacts->"c"->$classId = nil) do={
-			:local path ([($MtmFacts->"getMtmPath")]."Tools/Interfaces/Wireless.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmFacts->"c"->$classId);
+	:return ($sObj->"obj"->($sObj->"hash"));
+}
+:set ($s->"getBridge") do={
+	:global MtmFacts;
+	:local sysId "tool-ifs-brd";
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") $sysId];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Tools/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Tools/Interfaces/Common/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Tools/Interfaces/Bridge/Part1.rsc");
+		:set ($paths->3) ([($MtmFacts->"getMtmPath")]."Tools/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
 	}
-	:set ($s->"getBridge") do={
-		:global MtmFacts;
-		:local classId "tool-ifs-brd";
-		:if ($MtmFacts->"c"->$classId = nil) do={
-			:local path ([($MtmFacts->"getMtmPath")]."Tools/Interfaces/Bridge.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmFacts->"c"->$classId);
-	}
-	:set ($s->"getCommon") do={
-		:global MtmFacts;
-		:local classId "tool-ifs-common";
-		:if ($MtmFacts->"c"->$classId = nil) do={
-			:local path ([($MtmFacts->"getMtmPath")]."Tools/Interfaces/Common.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmFacts->"c"->$classId);
-	}
-	:set ($MtmT->$classId) $s;
+	:return ($sObj->"obj"->($sObj->"hash"));
 }

@@ -1,21 +1,14 @@
-:local classId "fact-utility-event";
-:global MtmFacts;
-:if ($MtmFacts = nil) do={
-	:error ($classId.": MTM Factories not loaded");
-}
-:global MtmU;
-:if (($MtmU->$classId) = nil) do={
-	
-	:local s [:toarray ""];
-	:set ($s->"getInterfaceUp") do={
-		:global MtmU;
-		:local classId "utility-events-ifup";
-		:if ($MtmU->$classId = nil) do={
-			:global MtmFacts;
-			:local path ([($MtmFacts->"getMtmPath")]."Utilities/Events/InterfaceUp.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmU->$classId);
+:set ($s->"getInterfaceUp") do={
+	:global MtmFacts;
+	:local sysId "util-events-ifup";
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") $sysId];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Utilities/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Utilities/Events/InterfaceUp/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Utilities/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
 	}
-	:set ($MtmU->$classId) $s;
+	:return ($sObj->"obj"->($sObj->"hash"));
 }

@@ -1,21 +1,14 @@
-:local classId "fact-tool-hash";
-:global MtmFacts;
-:if ($MtmFacts = nil) do={
-	:error ($classId.": MTM Factories not loaded");
-}
-:global MtmT2;
-:if (($MtmT2->$classId) = nil) do={
-	
-	:local s [:toarray ""];
-	:set ($s->"getMD5") do={
-		:global MtmT3;
-		:local classId "tool-hash-md5";
-		:if ($MtmT3->$classId = nil) do={
-			:global MtmFacts;
-			:local path ([($MtmFacts->"getMtmPath")]."Tools/Hashing/MD5.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmT3->$classId);
+:set ($s->"getMD5") do={
+	:global MtmFacts;
+	:local sysId "tool-hash-md5";
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") $sysId];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Tools/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Tools/Hashing/MD5/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Tools/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
 	}
-	:set ($MtmT2->$classId) $s;
+	:return ($sObj->"obj"->($sObj->"hash"));
 }

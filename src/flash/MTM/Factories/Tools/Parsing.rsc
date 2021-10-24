@@ -1,91 +1,113 @@
-:local classId "fact-tool-parsing";
-:global MtmFacts;
-:if ($MtmFacts = nil) do={
-	:error ($classId.": MTM Factories not loaded");
+:set ($s->"getPrimitives") do={
+	:global MtmFacts;
+	:local sysId "tool-parsing-primis";
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") $sysId];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Tools/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Tools/Parsing/Primitives/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Tools/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
+	}
+	:return ($sObj->"obj"->($sObj->"hash"));
 }
-:global MtmT;
-:if (($MtmT->$classId) = nil) do={
-	
-	:local s [:toarray ""];
-	:set ($s->"getPrimitives") do={
-		:global MtmT;
-		:local classId "tool-parsing-primis";
-		:if ($MtmT->$classId = nil) do={
-			:global MtmFacts;
-			:local path ([($MtmFacts->"getMtmPath")]."Tools/Parsing/Primitives.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmT->$classId);
+:set ($s->"getDateTime") do={
+	:global MtmFacts;
+	:local sysId "tool-parsing-date-time";
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") $sysId];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Tools/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Tools/Parsing/DateTime/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Tools/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
 	}
-	:set ($s->"getJsonEncode") do={
-		:global MtmT;
-		:local classId "tool-parsing-json-enc";
-		:if ($MtmT->$classId = nil) do={
-			:global MtmFacts;
-			:local path ([($MtmFacts->"getMtmPath")]."Tools/Parsing/JsonEncode.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmT->$classId);
+	:return ($sObj->"obj"->($sObj->"hash"));
+}
+:set ($s->"getIPv4") do={
+	:global MtmFacts;
+	:local sysId "tool-parsing-ipv4";
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") $sysId];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Tools/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Tools/Parsing/IPv4/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Tools/Parsing/IPv4/Part2.rsc");
+		:set ($paths->3) ([($MtmFacts->"getMtmPath")]."Tools/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
 	}
-	:set ($s->"getMonitorData") do={
-		:global MtmT;
-		:local classId "tool-parsing-monitor-data";
-		:if ($MtmT->$classId = nil) do={
-			:global MtmFacts;
-			:local path ([($MtmFacts->"getMtmPath")]."Tools/Parsing/MonitorData.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmT->$classId);
+	:return ($sObj->"obj"->($sObj->"hash"));
+}
+:set ($s->"getIPv6") do={
+	:global MtmFacts;
+	:local sysId "tool-parsing-date-time";
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") $sysId];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Tools/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Tools/Parsing/IPv6/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Tools/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
 	}
-	:set ($s->"getDateTime") do={
-		:global MtmT;
-		:local classId "tool-parsing-date-time";
-		:if ($MtmT->$classId = nil) do={
-			:global MtmFacts;
-			:local path ([($MtmFacts->"getMtmPath")]."Tools/Parsing/DateTime.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmT->$classId);
+	:return ($sObj->"obj"->($sObj->"hash"));
+}
+:set ($s->"getJsonEncode") do={
+	:global MtmFacts;
+	:local sysId "tool-parsing-json-enc";
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") $sysId];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Tools/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Tools/Parsing/JsonEncode/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Tools/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
 	}
-	:set ($s->"getIPv4") do={
-		:global MtmT;
-		:local classId "tool-parsing-ipv4";
-		:if ($MtmT->$classId = nil) do={
-			:global MtmFacts;
-			:local path ([($MtmFacts->"getMtmPath")]."Tools/Parsing/IPv4.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmT->$classId);
+	:return ($sObj->"obj"->($sObj->"hash"));
+}
+:set ($s->"getMonitorData") do={
+	:global MtmFacts;
+	:local sysId "tool-parsing-mon-data";
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") $sysId];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Tools/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Tools/Parsing/MonitorData/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Tools/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
 	}
-	:set ($s->"getIPv6") do={
-		:global MtmT;
-		:local classId "tool-parsing-ipv6";
-		:if ($MtmT->$classId = nil) do={
-			:global MtmFacts;
-			:local path ([($MtmFacts->"getMtmPath")]."Tools/Parsing/IPv6.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmT->$classId);
+	:return ($sObj->"obj"->($sObj->"hash"));
+}
+:set ($s->"getPing") do={
+	:global MtmFacts;
+	:local sysId "tool-parsing-ping";
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") $sysId];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Tools/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Tools/Parsing/Ping/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Tools/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
 	}
-	:set ($s->"getPing") do={
-		:global MtmT;
-		:local classId "tool-parsing-ping";
-		:if ($MtmT->$classId = nil) do={
-			:global MtmFacts;
-			:local path ([($MtmFacts->"getMtmPath")]."Tools/Parsing/Ping.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmT->$classId);
+	:return ($sObj->"obj"->($sObj->"hash"));
+}
+:set ($s->"getWlanScan") do={
+	:global MtmFacts;
+	:local sysId "tool-parsing-wlan-scan";
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") $sysId];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Tools/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Tools/Parsing/WlanScan/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Tools/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
 	}
-	:set ($s->"getWlanScan") do={
-		:global MtmT;
-		:local classId "tool-parsing-wlan-scan";
-		:if ($MtmT->$classId = nil) do={
-			:global MtmFacts;
-			:local path ([($MtmFacts->"getMtmPath")]."Tools/Parsing/WlanScan.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmT->$classId);
-	}
-	:set ($MtmT->$classId) $s;
+	:return ($sObj->"obj"->($sObj->"hash"));
 }

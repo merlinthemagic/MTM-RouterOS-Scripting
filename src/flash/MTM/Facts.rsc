@@ -24,55 +24,17 @@
 	
 	#clear class stores, include "init" so status can seee if global was wiped
 	
+	#core factories
+	:global MtmF;
+	:set MtmF [:toarray "init"];
+
 	#apps
 	:global MtmA;
 	:set MtmA [:toarray "init"];
-	
-	#objects default
-	:global MtmO;
-	:set MtmO [:toarray "init"];
-	
-	#objects 1
-	:global MtmO1;
-	:set MtmO1 [:toarray "init"];
-	
-	#objects 2
-	:global MtmO2;
-	:set MtmO2 [:toarray "init"];
-	
-	#objects 3
-	:global MtmO3;
-	:set MtmO3 [:toarray "init"];
-	
-	#ip
-	:global MtmI;
-	:set MtmI [:toarray "init"];
-	
-	#interfaces
-	:global MtmIF;
-	:set MtmIF [:toarray "init"];
-	
+
 	#system
 	:global MtmS;
 	:set MtmS [:toarray "init"];
-	
-	#tools
-	:global MtmT;
-	:set MtmT [:toarray "init"];
-	
-	:global MtmT2;
-	:set MtmT2 [:toarray "init"];
-	
-	:global MtmT3;
-	:set MtmT3 [:toarray "init"];
-	
-	#fetch tool
-	:global MtmTF;
-	:set MtmTF [:toarray "init"];
-	
-	#Utilities
-	:global MtmU;
-	:set MtmU [:toarray "init"];
 	
 	:set ($s->"setDebug") do={
 		:global MtmFacts;
@@ -93,36 +55,6 @@
 		}
 		:return true;
 	}
-	:set ($s->"getInterfaces") do={
-		:global MtmIF;
-		:local classId "fact-ifs";
-		:if ($MtmIF->$classId = nil) do={
-			:global MtmFacts;
-			:local path ([($MtmFacts->"getMtmPath")]."Factories/Interfaces.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmIF->$classId);
-	}
-	:set ($s->"getTools") do={
-		:global MtmT;
-		:local classId "fact-tools";
-		:if ($MtmT->$classId = nil) do={
-			:global MtmFacts;
-			:local path ([($MtmFacts->"getMtmPath")]."Factories/Tools.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmT->$classId);
-	}
-	:set ($s->"getUtilities") do={
-		:global MtmU;
-		:local classId "fact-utilities";
-		:if ($MtmU->$classId = nil) do={
-			:global MtmFacts;
-			:local path ([($MtmFacts->"getMtmPath")]."Factories/Utilities.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmU->$classId);
-	}
 	:set ($s->"getSystem") do={
 		:global MtmS;
 		:local classId "fact-system";
@@ -133,24 +65,88 @@
 		}
 		:return ($MtmS->$classId);
 	}
+	:set ($s->"getObjects") do={
+		:global MtmF;
+		:local classId "fact-objs";
+		:if ($MtmF->$classId = nil) do={
+			:global MtmFacts;
+			:local path ([($MtmFacts->"getMtmPath")]."Factories/Objects.rsc");
+			[($MtmFacts->"importFile") $path];
+		}
+		:return ($MtmF->$classId);
+	}
+	:set ($s->"getInterfaces") do={
+		:global MtmFacts;
+		:local sysId "fact-ifs";
+		:local objFact [($MtmFacts->"getObjects")];
+		:local sObj [($objFact->"getStore") $sysId];
+		:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+			:local paths [:toarray ""];
+			:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Factories/Base.rsc");
+			:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Factories/Interfaces/Factory/Part1.rsc");
+			:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Factories/Interfaces/Factory/Part2.rsc");
+			:set ($paths->3) ([($MtmFacts->"getMtmPath")]."Factories/Zstance.rsc");
+			:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
+		}
+		:return ($sObj->"obj"->($sObj->"hash"));
+	}
+	:set ($s->"getTools") do={
+		:global MtmFacts;
+		:local sysId "fact-tools";
+		:local objFact [($MtmFacts->"getObjects")];
+		:local sObj [($objFact->"getStore") $sysId];
+		:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+			:local paths [:toarray ""];
+			:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Factories/Base.rsc");
+			:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Factories/Tools/Factory/Part1.rsc");
+			:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Factories/Tools/Factory/Part2.rsc");
+			:set ($paths->3) ([($MtmFacts->"getMtmPath")]."Factories/Tools/Factory/Part3.rsc");
+			:set ($paths->4) ([($MtmFacts->"getMtmPath")]."Factories/Zstance.rsc");
+			:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
+		}
+		:return ($sObj->"obj"->($sObj->"hash"));
+	}
+	:set ($s->"getUtilities") do={
+		:global MtmFacts;
+		:local sysId "fact-utils";
+		:local objFact [($MtmFacts->"getObjects")];
+		:local sObj [($objFact->"getStore") $sysId];
+		:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+			:local paths [:toarray ""];
+			:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Factories/Base.rsc");
+			:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Factories/Utilities/Factory/Part1.rsc");
+			:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Factories/Zstance.rsc");
+			:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
+		}
+		:return ($sObj->"obj"->($sObj->"hash"));
+	}
 	:set ($s->"getRadius") do={
 		:global MtmFacts;
-		:local classId "fact-radius";
-		:if ($MtmFacts->"c"->$classId = nil) do={
-			:local path ([($MtmFacts->"getMtmPath")]."Factories/Radius.rsc");
-			[($MtmFacts->"importFile") $path];
+		:local sysId "fact-radius";
+		:local objFact [($MtmFacts->"getObjects")];
+		:local sObj [($objFact->"getStore") $sysId];
+		:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+			:local paths [:toarray ""];
+			:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Factories/Base.rsc");
+			:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Factories/Radius/Factory/Part1.rsc");
+			:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Factories/Zstance.rsc");
+			:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
 		}
-		:return ($MtmFacts->"c"->$classId);
+		:return ($sObj->"obj"->($sObj->"hash"));
 	}
 	:set ($s->"getIP") do={
-		:global MtmI;
-		:local classId "fact-ip";
-		:if ($MtmI->$classId = nil) do={
-			:global MtmFacts;
-			:local path ([($MtmFacts->"getMtmPath")]."Factories/IP.rsc");
-			[($MtmFacts->"importFile") $path];
+		:global MtmFacts;
+		:local sysId "fact-ip";
+		:local objFact [($MtmFacts->"getObjects")];
+		:local sObj [($objFact->"getStore") $sysId];
+		:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+			:local paths [:toarray ""];
+			:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Factories/Base.rsc");
+			:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Factories/IP/Factory/Part1.rsc");
+			:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Factories/Zstance.rsc");
+			:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
 		}
-		:return ($MtmI->$classId);
+		:return ($sObj->"obj"->($sObj->"hash"));
 	}
 	:set ($s->"getApp") do={
 		:global MtmFacts;
@@ -441,7 +437,6 @@
 		[($fsTool->"create") ([($s->"getMtmImportFile")])];
 		[($fsTool->"create") ([($s->"getMtmExceptionFile")])];
 	}
-	
 	#load helpers
 	:local path;
 	{

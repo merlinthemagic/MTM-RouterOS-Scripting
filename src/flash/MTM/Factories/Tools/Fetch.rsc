@@ -1,31 +1,28 @@
-:local classId "fact-tool-fetch";
-:global MtmFacts;
-:if ($MtmFacts = nil) do={
-	:error ($classId.": MTM Factories not loaded");
+:set ($s->"getUpload") do={
+	:global MtmFacts;
+	:local sysId "tool-fetch-upload";
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") $sysId];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Tools/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Tools/Fetch/Upload/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Tools/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
+	}
+	:return ($sObj->"obj"->($sObj->"hash"));
 }
-:global MtmTF;
-:if (($MtmTF->$classId) = nil) do={
-	
-	:local s [:toarray ""];
-	:set ($s->"getUpload") do={
-		:global MtmTF;
-		:local classId "tool-fetch-upload";
-		:if ($MtmTF->$classId = nil) do={
-			:global MtmFacts;
-			:local path ([($MtmFacts->"getMtmPath")]."Tools/Fetch/Upload.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmTF->$classId);
+:set ($s->"getDownload") do={
+	:global MtmFacts;
+	:local sysId "tool-fetch-download";
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") $sysId];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Tools/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Tools/Fetch/Download/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Tools/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
 	}
-	:set ($s->"getDownload") do={
-		:global MtmTF;
-		:local classId "tool-fetch-download";
-		:if ($MtmTF->$classId = nil) do={
-			:global MtmFacts;
-			:local path ([($MtmFacts->"getMtmPath")]."Tools/Fetch/Download.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmTF->$classId);
-	}
-	:set ($MtmTF->$classId) $s;
+	:return ($sObj->"obj"->($sObj->"hash"));
 }

@@ -1,31 +1,28 @@
-:local classId "fact-tool-time";
-:global MtmFacts;
-:if ($MtmFacts = nil) do={
-	:error ($classId.": MTM Factories not loaded");
+:set ($s->"getEpoch") do={
+	:global MtmFacts;
+	:local sysId "tool-time-epoch";
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") $sysId];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Tools/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Tools/Time/Epoch/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Tools/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
+	}
+	:return ($sObj->"obj"->($sObj->"hash"));
 }
-:global MtmT;
-:if (($MtmT3->$classId) = nil) do={
-
-	:local s [:toarray ""];
-	:set ($s->"getEpoch") do={
-		:global MtmT3;
-		:local classId "tool-time-epoch";
-		:if ($MtmT3->$classId = nil) do={
-			:global MtmFacts;
-			:local path ([($MtmFacts->"getMtmPath")]."Tools/Time/Epoch.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmT3->$classId);
+:set ($s->"getRos") do={
+	:global MtmFacts;
+	:local sysId "tool-time-ros";
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") $sysId];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Tools/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Tools/Time/ROS/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Tools/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
 	}
-	:set ($s->"getRos") do={
-		:global MtmT3;
-		:local classId "tool-time-ros";
-		:if ($MtmT3->$classId = nil) do={
-			:global MtmFacts;
-			:local path ([($MtmFacts->"getMtmPath")]."Tools/Time/ROS.rsc");
-			[($MtmFacts->"importFile") $path];
-		}
-		:return ($MtmT3->$classId);
-	}
-	:set ($MtmT->$classId) $s;
+	:return ($sObj->"obj"->($sObj->"hash"));
 }

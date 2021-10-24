@@ -1,33 +1,29 @@
-:local classId "fact-if-list-members";
-:global MtmFacts;
-:if ($MtmFacts = nil) do={
-	:error ($classId.": MTM Factories not loaded");
-}
-:if (($MtmFacts->"c"->$classId) = nil) do={
-	
-	:local s [:toarray ""];
-	:set ($s->"a") [:toarray ""];
-	
-	:set ($s->"getById") do={
-	
-		:global MtmFacts;
-		:local method "Facts->Interfaces->ListMembers->getById";
-		:if ($0 = nil) do={
-			[($MtmFacts->"throwException") method=$method msg="Id is mandatory"];
-		}
-		:global MtmO;
-		:local classId ("model-if-list-member-".$0);
-		:if ($MtmO->$classId = nil) do={
-			
-			:local paths [:toarray ""];
-			:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Models/Base.rsc");
-			:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Models/Interfaces/ListMember/Base.rsc");
-			:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Models/Zstance.rsc");
-
-			:local objTool [($MtmFacts->"execute") nsStr="getTools()->getObjects()"];
-			:return [($objTool->"getInstanceV3") $paths $classId $0 $MtmO "MtmO"];
-		}
-		:return ($MtmO->$classId);
+:set ($s->"getById") do={
+	:global MtmFacts;
+	:local method "Facts->Interfaces->ListMembers->getById";
+	:if ($0 = nil) do={
+		[($MtmFacts->"throwException") method=$method msg="Id is mandatory"];
 	}
-	:set ($MtmFacts->"c"->$classId) $s;
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") ("mtm-if-list-member-".$0)];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Models/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Models/Interfaces/ListMember/Base.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Models/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $0 ($sObj->"hash")];
+	}
+	:return ($sObj->"obj"->($sObj->"hash"));
+}
+:set ($s->"getAll") do={
+	:global MtmFacts;
+	:global |MTMS|;
+	:local self ($|MTMS|->"|MTMC|");
+	:local c 0;
+	:local rObjs [:toarray ""];
+	:foreach id in=[/interface list member find ] do={
+		:set ($rObjs->"$c") [($self->"getById") $id];
+		:set c ($c + 1);
+	}
+	:return $rObjs;
 }
