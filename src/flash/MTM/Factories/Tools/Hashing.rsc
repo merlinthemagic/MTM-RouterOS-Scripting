@@ -1,14 +1,10 @@
 :set ($s->"getMD5") do={
-	:global MtmFacts;
-	:local sysId "tool-hash-md5";
-	:local objFact [($MtmFacts->"getObjects")];
-	:local sObj [($objFact->"getStore") $sysId];
-	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
-		:local paths [:toarray ""];
-		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Tools/Base.rsc");
-		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Tools/Hashing/MD5/Part1.rsc");
-		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Tools/Zstance.rsc");
-		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
+	:global MtmSM0;
+	:local classId "tool-hash-md5";
+	:if ($MtmSM0->$classId = nil) do={
+		:global MtmFacts;
+		:local path ([($MtmFacts->"getMtmPath")]."Tools/Hashing/MD5/Full.rsc");
+		[($MtmFacts->"importFile") $path];
 	}
-	:return ($sObj->"obj"->($sObj->"hash"));
+	:return ($MtmSM0->$classId);
 }

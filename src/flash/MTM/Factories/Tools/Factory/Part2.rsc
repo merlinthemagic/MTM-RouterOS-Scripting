@@ -34,8 +34,9 @@
 	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
 		:local paths [:toarray ""];
 		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Factories/Base.rsc");
-		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Factories/Tools/Parsing.rsc");
-		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Factories/Zstance.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Factories/Tools/Parsing/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Factories/Tools/Parsing/Part2.rsc");
+		:set ($paths->3) ([($MtmFacts->"getMtmPath")]."Factories/Zstance.rsc");
 		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
 	}
 	:return ($sObj->"obj"->($sObj->"hash"));

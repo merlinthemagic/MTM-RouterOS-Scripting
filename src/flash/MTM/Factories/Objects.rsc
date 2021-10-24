@@ -32,20 +32,54 @@
 		:local instanceId $4;
 
 		:if (($storeObj->$instanceId) = nil) do={
+			
+			##cant use any of the tools, as they will be stood up by this function
 			:local tData "";
-			##:local fsTool [($MtmFacts->"execute") nsStr="getTools()->getFiles()"];
 			:foreach path in=$paths do={
-				##add a line break after each file, makes our life easier than tons or errors because file ends in a "}"
-				##:set tData ($tData."\n".([($fsTool->"getContent") $path]));
-				:set tData ($tData."\n".([/file get [find where name=$path] content]]));
-				
-				
+			
+				:if ([:len [/file find where name=$path]] > 0) do={
+					:if ([/file get [find where name=$path] size] < 4096) do={
+						##add a line break after each file, makes our life easier than tons or errors because file ends in a "}"
+						:set tData ($tData."\n".[/file get [find where name=$path] content]);
+					} else={
+						[($MtmFacts->"throwException") method=$method msg=("File: '".$path."', is ".[/file get [find where name=$path] size]." bytes, exceeds maximum of 4095 bytes")];
+					}
+				} else={
+					[($MtmFacts->"throwException") method=$method msg=("Path does not exist: '".$path."'")];
+				}
 			}
-			:global MtmCache;
-			:set tData [($MtmCache->"strReplace") str=$tData find="|MTMD|" replace=$objId];
-			:set tData [($MtmCache->"strReplace") str=$tData find="|MTMC|" replace=$instanceId];
-			:set tData [($MtmCache->"strReplace") str=$tData find="|MTMS|" replace=$storeName];
-			:local jobId [:execute script=$tData file=([($MtmFacts->"getMtmObjFile")])];
+
+			:local rData "";
+			:local isDone;
+			:local fLen;
+			:local rLen;
+			:local pos;
+			
+			:local strReps [:toarray ""];
+			:set ($strReps->"|MTMD|") $objId;
+			:set ($strReps->"|MTMC|") $instanceId;
+			:set ($strReps->"|MTMS|") $storeName;
+			
+			:foreach find,replace in=$strReps do={
+				:set isDone 0;
+				:set rLen [:len $tData];
+				:set fLen [:len $find];
+				:set rData "";
+				:while ($isDone = 0) do={
+					:set pos [:find $tData $find];
+					:if ([:typeof $pos] = "num") do={
+						:set rData ($rData.[:pick $tData 0 $pos].$replace);
+						:set tData [:pick $tData ($pos + $fLen) $rLen];
+						:set rLen [:len $tData];
+					} else={
+						:set rData ($rData.$tData);
+						:set isDone 1;
+					}
+				}
+				:set tData $rData;
+			}
+
+			[:execute script=$tData file=([($MtmFacts->"getMtmObjFile")])];
 			
 			:if ($MtmFacts->"debug" = true) do={
 				[($MtmFacts->"setDebugMsg") ("Waiting for object: ".$instanceId)];
@@ -53,7 +87,7 @@
 			:local tCount 50;
 			:while ($tCount > 0) do={
 			
-				:if ([($MtmCache->"isEmpty") ($storeObj->$instanceId)] = false) do= {
+				:if (($storeObj->$instanceId) != nil) do= {
 					:set tCount 0;
 				} else={
 					:if ($tCount > 1) do={
@@ -88,9 +122,24 @@
 		:if ($0 = nil) do={
 			[($MtmFacts->"throwException") method=$method msg="Input class unique id is mandatory"];
 		}
-		:local hashTool [($MtmFacts->"execute") nsStr="getTools()->getHashing()->getMD5()"];
-		:local oHash [($hashTool->"hash") $0];
-		
+
+		:local oHash "";
+		:if ($0 = "fact-tools" || $0 = "fact-tool-hashing" || $0 = "tool-strings") do={
+			##these hashes are in the path for getting the hash tool
+			:if ($0 = "fact-tools") do={
+				:set oHash "ffffffffffffffffffffffffffffffff";
+			}
+			:if ($0 = "fact-tool-hashing") do={
+				:set oHash "fffffffffffffffffffffffffffffffe";
+			}
+			:if ($0 = "tool-strings") do={
+				:set oHash "fffffffffffffffffffffffffffffffd";
+			}
+		} else={
+			:local hashTool [($MtmFacts->"execute") nsStr="getTools()->getHashing()->getMD5()"];
+			:set oHash [($hashTool->"hash") $0];
+		}
+
 		:local stores {"0"=0;"1"=1;"2"=2;"3"=3;"4"=4;"5"=5;"6"=6;"7"=7;"8"=8;"9"=9;"a"=10;"b"=11;"c"=12;"d"=13;"e"=14;"f"=15};
 		:local sId ($stores->([:pick $oHash 1]));
 		:local rObj [:toarray ""];

@@ -26,15 +26,19 @@
 	
 	#core factories
 	:global MtmF;
-	:set MtmF [:toarray "init"];
+	:set MtmF [:toarray ""];
+	
+	#static methods too large for partial loading, e.g. md5 hashing
+	:global MtmSM0;
+	:set MtmSM0 [:toarray ""];
 
 	#apps
 	:global MtmA;
-	:set MtmA [:toarray "init"];
+	:set MtmA [:toarray ""];
 
 	#system
 	:global MtmS;
-	:set MtmS [:toarray "init"];
+	:set MtmS [:toarray ""];
 	
 	:set ($s->"setDebug") do={
 		:global MtmFacts;
