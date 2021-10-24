@@ -123,23 +123,26 @@
 			[($MtmFacts->"throwException") method=$method msg="Input class unique id is mandatory"];
 		}
 
+		:local hashLen 6; ## dont want to waste memory, also don want collisions. 16M "should be a big enough keyspace?"
 		:local oHash "";
 		:if ($0 = "fact-tools" || $0 = "fact-tool-hashing" || $0 = "tool-strings") do={
 			##these hashes are in the path for getting the hash tool
+			##cant use the hash tool, as the intermediaries will be stood up by this function
 			:if ($0 = "fact-tools") do={
-				:set oHash "ffffffffffffffffffffffffffffffff";
+				:set oHash "afffffffffffffffffffffffffffffff";
 			}
 			:if ($0 = "fact-tool-hashing") do={
-				:set oHash "fffffffffffffffffffffffffffffffe";
+				:set oHash "bfffffffffffffffffffffffffffffff";
 			}
 			:if ($0 = "tool-strings") do={
-				:set oHash "fffffffffffffffffffffffffffffffd";
+				:set oHash "cfffffffffffffffffffffffffffffff";
 			}
 		} else={
 			:local hashTool [($MtmFacts->"execute") nsStr="getTools()->getHashing()->getMD5()"];
 			:set oHash [($hashTool->"hash") $0];
 		}
-
+		:set oHash [:pick $oHash 0 $hashLen];
+		
 		:local stores {"0"=0;"1"=1;"2"=2;"3"=3;"4"=4;"5"=5;"6"=6;"7"=7;"8"=8;"9"=9;"a"=10;"b"=11;"c"=12;"d"=13;"e"=14;"f"=15};
 		:local sId ($stores->([:pick $oHash 1]));
 		:local rObj [:toarray ""];
