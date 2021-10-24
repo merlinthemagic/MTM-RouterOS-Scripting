@@ -7,196 +7,10 @@
 :if (($MtmT->$classId) = nil) do={
 	
 	:local s [:toarray ""];
-	:set ($s->"srcFiles") [:toarray ""];
-	:set ($s->"jobs") [:toarray ""];
-	:set ($s->"busy") false;
-	:set ($s->"count") 0;
-
-	:set ($s->"getInstanceV1") do={
-	
-		:global MtmFacts;
-		:global MtmCache;
-		:local method "Facts->Tools->Objects->getInstanceV1";
-		:if ($paths = nil) do={
-			[($MtmFacts->"throwException") method=$method msg="Paths are mandatory"];
-		}
-		:if ($id = nil) do={
-			[($MtmFacts->"throwException") method=$method msg="Id is mandatory"];
-		}
-		:if ($classId = nil) do={
-			[($MtmFacts->"throwException") method=$method msg="ClassId is mandatory"];
-		}
-		
-		:local storeId ""; ## default store
-		:if ($objCacheId != nil) do={
-			:set storeId $objCacheId;
-		}
-		:local objStore;
-		:if ($storeId = "") do={
-			:global MtmO;
-			:set objStore $MtmO;
-		}
-		:if ($storeId = 1) do={
-			:global MtmO1;
-			:set objStore $MtmO1;
-		}
-		:if ($storeId = 2) do={
-			:global MtmO2;
-			:set objStore $MtmO2;
-		}
-		:if ($storeId = 3) do={
-			:global MtmO3;
-			:set objStore $MtmO3;
-		}
-		:if (($objStore->$classId) = nil) do={
-		
-			##setup the job
-			:local self [($MtmFacts->"execute") nsStr="getTools()->getObjects()"];
-			:local jObjs ($self->"jobs");
-			:if ([($MtmCache->"isEmpty") ($jObjs->$classId)] = true) do= {
-				
-				:local jobObj [:toarray ""];
-				:set ($jobObj->"paths") [:toarray ""];
-				:set ($jobObj->"storeId") ("MtmO".$storeId);
-				:set ($jobObj->"classId") $classId;
-				:set ($jobObj->"id") $id;
-				:set ($jobObj->"size") 0;
-				
-				:local mtmPath [($MtmFacts->"getMtmPath")];
-				:local pCount 0;
-				:foreach path in=$paths do={
-					:set ($jobObj->"paths"->$pCount) ($mtmPath.$path);
-					:set pCount ($pCount + 1);
-				}
-				:set ($jObjs->$classId) $jobObj;
-				
-				:if (($self->"busy") = false) do={
-					:set ($self->"busy") true;
-					:local scr (":global MtmFacts;\r\n");
-					:set scr ($scr.":local sObj [(\$MtmFacts->\"execute\") nsStr=\"getTools()->getObjects()\"];\r\n");
-					:set scr ($scr."[(\$sObj->\"doProcess\")];\r\n");
-					[:execute script=$scr file=([($MtmFacts->"getMtmNullFile")])];
-					
-					##debug
-					#[($self->"doProcess")];
-				}
-			}
-			
-			:if ($MtmFacts->"debug" = true) do={
-				[($MtmFacts->"setDebugMsg") ("Waiting for object: ".$classId)];
-			}
-			:local tCount 50;
-			:while ($tCount > 0) do={
-			
-				:if ([($MtmCache->"isEmpty") ($objStore->$classId)] = false) do= {
-					:set tCount 0;
-				} else={
-					:if ($tCount > 1) do={
-						:set tCount ($tCount - 1);
-						:delay 0.25s;
-					} else={
-						:local log ("Waiting for class to instanciate: '$classId' did not finish in time");
-						:if ($MtmFacts->"debug" = true) do={
-							[($MtmFacts->"setDebugMsg") $log];
-						}
-						[($MtmFacts->"throwException") method=$method msg=$log];
-					}
-				}
-			}
-		}
-		:if ($MtmFacts->"debug" = true) do={
-			[($MtmFacts->"setDebugMsg") ("Object is ready: ".$classId.", ".[:typeof ($objStore->$classId)])];
-		}
-		:return ($objStore->$classId);
-	}
-	:set ($s->"getInstanceV2") do={
-	
-		:global MtmFacts;
-		:global MtmCache;
-		:local method "Facts->Tools->Objects->getInstanceV2";
-		
-		:if ($0 = nil) do={
-			[($MtmFacts->"throwException") method=$method msg="Paths are mandatory"];
-		}
-		:if ($1 = nil) do={
-			[($MtmFacts->"throwException") method=$method msg="Object id is mandatory"];
-		}
-		:if ($2 = nil) do={
-			[($MtmFacts->"throwException") method=$method msg="Instance id is mandatory"];
-		}
-		:if ($3 = nil) do={
-			[($MtmFacts->"throwException") method=$method msg="Store obj is mandatory"];
-		}
-		:if ($4 = nil) do={
-			[($MtmFacts->"throwException") method=$method msg="store id is mandatory"];
-		}
-		
-		:local paths $0;
-		:local objId $1;
-		:local instanceId $2;
-		:local storeObj $3;
-		:local storeId $4;
-		
-		:if (($storeObj->$instanceId) = nil) do={
-		
-			##setup the job
-			:local self [($MtmFacts->"execute") nsStr="getTools()->getObjects()"];
-			:local jObjs ($self->"jobs");
-			:if ([($MtmCache->"isEmpty") ($jObjs->$instanceId)] = true) do= {
-				
-				:local jobObj [:toarray ""];
-				:set ($jobObj->"paths") $paths;
-				:set ($jobObj->"storeId") $storeId;
-				:set ($jobObj->"classId") $instanceId;
-				:set ($jobObj->"id") $objId;
-				:set ($jobObj->"size") 0;
-
-				:set ($jObjs->$instanceId) $jobObj;
-				
-				:if (($self->"busy") = false) do={
-					:set ($self->"busy") true;
-					:local scr (":global MtmFacts;\r\n");
-					:set scr ($scr.":local sObj [(\$MtmFacts->\"execute\") nsStr=\"getTools()->getObjects()\"];\r\n");
-					:set scr ($scr."[(\$sObj->\"doProcess\")];\r\n");
-					[:execute script=$scr file=([($MtmFacts->"getMtmNullFile")])];
-					
-					##debug
-					#[($self->"doProcess")];
-				}
-			}
-			
-			:if ($MtmFacts->"debug" = true) do={
-				[($MtmFacts->"setDebugMsg") ("Waiting for object: ".$instanceId)];
-			}
-			:local tCount 50;
-			:while ($tCount > 0) do={
-			
-				:if ([($MtmCache->"isEmpty") ($storeObj->$instanceId)] = false) do= {
-					:set tCount 0;
-				} else={
-					:if ($tCount > 1) do={
-						:set tCount ($tCount - 1);
-						:delay 0.25s;
-					} else={
-						:local log ("Waiting for class to instanciate: '$instanceId' did not finish in time");
-						:if ($MtmFacts->"debug" = true) do={
-							[($MtmFacts->"setDebugMsg") $log];
-						}
-						[($MtmFacts->"throwException") method=$method msg=$log];
-					}
-				}
-			}
-		}
-		:if ($MtmFacts->"debug" = true) do={
-			[($MtmFacts->"setDebugMsg") ("Object is ready: ".$instanceId.", ".[:typeof ($storeObj->$instanceId)])];
-		}
-		:return ($storeObj->$instanceId);
-	}
 	:set ($s->"getInstanceV3") do={
 	
 		##templates
 		:global MtmFacts;
-		:global MtmCache;
 		:local method "Facts->Tools->Objects->getInstanceV3";
 		
 		:if ($0 = nil) do={
@@ -222,22 +36,12 @@
 		
 		:if (($storeObj->$instanceId) = nil) do={
 			:local tData "";
-			:local srcHash "";
-			:local hashTool [($MtmFacts->"execute") nsStr="getTools()->getHashing()->getMD5()"];
-			:local fsTool "";
-			:local self [($MtmFacts->"execute") nsStr="getTools()->getObjects()"];
-			:local srcFiles ($self->"srcFiles");
+			:local fsTool [($MtmFacts->"execute") nsStr="getTools()->getFiles()"];
 			:foreach path in=$paths do={
-				:set srcHash [($hashTool->"hash") $path];
-				:if (($srcFiles->$srcHash) = nil) do={
-					:if ($fsTool = "") do={
-						:set fsTool [($MtmFacts->"execute") nsStr="getTools()->getFiles()"];
-					}
-					:set ($srcFiles->$srcHash) [($fsTool->"getContent") $path];
-				}
 				##add a line break after each file, makes our life easier than tons or errors because file ends in a "}"
-				:set tData ($tData."\n".($srcFiles->$srcHash));
+				:set tData ($tData."\n".([($fsTool->"getContent") $path]));
 			}
+			:global MtmCache;
 			:set tData [($MtmCache->"strReplace") str=$tData find="|MTMD|" replace=$objId];
 			:set tData [($MtmCache->"strReplace") str=$tData find="|MTMC|" replace=$instanceId];
 			:set tData [($MtmCache->"strReplace") str=$tData find="|MTMS|" replace=$storeName];
@@ -264,124 +68,172 @@
 					}
 				}
 			}
+			:if ($MtmFacts->"debug" = true) do={
+				[($MtmFacts->"setDebugMsg") ("Object is ready: ".$instanceId)];
+			}
+		} else={
+			:if ($MtmFacts->"debug" = true) do={
+				[($MtmFacts->"setDebugMsg") ("Object exists: ".$instanceId)];
+			}
 		}
-		:if ($MtmFacts->"debug" = true) do={
-			[($MtmFacts->"setDebugMsg") ("Object is ready: ".$instanceId)];
-		}
+		
 		:return ($storeObj->$instanceId);
 	}
-	:set ($s->"doProcess") do={
-
-		:global MtmFacts;
-		:local logHead (" RosEvent:");
-		:local method "Facts->Tools->Objects->doProcess";
+	:set ($s->"getStore") do={
 		
-		:do {
-			
-			:local self [($MtmFacts->"execute") nsStr="getTools()->getObjects()"];
-	
-			#build a script that will loop over the instance files and add them all to a new bigger file
-			:local scr (":global MtmFacts;\r\n");
-			:set scr ($scr.":global MtmCache;\r\n");
-			:set scr ($scr.":local jObj [(\$MtmFacts->\"getMtmTempVar\")];\r\n");
-			:set scr ($scr.":do {\r\n");
-			:set scr ($scr.":local fTool [(\$MtmFacts->\"execute\") nsStr=\"getTools()->getFiles()\"];\r\n");
-			:set scr ($scr.":local size 0;\r\n");
-			:set scr ($scr.":local content \"\";\r\n");
-			:set scr ($scr.":foreach path in=(\$jObj->\"paths\") do={\r\n");
-			:set scr ($scr.":set content ([(\$fTool->\"getContent\") path=\$path].\"\\n\");\r\n");
-			:set scr ($scr.":set content [(\$MtmCache->\"strReplace\") str=\$content find=\"|MTMD|\" replace=(\$jObj->\"id\")];\r\n");
-			:set scr ($scr.":set content [(\$MtmCache->\"strReplace\") str=\$content find=\"|MTMC|\" replace=(\$jObj->\"classId\")];\r\n");
-			:set scr ($scr.":set content [(\$MtmCache->\"strReplace\") str=\$content find=\"|MTMS|\" replace=(\$jObj->\"storeId\")];\r\n");
-			:set scr ($scr.":set size (\$size + [:len \$content] + 2);\r\n");
-			:set scr ($scr.":put (\$content);\r\n");
-			:set scr ($scr."}\r\n");
-			:set scr ($scr.":set (\$jObj->\"size\") \$size;\r\n");
-			:set scr ($scr."} on-error={\r\n");
-			:set scr ($scr."/file set mtmErr.txt content=(\"Error instanciating class: \".(\$jObj->\"classId\"));\r\n");
-			:set scr ($scr.":set (\$jObj->\"size\") -1;\r\n");
-			:set scr ($scr."}\r\n");
-			
-			#load the tools so we dont get "Script file loaded and executed successfully" junk in the output
-			:local fsTool [($MtmFacts->"execute") nsStr="getTools()->getFiles()"];
-	
-			:local tCount 0;
-			:local cSize 0;
-			:local tSize 0;
-			:local isDone false;
-			:local classId;
-			:local jObjs;
-			:local jobId;
-			:local outFile [($MtmFacts->"getMtmObjFile")];
-			
-			:while ($isDone = false) do={
-			
-				:set jObjs ($self->"jobs");
-				:if ([:len $jObjs] > 0) do={
-				
-					:foreach index,jobObj in=$jObjs do={
-	
-						##we have to jump through alot of hoops to make large objects
-						#the file size limitation screws us unless we use the logging function of :execute to append a file
-						:set classId ($jobObj->"classId");
-
-						##set the script job data
-						[($MtmFacts->"setMtmTempVar") $jobObj];
-
-						## zero out the file
-						[($fsTool->"setContent") $outFile ""];
-
-						#trigger the script
-						:set jobId [:execute script=$scr file=$outFile];
-
-						#wait for the slow ass i/o to catch up
-						:set tCount 75;
-						:set cSize 0;
-						:set tSize;
-						:while ($tCount > 0) do={
-						
-							:set tCount ($tCount - 1);
-							:if ($tCount > 0) do={
-								:delay 0.2s;
-							} else={
-								[($MtmFacts->"throwException") method=$method msg=("Failed to instanciate object of class: '".$classId."' in time") logFile=true];
-							}
-							
-							#did the script complete and give us the final size of the output file?
-							:if ($tSize = nil && ($jobObj->"size") > 0) do={
-								:set tSize ($jobObj->"size");
-								:if ($tSize < 0) do={
-									:local errMsg [($fsTool->"getContent") ([($MtmFacts->"getMtmErrFile")])];
-									[($MtmFacts->"throwException") method=$method msg=("instanciating object of class: '".$classId."' ended in exception. Msg: '".$errMsg."'") logFile=true];
-								}
-							}
-							:if ($tSize != nil) do={
-								#wait for the file to grow to the right size
-								:set cSize [($fsTool->"getSize") $outFile];
-								:if ($tSize = $cSize) do={
-									:set tCount 0; #success
-								}
-							}
-						}
-
-						#import the large instance file
-						[($MtmFacts->"importFile") $outFile];
-						:set ($self->"jobs"->$index);
-					}
-					
-				} else={
-					## done
-					:set ($self->"busy") false;
-					:set isDone true;
-				}
+		##get stores from here if you want to distribute objects across a bunch of globals
+		##once a global gets to ~$40-70Kb overflows seem to happen and unpredictable results ensue
+		:global MtmFacts;
+		:local method "Facts->Tools->Objects->getStoreByHash";
+		:if ($0 = nil) do={
+			[($MtmFacts->"throwException") method=$method msg="Input class unique id is mandatory"];
+		}
+		:local hashTool [($MtmFacts->"execute") nsStr="getTools()->getHashing()->getMD5()"];
+		:local oHash [($hashTool->"hash") $0];
+		
+		:local stores {"0"=0;"1"=1;"2"=2;"3"=3;"4"=4;"5"=5;"6"=6;"7"=7;"8"=8;"9"=9;"a"=10;"b"=11;"c"=12;"d"=13;"e"=14;"f"=15};
+		:local sId ($stores->([:pick $oHash 1]));
+		:local rObj [:toarray ""];
+		:set ($rObj->"hash") $oHash;
+		:set ($rObj->"name") ("MtmOs".$sId);
+		
+		:if ($sId = 0) do={
+			:global MtmOs0;
+			:if ($MtmOs0 = nil) do={
+				:set MtmOs0 [:toarray ""];
 			}
-			
-		} on-error={
-			:set ($self->"busy") false;
-			:log error ($logHead." '".$method."' ended in exception");
+			:set ($rObj->"obj") $MtmOs0;
+			:return $rObj;
+		}
+		:if ($sId = 1) do={
+			:global MtmOs1;
+			:if ($MtmOs1 = nil) do={
+				:set MtmOs1 [:toarray ""];
+			}
+			:set ($rObj->"obj") $MtmOs1;
+			:return $rObj;
+		}
+		:if ($sId = 2) do={
+			:global MtmOs2;
+			:if ($MtmOs2 = nil) do={
+				:set MtmOs2 [:toarray ""];
+			}
+			:set ($rObj->"obj") $MtmOs2;
+			:return $rObj;
+		}
+		:if ($sId = 3) do={
+			:global MtmOs3;
+			:if ($MtmOs3 = nil) do={
+				:set MtmOs3 [:toarray ""];
+			}
+			:set ($rObj->"obj") $MtmOs3;
+			:return $rObj;
+		}
+		:if ($sId = 4) do={
+			:global MtmOs4;
+			:if ($MtmOs4 = nil) do={
+				:set MtmOs4 [:toarray ""];
+			}
+			:set ($rObj->"obj") $MtmOs4;
+			:return $rObj;
+		}
+		:if ($sId = 5) do={
+			:global MtmOs5;
+			:if ($MtmOs5 = nil) do={
+				:set MtmOs5 [:toarray ""];
+			}
+			:set ($rObj->"obj") $MtmOs5;
+			:return $rObj;
+		}
+		:if ($sId = 6) do={
+			:global MtmOs6;
+			:if ($MtmOs6 = nil) do={
+				:set MtmOs6 [:toarray ""];
+			}
+			:set ($rObj->"obj") $MtmOs6;
+			:return $rObj;
+		}
+		:if ($sId = 7) do={
+			:global MtmOs7;
+			:if ($MtmOs7 = nil) do={
+				:set MtmOs7 [:toarray ""];
+			}
+			:set ($rObj->"obj") $MtmOs7;
+			:return $rObj;
+		}
+		:if ($sId = 8) do={
+			:global MtmOs8;
+			:if ($MtmOs8 = nil) do={
+				:set MtmOs8 [:toarray ""];
+			}
+			:set ($rObj->"obj") $MtmOs8;
+			:return $rObj;
+		}
+		:if ($sId = 9) do={
+			:global MtmOs9;
+			:if ($MtmOs9 = nil) do={
+				:set MtmOs9 [:toarray ""];
+			}
+			:set ($rObj->"obj") $MtmOs9;
+			:return $rObj;
+		}
+		:if ($sId = 10) do={
+			:global MtmOs10;
+			:if ($MtmOs10 = nil) do={
+				:set MtmOs10 [:toarray ""];
+			}
+			:set ($rObj->"obj") $MtmOs10;
+			:return $rObj;
+		}
+		:if ($sId = 11) do={
+			:global MtmOs11;
+			:if ($MtmOs11 = nil) do={
+				:set MtmOs11 [:toarray ""];
+			}
+			:set ($rObj->"obj") $MtmOs11;
+			:return $rObj;
+		}
+		:if ($sId = 12) do={
+			:global MtmOs12;
+			:if ($MtmOs12 = nil) do={
+				:set MtmOs12 [:toarray ""];
+			}
+			:set ($rObj->"obj") $MtmOs12;
+			:return $rObj;
+		}
+		:if ($sId = 13) do={
+			:global MtmOs13;
+			:if ($MtmOs13 = nil) do={
+				:set MtmOs13 [:toarray ""];
+			}
+			:set ($rObj->"obj") $MtmOs13;
+			:return $rObj;
+		}
+		:if ($sId = 14) do={
+			:global MtmOs14;
+			:if ($MtmOs14 = nil) do={
+				:set MtmOs14 [:toarray ""];
+			}
+			:set ($rObj->"obj") $MtmOs14;
+			:return $rObj;
+		}
+		:if ($sId = 15) do={
+			:global MtmOs15;
+			:if ($MtmOs15 = nil) do={
+				:set MtmOs15 [:toarray ""];
+			}
+			:set ($rObj->"obj") $MtmOs15;
+			:return $rObj;
 		}
 		
-		:return 0;
+		##catch all if the hash is moronic
+		:set ($rObj->"name") "MtmOsCA";
+		:global MtmOsCA;
+		:if ($MtmOsCA = nil) do={
+			:set MtmOsCA [:toarray ""];
+		}
+		:set ($rObj->"obj") $MtmOsCA;
+		:return $rObj;
 	}
 	:set ($MtmT->$classId) $s;
 }

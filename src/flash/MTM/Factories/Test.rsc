@@ -1,7 +1,8 @@
-:global MtmFacts;
-:set MtmFacts;
+:if ([:len [/system script environment find]] > 0) do={
+	/system script environment remove [ find ];
+}
 /import flash/MTM/Facts.rsc;
+:global MtmFacts;
 
-:local nsStr "getTools()->getTime()->getEpoch()->getCurrent()";
-:local result [($MtmFacts->"execute") nsStr=$nsStr];
+:local result [($MtmFacts->"execute") nsStr="getTools()->getTime()->getEpoch()->getCurrent()"];
 :put ("Current Epoch: ".$result); #epoch time

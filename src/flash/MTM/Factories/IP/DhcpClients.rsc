@@ -14,19 +14,16 @@
 		:if ($0 = nil) do={
 			[($MtmFacts->"throwException") method=$method msg="Id is mandatory"];
 		}
-		:global MtmO3;
-		:local classId ("mtm-ip-dhcp-cli-".$0);
-		:if ($MtmO3->$classId = nil) do={
-		
+		:local objTool [($MtmFacts->"execute") nsStr="getTools()->getObjects()"];
+		:local sObj [($objTool->"getStore") ("mtm-ip-dhcp-cli-".$0)];
+		:if ($sObj->"obj"->($sObj->"hash") = nil) do={
 			:local paths [:toarray ""];
 			:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Models/Base.rsc");
 			:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Models/IP/DHCP/Client/Base.rsc");
 			:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Models/Zstance.rsc");
-
-			:local objTool [($MtmFacts->"execute") nsStr="getTools()->getObjects()"];
-			:return [($objTool->"getInstanceV3") $paths $classId $0 $MtmO3 "MtmO3"];
+			:return [($objTool->"getInstanceV3") $paths ($sObj->"hash") $0 ($sObj->"obj") ($sObj->"name")];
 		}
-		:return ($MtmO3->$classId);
+		:return ($sObj->"obj"->($sObj->"hash"));
 	}
 	:set ($s->"getAll") do={
 		:global MtmFacts;
