@@ -2,6 +2,13 @@
 
 
 :if ([:len [/system script environment find]] > 0) do={
+	:local eName;
+	:local eVal;
+	:foreach id in=[/system script environment find] do={
+		:set eName [/system script environment get $id name];
+		:set eVal [/system script environment get $id value];
+		:put ($eName." :".[:len $eVal]);
+	}
 	/system script environment remove [ find ];
 }
 

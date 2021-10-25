@@ -82,7 +82,7 @@
 			[:execute script=$tData file=([($MtmFacts->"getMtmObjFile")])];
 			
 			:if ($MtmFacts->"debug" = true) do={
-				[($MtmFacts->"setDebugMsg") ("Waiting for object: ".$instanceId)];
+				[($MtmFacts->"setDebugMsg") ("Waiting for object: ".$instanceId.", in store: ".$storeName)];
 			}
 			:local tCount 50;
 			:while ($tCount > 0) do={
@@ -129,13 +129,13 @@
 			##these hashes are in the path for getting the hash tool
 			##cant use the hash tool, as the intermediaries will be stood up by this function
 			:if ($0 = "fact-tools") do={
-				:set oHash "afffffffffffffffffffffffffffffff";
+				:set oHash "6d731b135858b24c62ab7d595f9af669";
 			}
 			:if ($0 = "fact-tool-hashing") do={
-				:set oHash "bfffffffffffffffffffffffffffffff";
+				:set oHash "9782a6f3a3b12b734e36716516125898";
 			}
 			:if ($0 = "tool-strings") do={
-				:set oHash "cfffffffffffffffffffffffffffffff";
+				:set oHash "e3e5d224eac0aed9590c9c86bfddce29";
 			}
 		} else={
 			:local hashTool [($MtmFacts->"execute") nsStr="getTools()->getHashing()->getMD5()"];
@@ -148,6 +148,10 @@
 		:local rObj [:toarray ""];
 		:set ($rObj->"hash") $oHash;
 		:set ($rObj->"name") ("MtmOs".$sId);
+		
+		:if ($MtmFacts->"debug" = true) do={
+			[($MtmFacts->"setDebugMsg") ("ID: '".$0."' assigned hash: '".$oHash."' in store: ".($rObj->"name"))];
+		}
 		
 		:if ($sId = 0) do={
 			:global MtmOs0;

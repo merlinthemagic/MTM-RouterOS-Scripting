@@ -39,7 +39,7 @@
 	#system
 	:global MtmS;
 	:set MtmS [:toarray ""];
-	
+
 	:set ($s->"setDebug") do={
 		:global MtmFacts;
 		:local enable;

@@ -1,4 +1,3 @@
-:set ($s->"jobs") [:toarray ""];
 :set ($s->"addJob") do={
 
 	#this method will store the data for the trigger to process but not kick off the trigger
@@ -9,8 +8,7 @@
 	:if ($0 = nil || $1 = nil || $2 = nil || $3 = nil || $4 = nil || $5 = nil) do={
 		[($MtmFacts->"throwException") method=$method msg=("Url, data, timeout, min-pause, method and data type are mandatory inputs")];
 	}
-	:global |MTMS|;
-	:local self ($|MTMS|->"|MTMC|");
+	
 	:local jObj [:toarray ""];
 	:set ($jObj->"url") $0;  #url
 	:set ($jObj->"data") $1;  #data
@@ -20,9 +18,10 @@
 	:set ($jObj->"dataType") $5;  #dataType
 	:set ($jObj->"lastTrigger") 0; #last attempt at sending the data
 
-	:local counter ([:len ($self->"jobs")]);
-	:set ($self->"jobs"->$counter) $jObj;
-	
+	:global MtmStore;
+	:local jStore [($MtmStore->"getStore") "fetchJobs"];
+	:local counter ([:len ($jStore->"data")]);
+	:set ($jStore->"data"->$counter) $jObj;
 	:return 1;
 }
 :set ($s->"newJob") do={
@@ -43,9 +42,9 @@
 	:global MtmCache;
 	:local method "Utility->Fetch->Upload->trigger";
 	
-	:global |MTMS|;
-	:local self ($|MTMS|->"|MTMC|");
-	:local cJobs ($self->"jobs");
+	:global MtmStore;
+	:local jStore [($MtmStore->"getStore") "fetchJobs"];
+	:local cJobs ($jStore->"data");
 	:if ([:len $cJobs] > 0) do={
 		:local rJobs [:toarray ""];
 		:local rId 0;
@@ -85,13 +84,13 @@
 			}
 		}
 		#set the remaining jobs for next run
-		:set ($self->"jobs") $rJobs;
+		:set ($jStore->"data") $rJobs;
 	}
 	
 	:return 1;
 }
 :set ($s->"getJobCount") do={
-	:global |MTMS|;
-	:local self ($|MTMS|->"|MTMC|");
-	:return [:len ($self->"jobs")];
+	:global MtmStore;
+	:local jStore [($MtmStore->"getStore") "fetchJobs"];
+	:return [:len ($jStore->"data")];
 }
