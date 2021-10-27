@@ -22,7 +22,6 @@
 		:if ([:pick $1 7 11] < 2000) do={
 			[($MtmFacts->"throwException") method=$method msg="We cannot handle dates before the year 2000"];
 		}
-
 		#days elapsed since beginning of year at start of month
 		:local d {"jan"=0;"feb"=31;"mar"=60;"apr"=91;"may"=121;"jun"=152;"jul"=182;"aug"=213;"sep"=244;"oct"=274;"nov"=305;"dec"=335}
 		:set d ($d->[:pick $1 0 3]);
@@ -37,7 +36,12 @@
 		#add the hours, min and secs
 		:set d ($d + ([:pick $1 12 14] * 60 * 60) + ([:pick $1 15 17] * 60) + [:pick $1 18 20]);
 		#add jan 1s 2000 in unix, and subtract the offset to gmt for our timezone
-		:return ($d + 946684800 - [/system clock get gmt-offset]);
+		:set d ($d + 946684800 - [/system clock get gmt-offset]);
+		:if ($d < 1) do={
+			##happens when the GMT offset is not UTC?
+			[($MtmFacts->"throwException") method=$method msg=("Failed to produce epoch: ".$d)];
+		}
+		:return $d;
 	}
 	[($MtmFacts->"throwException") method=$method msg=("Invalid format: '".$0."'")];
 }
