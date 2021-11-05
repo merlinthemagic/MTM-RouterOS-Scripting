@@ -151,7 +151,7 @@
 			:set ($MtmOFC->$0) {"hash"=$oHash;"sid"=($stores->([:pick $oHash 1]))};
 			
 			:if ($MtmFacts->"debug" = true) do={
-				[($MtmFacts->"setDebugMsg") ("ID: '".$0."' assigned hash: '".($rObj->"hash")."' in store: '".($rObj->"name")."'")];
+				[($MtmFacts->"setDebugMsg") ("ID: '".$0."' assigned hash: '".($MtmOFC->$0->"hash")."' in store ID: '".($MtmOFC->$0->"sid")."'")];
 			}
 		}
 	
