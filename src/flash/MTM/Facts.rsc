@@ -28,6 +28,10 @@
 	:global MtmF;
 	:set MtmF [:toarray ""];
 	
+	#Object factory cache
+	:global MtmOFC;
+	:set MtmOFC [:toarray ""];
+	
 	#static methods too large for partial loading, e.g. md5 hashing
 	:global MtmSM0;
 	:set MtmSM0 [:toarray ""];
@@ -173,6 +177,7 @@
 		:global MtmFacts;
 		:local method "MtmFacts->execute";
 		:if ($nsStr = nil) do={
+			##this is sometimes a problem if the script you are executing is not wrapped in { } 
 			[($MtmFacts->"throwException") method=$method msg="Name space string is mandatory" logFile=true];
 		}
 		:local curObj $MtmFacts;

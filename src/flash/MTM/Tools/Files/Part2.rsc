@@ -39,7 +39,7 @@
 	
 	#wait for the right size
 	[($self->"waitForSize") $param1 $newSize 1600];
-	:return 0;
+	:return false;
 }
 :set ($s->"getSize") do={
 
@@ -94,7 +94,7 @@
 			}
 		}
 	}
-	:return 0;
+	:return false;
 }
 :set ($s->"waitForExists") do={
 
@@ -127,5 +127,5 @@
 			}
 		}
 	}
-	:return 0;
+	:return false;
 }

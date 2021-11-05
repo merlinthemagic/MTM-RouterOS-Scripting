@@ -57,9 +57,8 @@
 	
 	:if ([:len [/file find where name=$param1]] > 0) do={
 		:return true;
-	} else={
-		:return false;
 	}
+	:return false;
 }
 :set ($s->"create") do={
 
@@ -84,7 +83,7 @@
 		[($self->"waitForExists") $param1 true 1500];
 	}
 	#dont return anything yet, might wanna return a file object at some point
-	:return 0;
+	:return false;
 }
 :set ($s->"delete") do={
 
@@ -105,7 +104,7 @@
 		[($self->"waitForExists") $param1 false 1500];
 	}
 	#dont return anything yet
-	:return 0;
+	:return false;
 }
 :set ($s->"getContent") do={
 
@@ -138,7 +137,6 @@
 			}
 		}
 
-	} else={
-		:return [/file get [find where name=$param1] content];
 	}
+	:return [/file get [find where name=$param1] content];
 }

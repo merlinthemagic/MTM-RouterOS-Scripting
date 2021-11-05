@@ -123,37 +123,46 @@
 			[($MtmFacts->"throwException") method=$method msg="Input class unique id is mandatory"];
 		}
 
-		:local hashLen 6; ## dont want to waste memory, also don want collisions. 16M "should be a big enough keyspace?"
-		:local oHash "";
-		:if ($0 = "fact-tools" || $0 = "fact-tool-hashing" || $0 = "tool-strings") do={
-			##these hashes are in the path for getting the hash tool
-			##cant use the hash tool, as the intermediaries will be stood up by this function
-			:if ($0 = "fact-tools") do={
-				:set oHash "6d731b135858b24c62ab7d595f9af669";
+		:global MtmOFC;
+		:if (($MtmOFC->$0) = nil) do={
+			:local oHash "";
+			:if ($0 = "fact-tools" || $0 = "fact-tool-hashing" || $0 = "tool-strings") do={
+				##these hashes are in the path for getting the hash tool
+				##cant use the hash tool, as the intermediaries will be stood up by this function
+				:if ($0 = "fact-tools") do={
+					:set oHash "6d731b135858b24c62ab7d595f9af669";
+				}
+				:if ($0 = "fact-tool-hashing") do={
+					:set oHash "9782a6f3a3b12b734e36716516125898";
+				}
+				:if ($0 = "tool-strings") do={
+					:set oHash "e3e5d224eac0aed9590c9c86bfddce29";
+				}
+			} else={
+				:local hashTool [($MtmFacts->"execute") nsStr="getTools()->getHashing()->getMD5()"];
+				:set oHash [($hashTool->"hash") $0];
 			}
-			:if ($0 = "fact-tool-hashing") do={
-				:set oHash "9782a6f3a3b12b734e36716516125898";
+			## dont want to waste memory, also don want collisions. 16M "should" be a big enough keyspace?
+			:local hashLen 6;
+			:set oHash [:pick $oHash 0 $hashLen];
+			
+			##Consider checking the store size and allocating based on that metric rather than using the hash
+			:local stores {"0"=0;"1"=1;"2"=2;"3"=3;"4"=4;"5"=5;"6"=6;"7"=7;"8"=8;"9"=9;"a"=10;"b"=11;"c"=12;"d"=13;"e"=14;"f"=15};
+			:set ($MtmOFC->$0) {"hash"=$oHash;"sid"=($stores->([:pick $oHash 1]))};
+			
+			:if ($MtmFacts->"debug" = true) do={
+				[($MtmFacts->"setDebugMsg") ("ID: '".$0."' assigned hash: '".($rObj->"hash")."' in store: '".($rObj->"name")."'")];
 			}
-			:if ($0 = "tool-strings") do={
-				:set oHash "e3e5d224eac0aed9590c9c86bfddce29";
-			}
-		} else={
-			:local hashTool [($MtmFacts->"execute") nsStr="getTools()->getHashing()->getMD5()"];
-			:set oHash [($hashTool->"hash") $0];
 		}
-		:set oHash [:pick $oHash 0 $hashLen];
-		
-		:local stores {"0"=0;"1"=1;"2"=2;"3"=3;"4"=4;"5"=5;"6"=6;"7"=7;"8"=8;"9"=9;"a"=10;"b"=11;"c"=12;"d"=13;"e"=14;"f"=15};
-		:local sId ($stores->([:pick $oHash 1]));
+	
 		:local rObj [:toarray ""];
-		:set ($rObj->"hash") $oHash;
-		:set ($rObj->"name") ("MtmOs".$sId);
+		:set ($rObj->"hash") ($MtmOFC->$0->"hash");
+		:set ($rObj->"sid") ($MtmOFC->$0->"sid");
+		:set ($rObj->"name") ("MtmOs".($MtmOFC->$0->"sid"));
+
+		##Consider using [:parse ] below in the future, this will allow us to set an arbirary store count
 		
-		:if ($MtmFacts->"debug" = true) do={
-			[($MtmFacts->"setDebugMsg") ("ID: '".$0."' assigned hash: '".$oHash."' in store: ".($rObj->"name"))];
-		}
-		
-		:if ($sId = 0) do={
+		:if (($rObj->"sid") = 0) do={
 			:global MtmOs0;
 			:if ($MtmOs0 = nil) do={
 				:set MtmOs0 [:toarray ""];
@@ -161,7 +170,7 @@
 			:set ($rObj->"obj") $MtmOs0;
 			:return $rObj;
 		}
-		:if ($sId = 1) do={
+		:if (($rObj->"sid") = 1) do={
 			:global MtmOs1;
 			:if ($MtmOs1 = nil) do={
 				:set MtmOs1 [:toarray ""];
@@ -169,7 +178,7 @@
 			:set ($rObj->"obj") $MtmOs1;
 			:return $rObj;
 		}
-		:if ($sId = 2) do={
+		:if (($rObj->"sid") = 2) do={
 			:global MtmOs2;
 			:if ($MtmOs2 = nil) do={
 				:set MtmOs2 [:toarray ""];
@@ -177,7 +186,7 @@
 			:set ($rObj->"obj") $MtmOs2;
 			:return $rObj;
 		}
-		:if ($sId = 3) do={
+		:if (($rObj->"sid") = 3) do={
 			:global MtmOs3;
 			:if ($MtmOs3 = nil) do={
 				:set MtmOs3 [:toarray ""];
@@ -185,7 +194,7 @@
 			:set ($rObj->"obj") $MtmOs3;
 			:return $rObj;
 		}
-		:if ($sId = 4) do={
+		:if (($rObj->"sid") = 4) do={
 			:global MtmOs4;
 			:if ($MtmOs4 = nil) do={
 				:set MtmOs4 [:toarray ""];
@@ -193,7 +202,7 @@
 			:set ($rObj->"obj") $MtmOs4;
 			:return $rObj;
 		}
-		:if ($sId = 5) do={
+		:if (($rObj->"sid") = 5) do={
 			:global MtmOs5;
 			:if ($MtmOs5 = nil) do={
 				:set MtmOs5 [:toarray ""];
@@ -201,7 +210,7 @@
 			:set ($rObj->"obj") $MtmOs5;
 			:return $rObj;
 		}
-		:if ($sId = 6) do={
+		:if (($rObj->"sid") = 6) do={
 			:global MtmOs6;
 			:if ($MtmOs6 = nil) do={
 				:set MtmOs6 [:toarray ""];
@@ -209,7 +218,7 @@
 			:set ($rObj->"obj") $MtmOs6;
 			:return $rObj;
 		}
-		:if ($sId = 7) do={
+		:if (($rObj->"sid") = 7) do={
 			:global MtmOs7;
 			:if ($MtmOs7 = nil) do={
 				:set MtmOs7 [:toarray ""];
@@ -217,7 +226,7 @@
 			:set ($rObj->"obj") $MtmOs7;
 			:return $rObj;
 		}
-		:if ($sId = 8) do={
+		:if (($rObj->"sid") = 8) do={
 			:global MtmOs8;
 			:if ($MtmOs8 = nil) do={
 				:set MtmOs8 [:toarray ""];
@@ -225,7 +234,7 @@
 			:set ($rObj->"obj") $MtmOs8;
 			:return $rObj;
 		}
-		:if ($sId = 9) do={
+		:if (($rObj->"sid") = 9) do={
 			:global MtmOs9;
 			:if ($MtmOs9 = nil) do={
 				:set MtmOs9 [:toarray ""];
@@ -233,7 +242,7 @@
 			:set ($rObj->"obj") $MtmOs9;
 			:return $rObj;
 		}
-		:if ($sId = 10) do={
+		:if (($rObj->"sid") = 10) do={
 			:global MtmOs10;
 			:if ($MtmOs10 = nil) do={
 				:set MtmOs10 [:toarray ""];
@@ -241,7 +250,7 @@
 			:set ($rObj->"obj") $MtmOs10;
 			:return $rObj;
 		}
-		:if ($sId = 11) do={
+		:if (($rObj->"sid") = 11) do={
 			:global MtmOs11;
 			:if ($MtmOs11 = nil) do={
 				:set MtmOs11 [:toarray ""];
@@ -249,7 +258,7 @@
 			:set ($rObj->"obj") $MtmOs11;
 			:return $rObj;
 		}
-		:if ($sId = 12) do={
+		:if (($rObj->"sid") = 12) do={
 			:global MtmOs12;
 			:if ($MtmOs12 = nil) do={
 				:set MtmOs12 [:toarray ""];
@@ -257,7 +266,7 @@
 			:set ($rObj->"obj") $MtmOs12;
 			:return $rObj;
 		}
-		:if ($sId = 13) do={
+		:if (($rObj->"sid") = 13) do={
 			:global MtmOs13;
 			:if ($MtmOs13 = nil) do={
 				:set MtmOs13 [:toarray ""];
@@ -265,7 +274,7 @@
 			:set ($rObj->"obj") $MtmOs13;
 			:return $rObj;
 		}
-		:if ($sId = 14) do={
+		:if (($rObj->"sid") = 14) do={
 			:global MtmOs14;
 			:if ($MtmOs14 = nil) do={
 				:set MtmOs14 [:toarray ""];
@@ -273,7 +282,7 @@
 			:set ($rObj->"obj") $MtmOs14;
 			:return $rObj;
 		}
-		:if ($sId = 15) do={
+		:if (($rObj->"sid") = 15) do={
 			:global MtmOs15;
 			:if ($MtmOs15 = nil) do={
 				:set MtmOs15 [:toarray ""];

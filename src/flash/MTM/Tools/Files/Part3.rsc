@@ -42,7 +42,7 @@
 			:set lastSize $curSize;
 		}
 	}
-	:return 0;
+	:return false;
 }
 :set ($s->"join") do={
 
@@ -78,5 +78,5 @@
 	[($toolObj->"waitForSize") $param2 $sumSize 1500];
 
 	#dont return anything yet, might wanna return a file object at some point
-	:return 0;
+	:return false;
 }
