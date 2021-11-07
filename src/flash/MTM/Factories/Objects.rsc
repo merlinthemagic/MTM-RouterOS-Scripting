@@ -146,12 +146,11 @@
 			}
 			## dont want to waste memory, also don want collisions. 16M "should" be a big enough keyspace?
 			:local hashLen 6;
+			:local storChars 1;
 			:set oHash [:pick $oHash 0 $hashLen];
 			
-			##Consider checking the store size and allocating based on that metric rather than using the hash
-			:local stores {"0"=0;"1"=1;"2"=2;"3"=3;"4"=4;"5"=5;"6"=6;"7"=7;"8"=8;"9"=9;"a"=10;"b"=11;"c"=12;"d"=13;"e"=14;"f"=15};
-			:set ($MtmOFC->$0) {"hash"=$oHash;"sid"=($stores->([:pick $oHash 1]))};
-			
+			##Consider checking the store size and allocating based on that metric rather than just using the hash
+			:set ($MtmOFC->$0) {"hash"=$oHash;"sid"=([:pick $oHash 0 $storChars])};
 			:if ($MtmFacts->"debug" = true) do={
 				[($MtmFacts->"setDebugMsg") ("ID: '".$0."' assigned hash: '".($MtmOFC->$0->"hash")."' in store ID: '".($MtmOFC->$0->"sid")."'")];
 			}
@@ -162,144 +161,10 @@
 		:set ($rObj->"sid") ($MtmOFC->$0->"sid");
 		:set ($rObj->"name") ("MtmOs".($MtmOFC->$0->"sid"));
 
-		##Consider using [:parse ] below in the future, this will allow us to set an arbirary store count
-		
-		:if (($rObj->"sid") = 0) do={
-			:global MtmOs0;
-			:if ($MtmOs0 = nil) do={
-				:set MtmOs0 [:toarray ""];
-			}
-			:set ($rObj->"obj") $MtmOs0;
-			:return $rObj;
-		}
-		:if (($rObj->"sid") = 1) do={
-			:global MtmOs1;
-			:if ($MtmOs1 = nil) do={
-				:set MtmOs1 [:toarray ""];
-			}
-			:set ($rObj->"obj") $MtmOs1;
-			:return $rObj;
-		}
-		:if (($rObj->"sid") = 2) do={
-			:global MtmOs2;
-			:if ($MtmOs2 = nil) do={
-				:set MtmOs2 [:toarray ""];
-			}
-			:set ($rObj->"obj") $MtmOs2;
-			:return $rObj;
-		}
-		:if (($rObj->"sid") = 3) do={
-			:global MtmOs3;
-			:if ($MtmOs3 = nil) do={
-				:set MtmOs3 [:toarray ""];
-			}
-			:set ($rObj->"obj") $MtmOs3;
-			:return $rObj;
-		}
-		:if (($rObj->"sid") = 4) do={
-			:global MtmOs4;
-			:if ($MtmOs4 = nil) do={
-				:set MtmOs4 [:toarray ""];
-			}
-			:set ($rObj->"obj") $MtmOs4;
-			:return $rObj;
-		}
-		:if (($rObj->"sid") = 5) do={
-			:global MtmOs5;
-			:if ($MtmOs5 = nil) do={
-				:set MtmOs5 [:toarray ""];
-			}
-			:set ($rObj->"obj") $MtmOs5;
-			:return $rObj;
-		}
-		:if (($rObj->"sid") = 6) do={
-			:global MtmOs6;
-			:if ($MtmOs6 = nil) do={
-				:set MtmOs6 [:toarray ""];
-			}
-			:set ($rObj->"obj") $MtmOs6;
-			:return $rObj;
-		}
-		:if (($rObj->"sid") = 7) do={
-			:global MtmOs7;
-			:if ($MtmOs7 = nil) do={
-				:set MtmOs7 [:toarray ""];
-			}
-			:set ($rObj->"obj") $MtmOs7;
-			:return $rObj;
-		}
-		:if (($rObj->"sid") = 8) do={
-			:global MtmOs8;
-			:if ($MtmOs8 = nil) do={
-				:set MtmOs8 [:toarray ""];
-			}
-			:set ($rObj->"obj") $MtmOs8;
-			:return $rObj;
-		}
-		:if (($rObj->"sid") = 9) do={
-			:global MtmOs9;
-			:if ($MtmOs9 = nil) do={
-				:set MtmOs9 [:toarray ""];
-			}
-			:set ($rObj->"obj") $MtmOs9;
-			:return $rObj;
-		}
-		:if (($rObj->"sid") = 10) do={
-			:global MtmOs10;
-			:if ($MtmOs10 = nil) do={
-				:set MtmOs10 [:toarray ""];
-			}
-			:set ($rObj->"obj") $MtmOs10;
-			:return $rObj;
-		}
-		:if (($rObj->"sid") = 11) do={
-			:global MtmOs11;
-			:if ($MtmOs11 = nil) do={
-				:set MtmOs11 [:toarray ""];
-			}
-			:set ($rObj->"obj") $MtmOs11;
-			:return $rObj;
-		}
-		:if (($rObj->"sid") = 12) do={
-			:global MtmOs12;
-			:if ($MtmOs12 = nil) do={
-				:set MtmOs12 [:toarray ""];
-			}
-			:set ($rObj->"obj") $MtmOs12;
-			:return $rObj;
-		}
-		:if (($rObj->"sid") = 13) do={
-			:global MtmOs13;
-			:if ($MtmOs13 = nil) do={
-				:set MtmOs13 [:toarray ""];
-			}
-			:set ($rObj->"obj") $MtmOs13;
-			:return $rObj;
-		}
-		:if (($rObj->"sid") = 14) do={
-			:global MtmOs14;
-			:if ($MtmOs14 = nil) do={
-				:set MtmOs14 [:toarray ""];
-			}
-			:set ($rObj->"obj") $MtmOs14;
-			:return $rObj;
-		}
-		:if (($rObj->"sid") = 15) do={
-			:global MtmOs15;
-			:if ($MtmOs15 = nil) do={
-				:set MtmOs15 [:toarray ""];
-			}
-			:set ($rObj->"obj") $MtmOs15;
-			:return $rObj;
-		}
-		
-		##catch all if the hash is moronic
-		:set ($rObj->"name") "MtmOsCA";
-		:global MtmOsCA;
-		:if ($MtmOsCA = nil) do={
-			:set MtmOsCA [:toarray ""];
-		}
-		:set ($rObj->"obj") $MtmOsCA;
+		##By Using [:parse ] below it allows us to set an arbirary store count in the future
+		:local gName ($rObj->"name");
+		:local gObj [:parse (":global ".$gName."; :if (\$".$gName." = nil) do={ :set ".$gName." [:toarray \"\"] }; :return \$".$gName)];
+		:set ($rObj->"obj") [$gObj];
 		:return $rObj;
 	}
 	:set ($MtmF->$classId) $s;
