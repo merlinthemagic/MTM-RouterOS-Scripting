@@ -69,7 +69,7 @@
 		:if ($MtmS->$classId = nil) do={
 			:global MtmFacts;
 			:local path ([($MtmFacts->"getMtmPath")]."Factories/System.rsc");
-			[($MtmFacts->"importFile") $path];
+			:local result [($MtmFacts->"importFile") $path];
 		}
 		:return ($MtmS->$classId);
 	}
@@ -79,7 +79,7 @@
 		:if ($MtmF->$classId = nil) do={
 			:global MtmFacts;
 			:local path ([($MtmFacts->"getMtmPath")]."Factories/Objects.rsc");
-			[($MtmFacts->"importFile") $path];
+			:local result [($MtmFacts->"importFile") $path];
 		}
 		:return ($MtmF->$classId);
 	}
@@ -321,6 +321,7 @@
 			[($MtmFacts->"setDebugMsg") ("Initiating file import: ".$path)];
 			/import file-name=$path;
 			[($MtmFacts->"setDebugMsg") ("Completed file import: ".$path."\n")];
+			:return true;
 		} else={
 		
 			#delegate job to sub process
@@ -342,8 +343,8 @@
 					}
 				}
 			}
+			:return true;
 		}
-		:return 1;
 	}
 	:set ($s->"setDebugMsg") do={
 		:put ("Debug: ".$0);
@@ -436,6 +437,7 @@
 	## try removing the {} and all the sudden "Tools->Fetch->Upload->postJson" is called throught the upload class
 	## I do not yet understand it, might be when a method has no return (create used to not return anything)
 	:local fsTool;
+	:local result;
 	{
 		##create temp files
 		:set fsTool [($s->"execute") nsStr="getTools()->getFiles()"];
@@ -453,7 +455,7 @@
 		:global MtmCache;
 		:set MtmCache;
 		:set path ([($s->"getMtmPath")]."Cache.rsc");
-		[($s->"importFile") $path];
+		:set result [($s->"importFile") $path];
 	}
 	
 	{
@@ -461,6 +463,26 @@
 		:global MtmStore;
 		:set MtmStore;
 		:set path ([($s->"getMtmPath")]."Store.rsc");
-		[($s->"importFile") $path];
+		:set result [($s->"importFile") $path];
+	}
+	
+	{
+		##cache/store are launched async, make sure they are ready before we give the go ahead
+		:global MtmCache;
+		:global MtmStore;
+		:local tCount 50;
+		:while ($tCount > 0) do={
+			:if ($MtmCache != nil && $MtmStore != nil) do={
+				:set tCount 0;
+			} else={
+				:if ($tCount > 1) do={
+					:set tCount ($tCount - 1);
+					:delay 0.25s;
+				} else={
+					:set MtmFacts;
+					:error ("MtmCache and/or MtmStore failed to init in time");
+				}
+			}
+		}
 	}
 }

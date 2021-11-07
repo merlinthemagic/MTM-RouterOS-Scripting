@@ -37,9 +37,9 @@
 		:set d ($d + ([:pick $1 12 14] * 60 * 60) + ([:pick $1 15 17] * 60) + [:pick $1 18 20]);
 		#add jan 1s 2000 in unix, and subtract the offset to gmt for our timezone
 		:set d ($d + 946684800 - [/system clock get gmt-offset]);
-		:if ($d < 1) do={
-			##happens when the GMT offset is not UTC?
-			[($MtmFacts->"throwException") method=$method msg=("Failed to produce epoch: ".$d)];
+		:if ($d < 946684800) do={
+			##Epoch less than the year 2000, happens when the GMT offset is not UTC? 
+			[($MtmFacts->"throwException") method=$method msg=("Failed to produce correct epoch: ".$d)];
 		}
 		:return $d;
 	}

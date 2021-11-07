@@ -46,7 +46,7 @@
 	:local jStore [($MtmStore->"getStore") "fetchJobs"];
 	:local cJobs ($jStore->"data");
 	:if ([:len $cJobs] > 0) do={
-		:local rJobs [:toarray ""];
+		:set ($jStore->"data") [:toarray ""];
 		:local rId 0;
 		:local throw true;
 		:local cTime;
@@ -63,18 +63,18 @@
 							#success
 						} on-error={
 							#failed
-							:set ($rJobs->$rId) $jObj;
-							:set rId ($rId + 1);
+							:set rId [:len ($jStore->"data")];
+							:set ($jStore->"data"->$rId) $jObj;
 						}
+
 					} else={
 						[($MtmFacts->"throwException") method=$method msg=("Method: '".$jObj->"method"."' and dataType: '".$jObj->"dataType"."' not handled")];
 					}
 				} else= {
-					
 					:if (($jObj->"lastTrigger" + $jObj->"pause") < $jObj->"timeout") do={
 						#job should not be attempted again so soon
-						:set ($rJobs->$rId) $jObj;
-						:set rId ($rId + 1);
+						:set rId [:len ($jStore->"data")];
+						:set ($jStore->"data"->$rId) $jObj;
 					} else={
 						#job will expire before the next retry, no point in storing it
 					}
@@ -83,11 +83,8 @@
 				#job expired, drop
 			}
 		}
-		#set the remaining jobs for next run
-		:set ($jStore->"data") $rJobs;
 	}
-	
-	:return 1;
+	:return true;
 }
 :set ($s->"getJobCount") do={
 	:global MtmStore;

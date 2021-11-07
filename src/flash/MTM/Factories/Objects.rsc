@@ -54,6 +54,8 @@
 			:local fLen;
 			:local rLen;
 			:local pos;
+			:local result;
+			:local log "";
 			
 			:local strReps [:toarray ""];
 			:set ($strReps->"|MTMD|") $objId;
@@ -79,7 +81,7 @@
 				:set tData $rData;
 			}
 
-			[:execute script=$tData file=([($MtmFacts->"getMtmObjFile")])];
+			:set result [:execute script=$tData file=([($MtmFacts->"getMtmObjFile")])];
 			
 			:if ($MtmFacts->"debug" = true) do={
 				[($MtmFacts->"setDebugMsg") ("Waiting for object: ".$instanceId.", in store: ".$storeName)];
@@ -94,7 +96,7 @@
 						:set tCount ($tCount - 1);
 						:delay 0.25s;
 					} else={
-						:local log ("Waiting for class to instanciate: '$instanceId' did not finish in time");
+						:set log ("Waiting for class to instanciate: '$instanceId' did not finish in time");
 						:if ($MtmFacts->"debug" = true) do={
 							[($MtmFacts->"setDebugMsg") $log];
 						}
