@@ -15,8 +15,9 @@
 :local url "https://www.example.net/Path/EndPoint.php";  #required
 :local data [:toarray "my,data,and,objects"]; #required, can be array or already parsed json string
 :local throw false; #optional, throws on error, defaults to false
+:local port 443; #optional, defaults to 443 for https and 80 for http
 
-:local result [($toolObj->"postJson") url=$url data=$data throw=$throw];
+:local result [($toolObj->"postJson") url=$url data=$data throw=$throw port=$port];
 :put ($result); #"result array from fetch";
 ```
 

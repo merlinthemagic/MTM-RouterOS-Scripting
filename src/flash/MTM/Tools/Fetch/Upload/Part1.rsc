@@ -5,6 +5,7 @@
 	:local param1; #url
 	:local param2; #data
 	:local param3; #throw
+	:local param4; #port
 	:if ($0 != nil) do={
 		:set param1 $0;
 		:if ($1 != nil) do={
@@ -12,6 +13,9 @@
 		}
 		:if ($2 != nil) do={
 			:set param3 $2;
+		}
+		:if ($3 != nil) do={
+			:set param4 $3;
 		}
 	} else={
 		:if ($url != nil) do={
@@ -21,6 +25,9 @@
 			}
 			:if ($throw != nil) do={
 				:set param3 $throw;
+			}
+			:if ($port != nil) do={
+				:set param4 $port;
 			}
 		} else={
 			[($MtmFacts->"throwException") method=$method msg="Url is mandatory"];
@@ -49,10 +56,16 @@
 	:local scheme;
 	:if ([:find $param1 "https://"] = 0) do={
 		:set scheme "https";
+		:if ($param4 = nil) do={
+			:set param4 443;
+		}
 	}
 	:if ($scheme = nil) do={
 		:if ([:find $param1 "http://"] = 0) do={
 			:set scheme "http";
+			:if ($param4 = nil) do={
+				:set param4 80;
+			}
 		}
 	}
 	:if ($scheme = nil) do={
@@ -61,10 +74,10 @@
 	
 	:local result;
 	:if ($scheme = "https") do={
-		:set result [/tool fetch check-certificate=yes mode=https url=$param1 http-header-field="Content-Type: application/json" http-method=post http-data="$param2" output=none as-value];
+		:set result [/tool fetch check-certificate=yes mode=https port=$param4 url=$param1 http-header-field="Content-Type: application/json" http-method=post http-data="$param2" output=none as-value];
 	}
 	:if ($scheme = "http") do={
-		:set result [/tool fetch mode=http url=$param1 http-header-field="Content-Type: application/json" http-method=post http-data="$param2" output=none as-value];
+		:set result [/tool fetch mode=http port=$param4 url=$param1 http-header-field="Content-Type: application/json" http-method=post http-data="$param2" output=none as-value];
 	}
 	:if ($result->"status" = "finished") do={
 		:return $result;
