@@ -17,7 +17,6 @@
 	:if ($2 != nil) do={
 		:set param3 $2;
 	}
-	
 	:local lastSize;
 	:local curSize 0;
 	:local stableCount 0;
@@ -78,5 +77,5 @@
 	[($toolObj->"waitForSize") $param2 $sumSize 1500];
 
 	#dont return anything yet, might wanna return a file object at some point
-	:return false;
+	:return 0;
 }

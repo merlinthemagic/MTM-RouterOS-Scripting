@@ -55,7 +55,7 @@
 	}
 	
 	#wait for the file size to settle
-	[($fileTool->"waitForStableSize") $tmpFile];
+	:local result [($fileTool->"waitForStableSize") $tmpFile];
 	:local mData [($fileTool->"getContent") $tmpFile];
 
 	:local parseTool [($MtmFacts->"execute") nsStr="getTools()->getParsing()->getWlanScan()"];
