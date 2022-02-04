@@ -22,6 +22,6 @@
 :local format "m/d/Y h:i:s";
 :local time "jul/27/2019 09:37:24";
 
-:local result [($toolObj->"getFromFormat") format='$format' time='$time'];
+:local result [($toolObj->"getFromFormat") $format $time];
 :put ($result); #"1564220244";
 ```
