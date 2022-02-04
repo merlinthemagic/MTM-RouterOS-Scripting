@@ -22,10 +22,11 @@
 		:if ([:pick $1 7 11] < 2000) do={
 			[($MtmFacts->"throwException") method=$method msg="We cannot handle dates before the year 2000"];
 		}
+		:local m [:pick $1 0 3];
 		#days elapsed since beginning of year at start of month
 		:local d {"jan"=0;"feb"=31;"mar"=60;"apr"=91;"may"=121;"jun"=152;"jul"=182;"aug"=213;"sep"=244;"oct"=274;"nov"=305;"dec"=335}
-		:set d ($d->[:pick $1 0 3]);
-		:if (($d != "jan" && $d != "feb") && (([:pick $1 9 11] - 1) / 4) = ([:pick $1 9 11] / 4)) do={
+		:set d ($d->$m);
+		:if (($m != "jan" && $m != "feb") && (([:pick $1 9 11] - 1) / 4) = ([:pick $1 9 11] / 4)) do={
 			##its past feb in a non leap year, so feb only had 28 days
 			:set d ($d - 1);
 		}
