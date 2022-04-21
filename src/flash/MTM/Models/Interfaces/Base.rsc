@@ -9,10 +9,27 @@
 	:return [/interface get |MTMD| mac-address];
 }
 :set ($s->"getMTU") do={
-	:return [/interface get |MTMD| mtu];
+	:return [:tonum [/interface get |MTMD| mtu]];
+}
+:set ($s->"setMTU") do={
+	:global MtmFacts;
+	:if ([:typeof $0] != "num") do={
+		[($MtmFacts->"throwException") method="Interfaces->Base->setMTU" msg="MTU must be a number"];
+	}
+	:return [/interface set |MTMD| mtu=$0];
 }
 :set ($s->"getL2MTU") do={
-	:return [/interface get |MTMD| l2mtu];
+	:return [:tonum [/interface get |MTMD| l2mtu]];
+}
+:set ($s->"setL2MTU") do={
+	:global MtmFacts;
+	:if ([:typeof $0] != "num") do={
+		[($MtmFacts->"throwException") method="Interfaces->Base->setL2MTU" msg="L2-MTU must be a number"];
+	}
+	:return [/interface set |MTMD| l2mtu=$0];
+}
+:set ($s->"getMaxL2MTU") do={
+	:return [:tonum [/interface get |MTMD| max-l2mtu]];
 }
 :set ($s->"getComment") do={
 	:return [/interface get |MTMD| comment];
