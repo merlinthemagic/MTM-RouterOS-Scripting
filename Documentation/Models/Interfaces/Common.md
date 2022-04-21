@@ -45,11 +45,34 @@ Common methods for all interface types
 :put ($result); #number e.g. 1500
 ```
 
+### setMTU:
+
+```
+:local val 1500;
+:local result [($ifObj->"setMTU") $val];
+:put ($result); #nil
+```
+
 ### getL2MTU:
 
 ```
 :local result [($ifObj->"getL2MTU")];
 :put ($result); #number e.g. 1594
+```
+
+### getMaxL2MTU:
+
+```
+:local result [($ifObj->"getMaxL2MTU")];
+:put ($result); #number e.g. 10218
+```
+
+### setL2MTU:
+
+```
+:local val 9214;
+:local result [($ifObj->"setL2MTU") $val];
+:put ($result); #nil
 ```
 
 ### getDisabled:
