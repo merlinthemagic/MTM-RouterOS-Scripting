@@ -2,6 +2,9 @@
 :global MtmSM0; ##too large cant split
 :if (($MtmSM0->$classId) = nil) do={
 
+	#todo: escape special chars: /\"\'\b\f\t\r\n.
+	#todo: deal with boolean datatypes
+	
 	:local s [:toarray ""];
 	:set ($s->"getFromString") do={
 	
