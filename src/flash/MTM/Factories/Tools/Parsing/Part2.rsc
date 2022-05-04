@@ -40,3 +40,13 @@
 	}
 	:return ($sObj->"obj"->($sObj->"hash"));
 }
+:set ($s->"getJsonDecode") do={
+	:global MtmSM0;
+	:local classId "tool-parsing-json-dec";
+	:if ($MtmSM0->$classId = nil) do={
+		:global MtmFacts;
+		:local path ([($MtmFacts->"getMtmPath")]."Tools/Parsing/JsonDecode/Full.rsc");
+		[($MtmFacts->"importFile") $path];
+	}
+	:return ($MtmSM0->$classId);
+}

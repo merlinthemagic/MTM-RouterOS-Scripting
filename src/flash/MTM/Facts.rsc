@@ -32,7 +32,7 @@
 	:global MtmOFC;
 	:set MtmOFC [:toarray ""];
 	
-	#static methods too large for partial loading, e.g. md5 hashing
+	#static methods too large for partial loading, e.g. md5 hashing or json decode
 	:global MtmSM0;
 	:set MtmSM0 [:toarray ""];
 
