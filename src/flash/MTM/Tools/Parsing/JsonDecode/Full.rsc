@@ -107,6 +107,9 @@
 						
 						:if (($dP->"mode") = "val") do={
 							##capture last value, could be its not delimited by a \" e.g. a number
+							:if ([:tostr [:tonum ($dP->"val")]] = ($dP->"val")) do={
+								:set ($dP->"val") [:tonum ($dP->"val")];
+							}
 							:set ($dP->"vals"->($dP->"prop")) ($dP->"val");
 							:set ($dP->"mode") "";
 						}
@@ -181,12 +184,26 @@
 				}
 				:if ($isDone = false) do={
 					:if ($cCh = ",") do={
+						##is the current value we are gathering a number? that will not be bounded by a \"
 						:if (($dP->"mode") = "val" && ($dP->"valType") = "num") do={
-							:set ($dP->"vals"->($dP->"prop")) ($dP->"val");
+							:set ($dP->"vals"->($dP->"prop")) [:tonum ($dP->"val")];
 							:set ($dP->"prop") "";
 							:set ($dP->"val") "";
 							:set ($dP->"valType") "";
 							:set isDone true;
+						}
+						
+						:if ($isDone = false) do={
+							##is the next value a number? that will not be bounded by a \"
+							:if (($dP->"mode") = "" && $in < $lPos) do={
+								:set nCh ($cData->($in + 1));
+								:if ([:tostr [:tonum $nCh]] = $nCh) do={
+									##value is number so there will be no open/close quotes
+									:set ($dP->"mode") "val";
+									:set ($dP->"valType") "num";
+									:set isDone true;
+								}	
+							}
 						}
 					}
 				}

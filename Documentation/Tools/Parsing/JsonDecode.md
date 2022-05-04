@@ -36,7 +36,14 @@
 
 ##### simple array
 ```
-:local data "[\"alice\", \"bob\"]";
+:local data "[\"alice\",\"bob\"]";
 :local result [($toolObj->"getFromString") data=$data];
 :put ($result); #"alice;bob" indexed 0,1
+```
+
+##### array with mixed data types
+```
+:local data "[\"alice\",\"bob\",99]";
+:local result [($toolObj->"getFromString") data=$data];
+:put ($result); #"alice;bob;99" indexes 0,1 will be str, index 2 will be num 
 ```
