@@ -2,9 +2,6 @@
 
 /import flash/MTM/Facts.rsc;
 :global MtmFacts;
-
-[($MtmFacts->"setDebug") true];
-
 :local sTime [($MtmFacts->"execute") nsStr="getTools()->getTime()->getEpoch()->getCurrent()"];
 
 ##remove specific tool from cache
@@ -21,6 +18,8 @@
 :local rData "";
 :local expect "";
 :local result "";
+
+
 
 :set tId "simpleArray";
 :set input "[\"alice\",\"bob\",7]";
@@ -132,3 +131,6 @@
 :if ($expect != $result) do={
 	:error ("Error in test ID: '".$tId."', expected: '".$expect."' received: '".$result."'")
 }
+
+:local eTime [($MtmFacts->"execute") nsStr="getTools()->getTime()->getEpoch()->getCurrent()"];
+:put ("Success. Duration: ".$eTime-$sTime);
