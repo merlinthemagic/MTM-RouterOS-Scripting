@@ -187,6 +187,7 @@
 						##is the current value we are gathering a number? that will not be bounded by a \"
 						:if (($dP->"mode") = "val" && ($dP->"valType") = "num") do={
 							:set ($dP->"vals"->($dP->"prop")) [:tonum ($dP->"val")];
+							:set ($dP->"mode") "";
 							:set ($dP->"prop") "";
 							:set ($dP->"val") "";
 							:set ($dP->"valType") "";
