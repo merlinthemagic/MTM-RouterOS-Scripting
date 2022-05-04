@@ -1,6 +1,6 @@
 # An on demand loaded library of functions for ROS scripting
 
-100's of already built functions e.g. JSON encode, fetch API and string functions (trim, replace, split etc), get epoch.
+100's of already built functions e.g. JSON encode/decode, fetch API and string functions (trim, replace, split, chunk), get epoch etc.
 
 Breaks up functionallity into class like files, Auto loader like functionallity (lazy loader to save memory).
 
@@ -68,6 +68,24 @@ Note: If you want to expand/fix errors in the MTM classes then load MTM like so:
 
 ##...use MTM again
 ```
+
+If you only need to work on a single class then unload it like so:
+
+```
+:local sysId "tool-time-epoch"; ##names are in the factories
+
+##unload if set in hash store
+:local objFact [($MtmFacts->"getObjects")];
+:local sObj [($objFact->"getStore") $sysId];
+:set ($sObj->"obj"->($sObj->"hash"));
+
+##unload if set in large object store
+:global MtmSM0;
+:if (($MtmSM0->$sysId) != nil) do={
+	:set ($MtmSM0->$sysId);
+}
+```
+
 
 
 

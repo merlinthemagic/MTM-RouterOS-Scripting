@@ -67,7 +67,7 @@
 }
 
 
-:set tId "objectNestedArray";
+:set tId "objectWithNestedArray";
 :set input "{\"users\":[\"alice\",\"bob\"],\"count\":199,\"text\":\"helloWorld\"}";
 :set rData [($toolObj->"getFromString") $input];
 
