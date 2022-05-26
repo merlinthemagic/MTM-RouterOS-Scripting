@@ -45,3 +45,18 @@
 	}
 	:return ($sObj->"obj"->($sObj->"hash"));
 }
+:set ($s->"getLTE") do={
+	:global MtmFacts;
+	:local sysId "tool-ifs-lte";
+	:local objFact [($MtmFacts->"getObjects")];
+	:local sObj [($objFact->"getStore") $sysId];
+	:if ($sObj->"obj"->($sObj->"hash") = nil) do={
+		:local paths [:toarray ""];
+		:set ($paths->0) ([($MtmFacts->"getMtmPath")]."Tools/Base.rsc");
+		:set ($paths->1) ([($MtmFacts->"getMtmPath")]."Tools/Interfaces/Common/Part1.rsc");
+		:set ($paths->2) ([($MtmFacts->"getMtmPath")]."Tools/Interfaces/LTE/Part1.rsc");
+		:set ($paths->3) ([($MtmFacts->"getMtmPath")]."Tools/Zstance.rsc");
+		:return [($objFact->"getInstance") ($sObj->"obj") ($sObj->"name") $paths $sysId ($sObj->"hash")];
+	}
+	:return ($sObj->"obj"->($sObj->"hash"));
+}
