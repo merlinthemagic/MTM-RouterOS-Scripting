@@ -65,3 +65,15 @@
 	/ip dhcp-server set |MTMD| lease-time=([($toolObj->"fromSecondsV1") $0]);
 	:return true;
 }
+:set ($s->"getAddressPool") do={
+	:return [/ip dhcp-server get |MTMD| address-pool];
+}
+:set ($s->"setAddressPool") do={
+	:if ([:typeof $0] != "str") do={
+		:global MtmFacts;
+		:local method "Models->IP->DHCP->Server->setAddressPool";
+		[($MtmFacts->"throwException") method=$method msg="Invalid input"];
+	}
+	/ip dhcp-server set |MTMD| address-pool=$0;
+	:return true;
+}

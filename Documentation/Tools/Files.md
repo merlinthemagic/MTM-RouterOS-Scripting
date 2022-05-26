@@ -83,7 +83,7 @@ Note: adds a "\r\n" after the content of each input
 
 ### setFetchUser:
 
-Sets a service, port and credentials for a user able to fetch local files 
+Sets a service, port and credentials for a user able to fetch local files. Helps us load large local files > 4095 bytes
 
 ```
 :local uName "someUsername"; 

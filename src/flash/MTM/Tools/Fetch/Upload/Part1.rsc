@@ -79,11 +79,11 @@
 	:if ($scheme = "http") do={
 		:set result [/tool fetch mode=http port=$param4 url=$param1 http-header-field="Content-Type: application/json" http-method=post http-data="$param2" output=none as-value];
 	}
-	:if ($result->"status" = "finished") do={
+	:if (($result->"status") = "finished") do={
 		:return $result;
 	}
 	:if ($param3 = true) do={
-		[($MtmFacts->"throwException") method=$method msg=("Fetch completed with status: ".$result->"status")];
+		[($MtmFacts->"throwException") method=$method msg=("Fetch completed with status: ".($result->"status"))];
 	}
 	#default return result
 	:return $result;
