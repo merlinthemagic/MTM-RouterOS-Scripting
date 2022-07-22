@@ -5,8 +5,8 @@
 	:local mVal [($MtmFacts->"getEnv") "mtm.env.loaded" false];
 	:if ([:typeof $mVal] = "nil") do={
 		:set mVal [($MtmFacts->"setEnv") "mtm.root.path" "flash/MTM"];
-		:set mVal [($MtmFacts->"setEnv") "mtm.debug.enabled" true];
-		:set mVal [($MtmFacts->"setEnv") "mtm.env.loaded" true];
+		:set mVal [($MtmFacts->"setEnv") "mtm.debug.enabled" "false"];
+		:set mVal [($MtmFacts->"setEnv") "mtm.env.loaded" "true"];
 	}
 	
 } else={
