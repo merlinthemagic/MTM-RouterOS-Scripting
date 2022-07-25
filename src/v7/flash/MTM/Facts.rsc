@@ -142,39 +142,39 @@
 		:set mVal [($MtmFacts->"getEnv") "mtm.remote.save.enabled" false];
 		:if ($mVal = true) do={
 			:set dstPath [($MtmFacts->"getEnv") "mtm.remote.save.path" false];
-		}
-		:if ($dstPath = "") do={
+			:set dstPath ($dstPath.$0);
+		} else={
 			:set dstPath "remoteLoad.rsc";
-		} else={
-			:set dstPath ($dstPath."/".$0);
 		}
 		
-		:set mVal [:tostr [($MtmFacts->"getEnv") "mtm.remote.port" false]];
-		:if ($mVal = "") do={
-			:if (([($MtmFacts->"getEnv") "mtm.remote.host"]) ~ "^https") do={
-				:set port 443;
+		:if ($dstPath = "remoteLoad.rsc" || [:len [/file find where name=$dstPath]] = 0) do={
+			#file does not exist in the local cache, get it
+			:set mVal [:tostr [($MtmFacts->"getEnv") "mtm.remote.port" false]];
+			:if ($mVal = "") do={
+				:if (([($MtmFacts->"getEnv") "mtm.remote.host"]) ~ "^https") do={
+					:set port 443;
+				} else={
+					:set port 80;
+				}
 			} else={
-				:set port 80;
+				:set port $mVal;
 			}
-		} else={
-			:set port $mVal;
+			:if (([($MtmFacts->"getEnv") "mtm.remote.host"]) ~ "^https") do={
+				:set mode "https";
+				:set chkCert "no";
+			} else={
+				:set mode "http";
+				:set chkCert "no";
+			}
+			
+			:do {
+				:set mVal [/tool fetch check-certificate=$chkCert url=$url mode=$mode port=$port user="$user" password="$pass" http-method=get output=file as-value dst-path=$dstPath];
+				#success
+			} on-error={
+				##there is no error catching possible..
+				:error ($cPath.": Fetching '".$url."' to import file '".$0."' failed");
+			}
 		}
-		:if (([($MtmFacts->"getEnv") "mtm.remote.host"]) ~ "^https") do={
-			:set mode "https";
-			:set chkCert "no";
-		} else={
-			:set mode "http";
-			:set chkCert "no";
-		}
-		
-		:do {
-			:set mVal [/tool fetch check-certificate=$chkCert url=$url mode=$mode port=$port user="$user" password="$pass" http-method=get output=file as-value dst-path=$dstPath];
-			#success
-		} on-error={
-			##there is no error catching possible..
-			:error ($cPath.": Fetching '".$url."' to import file '".$0."' failed");
-		}
-		
 		:return [($MtmFacts->"importFile") $dstPath];
 	}
 	:set ($s->"get") do={
