@@ -10,7 +10,7 @@
 		##remote loading settings, this is where you can enable a device to download 
 		:set mVal [($MtmFacts->"setEnv") "mtm.remote.enabled" "true"]; ##allow fetching from remote server
 		:set mVal [($MtmFacts->"setEnv") "mtm.remote.host" "https://raw.githubusercontent.com"]; ##fetching from this remote server/fqdn
-		:set mVal [($MtmFacts->"setEnv") "mtm.remote.url" "/merlinthemagic/MTM-RouterOS-Scripting/main/src/v7"]; ##path on server to files (no leading or trailing / please)
+		:set mVal [($MtmFacts->"setEnv") "mtm.remote.url" "merlinthemagic/MTM-RouterOS-Scripting/main/src/v7"]; ##path on server to files (no leading or trailing / please)
 		:set mVal [($MtmFacts->"setEnv") "mtm.remote.port" ""]; ##remote port
 		:set mVal [($MtmFacts->"setEnv") "mtm.remote.user" ""]; ##remote basic auth username
 		:set mVal [($MtmFacts->"setEnv") "mtm.remote.pass" ""]; ##remote basic auth password

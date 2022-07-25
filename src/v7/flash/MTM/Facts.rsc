@@ -136,7 +136,7 @@
 		:set pass ([($MtmFacts->"getEnv") "mtm.remote.pass"]);
 		
 		:set url ($url.[($MtmFacts->"getEnv") "mtm.remote.host"]);
-		:set url ($url.[($MtmFacts->"getEnv") "mtm.remote.url"]);
+		:set url ($url."/".[($MtmFacts->"getEnv") "mtm.remote.url"]);
 		:set url ($url."/".$0);
 		
 		:set mVal [($MtmFacts->"getEnv") "mtm.remote.save.enabled" false];
