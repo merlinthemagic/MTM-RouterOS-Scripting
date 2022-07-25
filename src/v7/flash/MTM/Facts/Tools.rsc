@@ -21,7 +21,16 @@
 	}
 	:return ($MtmTools->"hashing");
 }
-
+:set ($s->"getJson") do={
+	:global MtmTools;
+	:if ([:typeof ($MtmTools->"json")] = "nothing") do={
+		:global MtmFacts;
+		:local mVal "";
+		:set mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Facts/Tools/Json.rsc");
+		:set mVal [($MtmFacts->"importFile") $mVal];
+	}
+	:return ($MtmTools->"json");
+}
 :global MtmTools;
 :set MtmTools [:toarray ""];
 

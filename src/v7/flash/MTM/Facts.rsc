@@ -75,15 +75,22 @@
 		:local mVal "";
 		
 		:if ([:len [/file find where name=$0]] = 0) do={
-			##file does not exist locally, try a remote load?
-			:set mVal [($MtmFacts->"importRemoteFile") $0];
+			
+			:set mVal [($MtmFacts->"getEnv") "mtm.remote.enabled" false];
+			:if ($mVal != true) do={
+				:error ($cPath.": Cannot import '".$0."' file does not exist locally and remote fetching is not enabled");
+			} else={
+				##file does not exist locally, try a remote load
+				:set mVal [($MtmFacts->"importRemoteFile") $0];
+			}
+			
 		} else= {
 			:set mVal [($MtmFacts->"getEnv") "mtm.debug.enabled" false];
 			:if ($mVal = true) do={
 				#debugging mode
-				[($MtmFacts->"echo") ("Starting file import: '".$0)];
+				[($MtmFacts->"echo") ("Starting file import: '".$0."'")];
 				/import file-name=$0 verbose=no;
-				[($MtmFacts->"echo") ("Completed file import: '".$0)];
+				[($MtmFacts->"echo") ("Completed file import: '".$0."'")];
 			} else={
 			
 				#delegate job to sub process
@@ -116,39 +123,59 @@
 		:if ([:len $0] = 0 || [:typeof $0] != "str") do={
 			:error ($cPath.": File path is mandatory, must be string value");
 		}
-		:local mVal "";
-		
-		:set mVal [($MtmFacts->"getEnv") "mtm.remote.enabled" false];
-		:if ($mVal != true) do={
-			:error ($cPath.": Cannot import '".$0."' file does not exist locally and remote fetching is not enabled");
-		}
-		
+		:local mVal "";		
+		:local dstPath "";
+		:local user "";
+		:local pass "";
 		:local url "";
+		:local port "";
+		:local mode "";
+		:local chkCert "";
+		
+		:set user ([($MtmFacts->"getEnv") "mtm.remote.user"]);
+		:set pass ([($MtmFacts->"getEnv") "mtm.remote.pass"]);
+		
 		:set url ($url.[($MtmFacts->"getEnv") "mtm.remote.host"]);
 		:set url ($url.[($MtmFacts->"getEnv") "mtm.remote.url"]);
 		:set url ($url."/".$0);
 		
-	#	$cmdStr		= "/tool fetch url=\"https://".$dacHost."/api/v1/Provisioning/Get/RouterOSv7/RpsInitial/".$devObj->getGuid()."/\"";
-#							$cmdStr		.= " port=".$dacPort." mode=https user=\"".getenv("dd-dac.api.user")."\"";
-#							$cmdStr		.= " password=\"".getenv("dd-dac.api.pass")."\"";
-#							$cmdStr		.= " http-method=get output=file as-value dst-path=flash/RPS/primary.rsc";
-
-
-		:put ($url);
-			:put ([:typeof $url]);
-			
-			:error ($cPath.": Cannot import '".$0."' file does not exist locally and remote fetching is not enabled");
-		:if ([:len [/file find where name=$0]] = 0) do={
-			##file does not exist locally, are we allowed to fetch from a remote host?
-			:set mVal [($MtmFacts->"getEnv") "mtm.remote.enabled" false];
-			:put ($mVal);
-			:put ([:typeof $mVal]);
-			:if ($mVal = true) do={
-				:put ("Contains Merlin");
-			} else={
-				:error ($cPath.": Cannot import '".$0."' file does not exist locally and remote fetching is not enabled");
-			}
+		:set mVal [($MtmFacts->"getEnv") "mtm.remote.save.enabled" false];
+		:if ($mVal = true) do={
+			:set dstPath [($MtmFacts->"getEnv") "mtm.remote.save.path" false];
 		}
+		:if ($dstPath = "") do={
+			:set dstPath "remoteLoad.rsc";
+		} else={
+			:set dstPath ($dstPath."/".$0);
+		}
+		
+		:set mVal [:tostr [($MtmFacts->"getEnv") "mtm.remote.port" false]];
+		:if ($mVal = "") do={
+			:if (([($MtmFacts->"getEnv") "mtm.remote.host"]) ~ "^https") do={
+				:set port 443;
+			} else={
+				:set port 80;
+			}
+		} else={
+			:set port $mVal;
+		}
+		:if (([($MtmFacts->"getEnv") "mtm.remote.host"]) ~ "^https") do={
+			:set mode "https";
+			:set chkCert "no";
+		} else={
+			:set mode "http";
+			:set chkCert "no";
+		}
+		
+		:do {
+			:set mVal [/tool fetch check-certificate=$chkCert url=$url mode=$mode port=$port user="$user" password="$pass" http-method=get output=file as-value dst-path=$dstPath];
+			#success
+		} on-error={
+			##there is no error catching possible..
+			:error ($cPath.": Fetching '".$url."' to import file '".$0."' failed");
+		}
+		
+		:return [($MtmFacts->"importFile") $dstPath];
 	}
 	:set ($s->"get") do={
 		

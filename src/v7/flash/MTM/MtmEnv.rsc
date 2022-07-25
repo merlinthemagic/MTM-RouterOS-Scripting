@@ -11,12 +11,12 @@
 		:set mVal [($MtmFacts->"setEnv") "mtm.remote.enabled" "true"]; ##allow fetching from remote server
 		:set mVal [($MtmFacts->"setEnv") "mtm.remote.host" "https://raw.githubusercontent.com"]; ##fetching from this remote server/fqdn
 		:set mVal [($MtmFacts->"setEnv") "mtm.remote.url" "/merlinthemagic/MTM-RouterOS-Scripting/main/src/v7"]; ##path on server to files (no trailing / please)
-		:set mVal [($MtmFacts->"setEnv") "mtm.remote.port" 443]; ##remote port
+		:set mVal [($MtmFacts->"setEnv") "mtm.remote.port" ""]; ##remote port
 		:set mVal [($MtmFacts->"setEnv") "mtm.remote.user" ""]; ##remote basic auth username
 		:set mVal [($MtmFacts->"setEnv") "mtm.remote.pass" ""]; ##remote basic auth password
 		
 		:set mVal [($MtmFacts->"setEnv") "mtm.remote.save.enabled" "false"]; ##save files to local path so fetching is not needed next time
-		:set mVal [($MtmFacts->"setEnv") "mtm.remote.save.path" "/MTM"]; ##path on local device to save files. Differs from the root allowing you to save in RAM if wanted files are then only fetched on reboot (no trailing / please)
+		:set mVal [($MtmFacts->"setEnv") "mtm.remote.save.path" ""]; ##path on local device to save files. Differs from the root allowing you to save in RAM if wanted files are then only fetched on reboot (no trailing / please)
 		
 		:set mVal [($MtmFacts->"setEnv") "mtm.env.loaded" "true"];
 	}
