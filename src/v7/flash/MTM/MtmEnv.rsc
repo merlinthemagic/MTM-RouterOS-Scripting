@@ -12,6 +12,7 @@
 		:set mVal [($MtmFacts->"setEnv") "mtm.remote.host" "https://raw.githubusercontent.com"]; ##fetching from this remote server/fqdn
 		:set mVal [($MtmFacts->"setEnv") "mtm.remote.url" "merlinthemagic/MTM-RouterOS-Scripting/main/src/v7"]; ##path on server to files (no leading or trailing / please)
 		:set mVal [($MtmFacts->"setEnv") "mtm.remote.port" ""]; ##remote port
+		:set mVal [($MtmFacts->"setEnv") "mtm.remote.cert.valid" "false"]; ##remote validate certificate, if true you must have the cert installed (only https relevant)
 		:set mVal [($MtmFacts->"setEnv") "mtm.remote.user" ""]; ##remote basic auth username
 		:set mVal [($MtmFacts->"setEnv") "mtm.remote.pass" ""]; ##remote basic auth password
 		

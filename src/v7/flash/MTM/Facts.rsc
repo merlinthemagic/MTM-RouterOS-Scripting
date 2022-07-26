@@ -160,8 +160,15 @@
 				:set port $mVal;
 			}
 			:if (([($MtmFacts->"getEnv") "mtm.remote.host"]) ~ "^https") do={
+				
 				:set mode "https";
-				:set chkCert "no";
+				:set mVal [($MtmFacts->"getEnv") "mtm.remote.cert.valid" false];
+				:if ($mVal = true) do={
+					:set chkCert "yes";
+				} else={
+					:set chkCert "no";
+				}
+
 			} else={
 				:set mode "http";
 				:set chkCert "no";

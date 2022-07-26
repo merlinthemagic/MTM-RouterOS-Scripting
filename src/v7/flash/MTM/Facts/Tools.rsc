@@ -31,6 +31,17 @@
 	}
 	:return ($MtmTools->"json");
 }
+:set ($s->"getJobs") do={
+	:global MtmTools;
+	:if ([:typeof ($MtmTools->"jobs")] = "nothing") do={
+		:global MtmFacts;
+		:local mVal "";
+		:set mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Facts/Tools/Jobs.rsc");
+		:set mVal [($MtmFacts->"importFile") $mVal];
+	}
+	:return ($MtmTools->"jobs");
+}
+
 :global MtmTools;
 :set MtmTools [:toarray ""];
 
