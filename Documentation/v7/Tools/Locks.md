@@ -26,3 +26,18 @@
 :local result [($toolObj->"unlock") $lockName $key];
 :put ($result); #bool true, error if key is not valid
 ```
+
+####Example:
+
+```
+:local lockName "myProcess";
+:local duration 60; ##need a lock for 60 seconds max
+:local wait 0; ##error out if i cannot get a lock righ away
+:local key [($toolObj->"lock") $lockName $duration $wait]; ## get a lock
+
+# have all processes honor this lock and avoid race conditions, partial overrides etc
+##.. do the work
+
+:local resBool [($toolObj->"unlock") $lockName $key]; ## free up the lock
+
+```

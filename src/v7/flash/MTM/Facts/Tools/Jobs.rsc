@@ -24,7 +24,6 @@
 	:return ($MtmToolJobs1->"track");
 }
 
-
 :global MtmToolJobs1;
 :set MtmToolJobs1 [:toarray ""];
 

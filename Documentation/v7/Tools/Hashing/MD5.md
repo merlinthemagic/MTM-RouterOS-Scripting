@@ -1,4 +1,4 @@
-#initialize MD5
+#initialize
 
 ```
 /import flash/MTM/Facts.rsc;
