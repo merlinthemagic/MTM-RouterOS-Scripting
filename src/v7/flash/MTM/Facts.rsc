@@ -1,6 +1,6 @@
 :local cPath "MTM/Facts.rsc";
 :global MtmFacts;
-:if ($MtmFacts = nil) do={
+:if ([:typeof $MtmFacts] = "nothing") do={
 
 	:local s [:toarray ""];
 	:set ($s->"env") [:toarray ""];
@@ -318,8 +318,138 @@
 		}
 		:return $rData;
 	}
-	
-	
+		:set ($s->"getJob") do={
+		:global MtmJobs;
+		:global MtmFacts;
+		:local cPath "MTM/Facts.rsc/getJob";
+		:if ([:typeof $0] != "str") do={
+			:error ($cPath.": Input has invalid type '".[:typeof $0]."'");
+		}
+		
+		:local lock "mtmJobs";
+		:local key "";
+		:do {
+			:set key [($MtmFacts->"lock") $lock 5 7];
+		} on-error={
+			:error ($cPath.": Failed to lock");
+		}
+		:if (($MtmJobs->$0) = nil) do={
+			:local jobObj [:toarray ""];
+			:set ($jobObj->"id") "";
+			:set ($jobObj->"data") [:toarray ""];
+			:set ($jobObj->"lastCheck") 0;
+			:set ($jobObj->"lastUpdate") 0;
+			:set ($MtmJobs->$0) $jobObj;
+		}
+		:do {
+			:set key [($MtmFacts->"unlock") $lock $key];
+		} on-error={
+			:error ($cPath.": Failed to unlock");
+		}
+		
+		:return ($MtmJobs->$0);
+	}
+	:set ($s->"setJob") do={
+		:global MtmJobs;
+		:global MtmFacts;
+		:local cPath "MTM/Facts.rsc/setJob";
+		:if ([:typeof $0] != "str") do={
+			:error ($cPath.": Input name has invalid type '".[:typeof $0]."'");
+		}
+		:if ([:typeof $1] != "array" && [:typeof $1] != "nothing") do={
+			:error ($cPath.": Input object has invalid type '".[:typeof $1]."'");
+		}
+		:local lock "mtmJobs";
+		:local key "";
+		:do {
+			:set key [($MtmFacts->"lock") $lock 5 7];
+		} on-error={
+			:error ($cPath.": Failed to lock");
+		}
+		:if (($MtmJobs->$0) != nil) do={
+			:set ($MtmJobs->$0) $1;
+			:do {
+				:set key [($MtmFacts->"unlock") $lock $key];
+			} on-error={
+				:error ($cPath.": Failed to unlock");
+			}
+		} else={
+			:do {
+				:set key [($MtmFacts->"unlock") $lock $key];
+			} on-error={
+				:error ($cPath.": Failed to unlock");
+			}
+			:error ($cPath.": No job exists with name: '".$0."'");
+		}
+		:return true;
+	}
+	:set ($s->"lock") do={
+		
+		:global MtmLocks;
+		:local cPath "DCS/Facts.rsc/lock";
+		:if ([:typeof $0] != "str"  || [:len $0] < 1) do={
+			:error ($cPath.": Input lock name invalid type '".[:typeof $0]."'");
+		}
+		:if ([:typeof $1] != "str" || [:len $1] < 1) do={
+			:error ($cPath.": Input lock duration for lock name '".$0."'");
+		}
+		:local hold [:tonum $1];
+		:local wait 2; ##minimum 2 seconds
+		:if ([:typeof $2] = "str" && [:len $2] > 0) do={
+			:set wait [:tonum $2];
+		}
+		
+		:global MtmFacts;
+		:local key ([/certificate scep-server otp generate minutes-valid=0 as-value]->"password");
+		:local timeTool [($MtmFacts->"get") "getTools()->getTime()->getEpoch()"];
+		:local cTime [($timeTool->"getCurrent")];
+		:local tTime ($cTime + $wait);
+		:local lock;
+		:local isDone 0;
+		:while ($isDone = 0) do={
+			:set lock ($MtmLocks->$0);
+			:if ([:typeof $lock] = "nothing") do={
+				:set ($MtmLocks->$0) {expire=($cTime + $hold);key=$key};
+				:set isDone 1;
+			} else={
+				:if (($lock->"expire") < $cTime) do={
+					:set ($MtmLocks->$0);
+				} else={
+					:if ($tTime > $cTime) do={
+						:delay 0.2s;
+						:set cTime [($timeTool->"getCurrent")];
+					} else={
+						:set isDone 1;
+					}
+				}
+			}
+		}
+		:set lock ($MtmLocks->$0);
+		:if ($key = ($lock->"key")) do={
+			:return ($lock->"key");
+		} else={
+			:error ($cPath.": Failed to obtain lock name '".$0."'");
+		}
+	}
+	:set ($s->"unlock") do={
+		:global MtmLocks;
+		:local cPath "DCS/Facts.rsc/unlock";
+		:if ([:typeof $0] != "str"  || [:len $0] < 1) do={
+			:error ($cPath.": Input lock name invalid type '".[:typeof $0]."'");
+		}
+		:if ([:typeof $1] != "str"  || [:len $1] < 1) do={
+			:error ($cPath.": Input lock key invalid for lock name '".$0."'");
+		}
+		:local lock ($MtmLocks->$0);
+		:if ([:typeof $lock] != "nothing") do={
+			:if ($1 != ($lock->"key")) do={
+				:error ($cPath.": Failed to unlock name '".$0."' key does not match");
+			}
+			:set ($MtmLocks->$0);
+		}
+		:return true;
+	}
+
 	##factories
 	:set ($s->"getTools") do={
 		:global MtmFaObjs;
@@ -341,4 +471,9 @@
 	#static "objects"
 	:global MtmFaObjs;
 	:set $MtmFaObjs [:toarray ""];
+	
+	:global MtmLocks;
+	:if ([:typeof $MtmLocks] = "nothing") do={
+		:set $MtmLocks [:toarray ""];
+	}
 }

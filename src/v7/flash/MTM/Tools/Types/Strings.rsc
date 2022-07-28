@@ -39,5 +39,39 @@
 	}
 	:return $r0;
 }
+:set ($s->"replace") do={
+	
+	:global MtmFacts;
+	:local cPath "MTM/Tools/DataTypes/Strings.rsc/replace";
+	:if ([:typeof $0] != "str") do={
+		:error ($cPath.": Input string has invalid type '".[:typeof $0]."'");
+	}
+	:if ([:typeof $1] != "str") do={
+		:error ($cPath.": Input pattern has invalid type '".[:typeof $1]."'");
+	}
+	:if ([:typeof $2] != "str") do={
+		:error ($cPath.": Input replacement has invalid type '".[:typeof $2]."'");
+	}
+	
+	:local str $0;
+	:local rData "";
+	:local pos;
+	:local rLen [:len $0];
+	
+	:local findLen [:len $1];
+	:local isDone 0;
+	:while ($isDone = 0) do={
+		:set pos [:find $str $1];
+		:if ([:typeof $pos] = "num") do={
+			:set rData ($rData.[:pick $str 0 $pos].$2);
+			:set str [:pick $str ($pos + $findLen) $rLen];
+			:set rLen [:len $str];
+		} else={
+			:set rData ($rData.$str);
+			:set isDone 1;
+		}
+	}
+	:return $rData;
+}
 :global MtmToolTypes1;
 :set ($MtmToolTypes1->"strs") $s;

@@ -41,7 +41,16 @@
 	}
 	:return ($MtmTools->"jobs");
 }
-
+:set ($s->"getTime") do={
+	:global MtmTools;
+	:if ([:typeof ($MtmTools->"time")] = "nothing") do={
+		:global MtmFacts;
+		:local mVal "";
+		:set mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Facts/Tools/Time.rsc");
+		:set mVal [($MtmFacts->"importFile") $mVal];
+	}
+	:return ($MtmTools->"time");
+}
 :global MtmTools;
 :set MtmTools [:toarray ""];
 
