@@ -318,7 +318,7 @@
 		}
 		:return $rData;
 	}
-		:set ($s->"getJob") do={
+	:set ($s->"getJob") do={
 		:global MtmJobs;
 		:global MtmFacts;
 		:local cPath "MTM/Facts.rsc/getJob";
@@ -475,5 +475,10 @@
 	:global MtmLocks;
 	:if ([:typeof $MtmLocks] = "nothing") do={
 		:set $MtmLocks [:toarray ""];
+	}
+	
+	:global MtmJobs;
+	:if ([:typeof $MtmJobs] = "nothing") do={
+		:set $MtmJobs [:toarray ""];
 	}
 }
