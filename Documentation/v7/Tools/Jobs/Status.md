@@ -1,4 +1,4 @@
-#initialize Encode
+#initialize
 
 ```
 /import flash/MTM/Facts.rsc;

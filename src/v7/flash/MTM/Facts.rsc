@@ -318,71 +318,6 @@
 		}
 		:return $rData;
 	}
-	:set ($s->"getJob") do={
-		:global MtmJobs;
-		:global MtmFacts;
-		:local cPath "MTM/Facts.rsc/getJob";
-		:if ([:typeof $0] != "str") do={
-			:error ($cPath.": Input has invalid type '".[:typeof $0]."'");
-		}
-		
-		:local lock "mtmJobs";
-		:local key "";
-		:do {
-			:set key [($MtmFacts->"lock") $lock 5 7];
-		} on-error={
-			:error ($cPath.": Failed to lock");
-		}
-		:if (($MtmJobs->$0) = nil) do={
-			:local jobObj [:toarray ""];
-			:set ($jobObj->"id") "";
-			:set ($jobObj->"data") [:toarray ""];
-			:set ($jobObj->"lastCheck") 0;
-			:set ($jobObj->"lastUpdate") 0;
-			:set ($MtmJobs->$0) $jobObj;
-		}
-		:do {
-			:set key [($MtmFacts->"unlock") $lock $key];
-		} on-error={
-			:error ($cPath.": Failed to unlock");
-		}
-		
-		:return ($MtmJobs->$0);
-	}
-	:set ($s->"setJob") do={
-		:global MtmJobs;
-		:global MtmFacts;
-		:local cPath "MTM/Facts.rsc/setJob";
-		:if ([:typeof $0] != "str") do={
-			:error ($cPath.": Input name has invalid type '".[:typeof $0]."'");
-		}
-		:if ([:typeof $1] != "array" && [:typeof $1] != "nothing") do={
-			:error ($cPath.": Input object has invalid type '".[:typeof $1]."'");
-		}
-		:local lock "mtmJobs";
-		:local key "";
-		:do {
-			:set key [($MtmFacts->"lock") $lock 5 7];
-		} on-error={
-			:error ($cPath.": Failed to lock");
-		}
-		:if (($MtmJobs->$0) != nil) do={
-			:set ($MtmJobs->$0) $1;
-			:do {
-				:set key [($MtmFacts->"unlock") $lock $key];
-			} on-error={
-				:error ($cPath.": Failed to unlock");
-			}
-		} else={
-			:do {
-				:set key [($MtmFacts->"unlock") $lock $key];
-			} on-error={
-				:error ($cPath.": Failed to unlock");
-			}
-			:error ($cPath.": No job exists with name: '".$0."'");
-		}
-		:return true;
-	}
 	:set ($s->"lock") do={
 		
 		:global MtmLocks;
@@ -471,14 +406,5 @@
 	#static "objects"
 	:global MtmFaObjs;
 	:set $MtmFaObjs [:toarray ""];
-	
-	:global MtmLocks;
-	:if ([:typeof $MtmLocks] = "nothing") do={
-		:set $MtmLocks [:toarray ""];
-	}
-	
-	:global MtmJobs;
-	:if ([:typeof $MtmJobs] = "nothing") do={
-		:set $MtmJobs [:toarray ""];
-	}
+
 }
