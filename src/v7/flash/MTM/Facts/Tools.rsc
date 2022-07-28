@@ -51,6 +51,16 @@
 	}
 	:return ($MtmTools->"time");
 }
+:set ($s->"getGuids") do={
+	:global MtmTools;
+	:if ([:typeof ($MtmTools->"guids")] = "nothing") do={
+		:global MtmFacts;
+		:local mVal "";
+		:set mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Facts/Tools/Guids.rsc");
+		:set mVal [($MtmFacts->"importFile") $mVal];
+	}
+	:return ($MtmTools->"guids");
+}
 :global MtmTools;
 :set MtmTools [:toarray ""];
 

@@ -1,6 +1,7 @@
 
 
-
+:local scr (":global MtmFacts; :local mVal [(\$MtmFacts->\"importFile\") $wrkPath];");
+		:set ($trkObj->"id") [:execute script=$scr file=([($MtmFacts->"getNullFile")])];
 
 
 :global MtmLocks;

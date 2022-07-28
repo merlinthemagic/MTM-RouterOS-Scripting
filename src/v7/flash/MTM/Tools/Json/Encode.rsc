@@ -13,7 +13,6 @@
 :set ($s->"getFromArray") do={
 
 	#todo: escape special chars: /\"\'\b\f\t\r\n.
-	
 	:local cPath "MTM/Tools/Json/Encode.rsc/getFromArray";
 	:if ([:typeof $0] != "array") do={
 		:error ($cPath.": Input has invalid type '".[:typeof $0]."'");
@@ -67,7 +66,7 @@
 			:set vType "";
 		}
 		:if ($vType = "array") do={
-			:set rData ($rData.[($self->"getFromArray") data=$value]);
+			:set rData ($rData.[($self->"getFromArray") $value]);
 			:set vType "";
 		}
 		:if ($vType != "") do={

@@ -73,5 +73,55 @@
 	}
 	:return $rData;
 }
+:set ($s->"toLower") do={
+	
+	:global MtmFacts;
+	:local cPath "MTM/Tools/DataTypes/Strings.rsc/toLower";
+	:if ([:typeof $0] != "str") do={
+		:error ($cPath.": Input string has invalid type '".[:typeof $0]."'");
+	}
+	
+	:local rData "";
+	:local rLen [:len $0];
+	:local upper "ABCDEFGHIKJLMNOPQRSTUVWXYZ";
+	:local lower "abcdefghikjlmnopqrstuvwxyz";
+	:local ch;
+	:local pos;
+	:for x from=0 to=($rLen - 1) do={
+		:set ch [:pick $0 $x];
+		:set pos [:find $upper $ch];
+		:if ([:typeof $pos] = "num") do={
+			:set rData ($rData.[:pick $lower $pos]);
+		} else={
+			:set rData ($rData.$ch);
+		}
+	}
+	:return $rData;
+}
+:set ($s->"toUpper") do={
+	
+	:global MtmFacts;
+	:local cPath "MTM/Tools/DataTypes/Strings.rsc/toUpper";
+	:if ([:typeof $0] != "str") do={
+		:error ($cPath.": Input string has invalid type '".[:typeof $0]."'");
+	}
+	
+	:local rData "";
+	:local rLen [:len $0];
+	:local upper "ABCDEFGHIKJLMNOPQRSTUVWXYZ";
+	:local lower "abcdefghikjlmnopqrstuvwxyz";
+	:local ch;
+	:local pos;
+	:for x from=0 to=($rLen - 1) do={
+		:set ch [:pick $0 $x];
+		:set pos [:find $lower $ch];
+		:if ([:typeof $pos] = "num") do={
+			:set rData ($rData.[:pick $upper $pos]);
+		} else={
+			:set rData ($rData.$ch);
+		}
+	}
+	:return $rData;
+}
 :global MtmToolTypes1;
 :set ($MtmToolTypes1->"strs") $s;
