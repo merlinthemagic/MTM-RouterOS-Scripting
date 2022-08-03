@@ -396,7 +396,16 @@
 		}
 		:return ($MtmFaObjs->"tools");
 	}
-	
+	:set ($s->"getModels") do={
+		:global MtmFaObjs;
+		:if ([:typeof ($MtmFaObjs->"models")] = "nothing") do={
+			:global MtmFacts;
+			:local mVal "";
+			:set mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Facts/Models.rsc");
+			:set mVal [($MtmFacts->"importFile") $mVal];
+		}
+		:return ($MtmFaObjs->"models");
+	}
 	:set MtmFacts $s;
 	
 	:local mVal "";
@@ -405,6 +414,12 @@
 	
 	#static "objects"
 	:global MtmFaObjs;
-	:set $MtmFaObjs [:toarray ""];
+	:set MtmFaObjs [:toarray ""];
+	
+	:global MtmIds1;
+	:set MtmIds1 [:toarray ""];
+	
+	:global MtmId;
+	:set MtmId [:nothing];
 
 }

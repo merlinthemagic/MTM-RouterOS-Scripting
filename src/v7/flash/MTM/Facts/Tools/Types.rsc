@@ -6,8 +6,7 @@
 	:global MtmToolTypes1;
 	:if ([:typeof ($MtmToolTypes1->"strs")] = "nothing") do={
 		:global MtmFacts;
-		:local mVal "";
-		:set mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Tools/Types/Strings.rsc");
+		:local mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Tools/Types/Strings.rsc");
 		:set mVal [($MtmFacts->"importFile") $mVal];
 	}
 	:return ($MtmToolTypes1->"strs");

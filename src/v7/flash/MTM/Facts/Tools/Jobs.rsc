@@ -6,8 +6,7 @@
 	:global MtmToolJobs1;
 	:if ([:typeof ($MtmToolJobs1->"status")] = "nothing") do={
 		:global MtmFacts;
-		:local mVal "";
-		:set mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Tools/Jobs/Status.rsc");
+		:local mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Tools/Jobs/Status.rsc");
 		:set mVal [($MtmFacts->"importFile") $mVal];
 	}
 	:return ($MtmToolJobs1->"status");
@@ -17,8 +16,7 @@
 	:global MtmToolJobs1;
 	:if ([:typeof ($MtmToolJobs1->"track")] = "nothing") do={
 		:global MtmFacts;
-		:local mVal "";
-		:set mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Tools/Jobs/Tracking.rsc");
+		:local mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Tools/Jobs/Tracking.rsc");
 		:set mVal [($MtmFacts->"importFile") $mVal];
 	}
 	:return ($MtmToolJobs1->"track");

@@ -6,8 +6,7 @@
 	:global MtmToolJson1;
 	:if ([:typeof ($MtmToolJson1->"encode")] = "nothing") do={
 		:global MtmFacts;
-		:local mVal "";
-		:set mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Tools/Json/Encode.rsc");
+		:local mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Tools/Json/Encode.rsc");
 		:set mVal [($MtmFacts->"importFile") $mVal];
 	}
 	:return ($MtmToolJson1->"encode");
@@ -17,8 +16,7 @@
 	:global MtmToolJson1;
 	:if ([:typeof ($MtmToolJson1->"decode")] = "nothing") do={
 		:global MtmFacts;
-		:local mVal "";
-		:set mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Tools/Json/Decode.rsc");
+		:local mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Tools/Json/Decode.rsc");
 		:set mVal [($MtmFacts->"importFile") $mVal];
 	}
 	:return ($MtmToolJson1->"decode");

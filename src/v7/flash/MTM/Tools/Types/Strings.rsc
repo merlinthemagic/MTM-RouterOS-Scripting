@@ -123,5 +123,61 @@
 	}
 	:return $rData;
 }
+:set ($s->"split") do={
+	
+	:global MtmFacts;
+	:local cPath "MTM/Tools/DataTypes/Strings.rsc/split";
+	:if ([:typeof $0] != "str") do={
+		:error ($cPath.": Input string has invalid type '".[:typeof $0]."'");
+	}
+	:if ([:typeof $1] != "str") do={
+		:error ($cPath.": Input pattern has invalid type '".[:typeof $1]."'");
+	}
+	:if ([:typeof $2] != "str") do={
+		:error ($cPath.": Input replacement has invalid type '".[:typeof $2]."'");
+	}
+	
+	:global MtmFacts;
+	:local method "Tools->Strings->split";
+	:local param1; #input
+	:local param2; #deliminator
+	:if ($0 != nil) do={
+		:set param1 $0;
+		:set param2 $1;
+	} else={
+		:if ($str != nil) do={
+			:set param1 $str;
+			:set param2 $delimitor;
+		} else={
+			[($MtmFacts->"throwException") method=$method msg="String is mandatory"];
+		}
+	}
+
+	:local rData [:toarray ""];
+	:local rCount 0;
+	:local splitLen [:len $param2];
+	:if ($splitLen = 0) do={
+		:set ($rData->$rCount) $param1;
+		:return $rData;
+	}
+	:local lData "";
+	:local rLen [:len $param1];
+	:local pos;
+	:local isDone 0;
+	:while ($isDone = 0) do={
+		:set pos [:find $param1 $param2];
+		:if ([:typeof $pos] = "num") do={
+			:set lData [:pick $param1 0 $pos];
+			:set param1 [:pick $param1 ($pos + $splitLen) $rLen];
+			:set rLen [:len $param1];
+		} else={
+			:set lData $param1;
+			:set isDone 1;
+		}
+		:set ($rData->$rCount) $lData;
+		:set rCount ($rCount + 1);
+	}
+	:return $rData;
+}
 :global MtmToolTypes1;
 :set ($MtmToolTypes1->"strs") $s;

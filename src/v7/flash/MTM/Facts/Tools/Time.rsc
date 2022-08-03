@@ -6,8 +6,7 @@
 	:global MtmToolTime1;
 	:if ([:typeof ($MtmToolTime1->"epoch")] = "nothing") do={
 		:global MtmFacts;
-		:local mVal "";
-		:set mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Tools/Time/Epoch.rsc");
+		:local mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Tools/Time/Epoch.rsc");
 		:set mVal [($MtmFacts->"importFile") $mVal];
 	}
 	:return ($MtmToolTime1->"epoch");

@@ -6,8 +6,7 @@
 	:global MtmToolHashing1;
 	:if ([:typeof ($MtmToolHashing1->"md5")] = "nothing") do={
 		:global MtmFacts;
-		:local mVal "";
-		:set mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Tools/Hashing/MD5.rsc");
+		:local mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Tools/Hashing/MD5.rsc");
 		:set mVal [($MtmFacts->"importFile") $mVal];
 	}
 	:return ($MtmToolHashing1->"md5");
