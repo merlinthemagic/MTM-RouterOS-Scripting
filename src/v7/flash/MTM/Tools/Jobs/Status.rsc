@@ -6,7 +6,7 @@
 	:if ([:typeof $0] != "id") do={
 		:error ($cPath.": Input has invalid type '".[:typeof $0]."'");
 	}
-	:local mVal [/system script job get $0 type];
+	:local mVal [/system/script/job/get $0 type];
 	:if ([:typeof $mVal] = "nil") do={
 		:return false;
 	} else={

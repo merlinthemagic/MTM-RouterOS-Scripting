@@ -64,6 +64,15 @@
 	}
 	:return ($MtmTools->"ifs");
 }
+:set ($s->"getFileSystem") do={
+	:global MtmTools;
+	:if ([:typeof ($MtmTools->"fs")] = "nothing") do={
+		:global MtmFacts;
+		:local mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Facts/Tools/FS.rsc");
+		:set mVal [($MtmFacts->"importFile") $mVal];
+	}
+	:return ($MtmTools->"fs");
+}
 :global MtmTools;
 :set MtmTools [:toarray ""];
 

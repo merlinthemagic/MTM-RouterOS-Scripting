@@ -1,6 +1,26 @@
 :local cPath "MTM/Tools/Types/Strings.rsc";
 :local s [:toarray ""];
 
+:set ($s->"getRandom") do={
+	
+	:global MtmFacts;
+	:local cPath "MTM/Tools/DataTypes/Strings.rsc/getRandom";
+	:if ([:typeof $0] != "num") do={
+		:error ($cPath.": Input has invalid type '".[:typeof $0]."'");
+	}
+	
+	:local count 0;
+	:if (($0 % 20) = 0) do={
+		:set count ([:tonum ($0 / 20)]);
+	} else={
+		:set count ([:tonum ($0 / 20)] + 1);
+	}
+	:local str "";
+	:for x from=1 to=$count do={
+		:set str ($str.([/certificate scep-server otp generate minutes-valid=0 as-value]->"password"));
+	}
+	:return ([:pick $str 0 $0]);
+}
 :set ($s->"trim") do={
 	
 	:global MtmFacts;

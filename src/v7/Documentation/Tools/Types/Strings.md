@@ -66,3 +66,10 @@ NOTE: If trying to echo the result via :put ($result) you might not see the line
 :local result [($toolObj->"chunk") $myStr $chunkLen];
 :put ($result); #array e.g. ["Hello", "World"]
 ```
+
+### getRandom:
+
+```
+:local result [($toolObj->"getRandom") [:tonum 32]];
+:put ($result); #string e.g. 'ca11d7ba70826abb715f3a5bbb4885db'
+```
