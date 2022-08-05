@@ -8,4 +8,4 @@
 
 
 :global MtmIds1;
-:set ($MtmIds1->$MtmId) $s;
+:set ($MtmIds1->([:tostr ("wlan".$MtmId)])) $s;

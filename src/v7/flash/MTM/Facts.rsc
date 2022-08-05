@@ -416,10 +416,13 @@
 	:global MtmFaObjs;
 	:set MtmFaObjs [:toarray ""];
 	
+	:global MtmId;
+	:set MtmId [:nothing];
+	
 	:global MtmIds1;
 	:set MtmIds1 [:toarray ""];
 	
-	:global MtmId;
-	:set MtmId [:nothing];
+	:global MtmIds2;
+	:set MtmIds2 [:toarray ""];
 
 }

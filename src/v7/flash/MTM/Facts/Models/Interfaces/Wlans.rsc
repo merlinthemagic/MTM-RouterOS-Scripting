@@ -44,7 +44,8 @@
 		:error ($cPath.": Input has invalid type '".[:typeof $0]."'");
 	}
 	:global MtmIds1;
-	:if ([:typeof ($MtmIds1->$0)] = "nothing") do={
+	:local sysId [:tostr ("wlan".$0)];
+	:if ([:typeof ($MtmIds1->$sysId)] = "nothing") do={
 		:global MtmFacts;
 		:local mVal [/interface/wireless/get $0 interface-type];
 		:if ($mVal = "virtual") do={
@@ -54,15 +55,12 @@
 		}
 		:local key [($MtmFacts->"lock") "MtmId" 5 7];
 		:global MtmId;
-		:set MtmId [:tostr $0];
+		:set MtmId $0;
 		:set mVal [($MtmFacts->"importFile") $mVal];
 		:set key [($MtmFacts->"unlock") "MtmId" $key];
 	}
-	:return ($MtmIds1->$0);
+	:return ($MtmIds1->$sysId);
 }
-
-:global MtmModelIfWlans1;
-:set MtmModelIfWlans1 [:toarray ""];
 
 :global MtmModelIfs1;
 :set ($MtmModelIfs1->"wlans") $s;

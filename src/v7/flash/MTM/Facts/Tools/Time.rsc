@@ -11,6 +11,16 @@
 	}
 	:return ($MtmToolTime1->"epoch");
 }
+:set ($s->"getRos") do={
+
+	:global MtmToolTime1;
+	:if ([:typeof ($MtmToolTime1->"ros")] = "nothing") do={
+		:global MtmFacts;
+		:local mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Tools/Time/ROS.rsc");
+		:set mVal [($MtmFacts->"importFile") $mVal];
+	}
+	:return ($MtmToolTime1->"ros");
+}
 
 :global MtmToolTime1;
 :set MtmToolTime1 [:toarray ""];
