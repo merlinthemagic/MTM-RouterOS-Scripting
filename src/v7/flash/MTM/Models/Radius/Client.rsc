@@ -6,6 +6,9 @@
 :set mVal ":return \"radius-client\";";
 :set ($s->"getType") [:parse $mVal];
 
+:set mVal ":if ([/radius/get $MtmId disabled] = false) do={ :return true; } else={ :return false; }";
+:set ($s->"getEnabled") [:parse $mVal];
+
 :set mVal ":return [/radius/get $MtmId src-address];";
 :set ($s->"getSrcAddress") [:parse $mVal];
 

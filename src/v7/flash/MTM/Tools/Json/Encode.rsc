@@ -69,6 +69,10 @@
 			:set rData ($rData.[($self->"getFromArray") $value]);
 			:set vType "";
 		}
+		:if ($vType = "ip") do={
+			:set rData ($rData.[:tostr $value]);
+			:set vType "";
+		}
 		:if ($vType != "") do={
 			:error ($cPath.": Input not handled for datatype: '".$vType."'");
 		}

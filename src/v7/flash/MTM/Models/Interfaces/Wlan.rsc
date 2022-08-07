@@ -6,6 +6,9 @@
 :set mVal ":return \"wlan\";";
 :set ($s->"getType") [:parse $mVal];
 
+:set mVal ":if ([/interface/wireless/get $MtmId disabled] = false) do={ :return true; } else={ :return false; }";
+:set ($s->"getEnabled") [:parse $mVal];
+
 :set mVal ":return [/interface/wireless/get $MtmId name];";
 :set ($s->"getName") [:parse $mVal];
 
