@@ -39,10 +39,10 @@
 		:set d ($d * 24 * 60 * 60);
 		#add the hours, min and secs
 		:set d ($d + ([:pick $0 12 14] * 60 * 60) + ([:pick $0 15 17] * 60) + [:pick $0 18 20]);
-		#add jan 1s 2000 in unix, and subtract the offset to gmt for our timezone
-		:set d ($d + 946684800 - [/system clock get gmt-offset]);
+		#add jan 1st 2000 in unix, and subtract the offset to gmt for our timezone
+		:set d ($d + 946684800 - ([($MtmFacts->"get") "getTools()->getTime()->getRos()->getGmtOffset()"]));
 		:if ($d > 946684799) do={
-			##Epoch less than the year 2000, happens when the GMT offset is not UTC? 
+			##Epoch greater than the year 2000, cool!
 			:return $d;
 		}
 	}
