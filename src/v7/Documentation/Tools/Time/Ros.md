@@ -18,7 +18,7 @@
 
 ### getGmtOffset:
 
-Note: returns number of seconds from GMT as a signed int
+Note: returns number of seconds from GMT as a "signed int".. in ROS represented as a string since num is not signed:/
 
 ```
 :put ([($toolObj->"getGmtOffset") $mTime $mFormat]); #number -21600
@@ -26,9 +26,16 @@ Note: returns number of seconds from GMT as a signed int
 
 ### getSecondsFromFormat:
 
-
 ```
 :local mTime "01:00:17";
 :local mFormat "h:i:s";
 :put ([($toolObj->"getSecondsFromFormat") $mTime $mFormat]); #number 3617
 ```
+
+### getCurrentHour:
+
+```
+:put ([($toolObj->"getCurrentHour")]); #number 5 or 13 etc
+```
+
+

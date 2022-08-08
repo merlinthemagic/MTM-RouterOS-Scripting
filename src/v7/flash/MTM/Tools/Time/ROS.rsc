@@ -81,5 +81,10 @@
 		:error ($cPath.": Failed to produce valid return '".$mVal."' from input time: '".$0."' and format: '".$1."'");
 	}
 }
+:set ($s->"getCurrentHour") do={
+
+	:local cPath "MTM/Tools/Time/ROS.rsc/getCurrentHour";
+	:return [:tonum [:pick [/system clock get time] 0 2]];
+}
 :global MtmToolTime1;
 :set ($MtmToolTime1->"ros") $s;
