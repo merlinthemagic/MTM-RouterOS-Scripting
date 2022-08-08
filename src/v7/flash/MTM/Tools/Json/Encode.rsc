@@ -52,7 +52,7 @@
 		}
 		:set vType [:typeof $value];
 		
-		:if ($vType = "str" || $vType = "time") do={
+		:if ($vType = "str" || $vType = "time" || $vType = "ip") do={
 			:set rData ($rData."\"$value\"");
 			:set vType "";
 		}
@@ -67,10 +67,6 @@
 		}
 		:if ($vType = "array") do={
 			:set rData ($rData.[($self->"getFromArray") $value]);
-			:set vType "";
-		}
-		:if ($vType = "ip") do={
-			:set rData ($rData.[:tostr $value]);
 			:set vType "";
 		}
 		:if ($vType != "") do={

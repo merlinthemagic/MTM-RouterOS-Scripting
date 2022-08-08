@@ -32,7 +32,9 @@
 	:local cPath "MTM/Tools/FS/Files.rsc/getTemp";
 	
 	:local strTool [($MtmFacts->"get") "getTools()->getTypes()->getStrings()"];
-	:local self [($MtmFacts->"get") "getTools()->getFileSystem()->getFiles()"];
+	
+	:global MtmToolFs1;
+	:local self ($MtmToolFs1->"files");
 	
 	:local isDone false;
 	:local max 50;
@@ -70,7 +72,10 @@
 		:error ($cPath.": Input has invalid type '".[:typeof $0]."'");
 	}
 	:local mVal "";
-	:local self [($MtmFacts->"get") "getTools()->getFileSystem()->getFiles()"];
+	
+	:global MtmToolFs1;
+	:local self ($MtmToolFs1->"files");
+	
 	:if ([($self->"getExists") $0] = false) do={
 		:set mVal [/file print file=$0];
 		#wait for the file to be created
@@ -92,7 +97,10 @@
 		:error ($cPath.": Input has invalid type '".[:typeof $0]."'");
 	}
 	:local mVal "";
-	:local self [($MtmFacts->"get") "getTools()->getFileSystem()->getFiles()"];
+	
+	:global MtmToolFs1;
+	:local self ($MtmToolFs1->"files");
+	
 	:if ([($self->"getExists") $0] = true) do={
 		:set mVal [/file remove $0];
 		:local tTime 1500;
@@ -129,7 +137,10 @@
 		:error ($cPath.": Input content has invalid type '".[:typeof $0]."'");
 	}
 	:local mVal "";
-	:local self [($MtmFacts->"get") "getTools()->getFileSystem()->getFiles()"];
+
+	:global MtmToolFs1;
+	:local self ($MtmToolFs1->"files");
+
 	:if ([($self->"getExists") $0] = false) do={
 		:set mVal [($self->"create") $0];
 	}
@@ -152,7 +163,10 @@
 	}
 
 	:local mVal "";
-	:local self [($MtmFacts->"get") "getTools()->getFileSystem()->getFiles()"];
+	
+	:global MtmToolFs1;
+	:local self ($MtmToolFs1->"files");
+
 	:if ([($self->"getExists") $0] = false) do={
 		:error ($cPath.": Cannot get content, file does not exists '".$0."'");
 	}
@@ -182,7 +196,10 @@
 		:error ($cPath.": Input file name has invalid type '".[:typeof $0]."'");
 	}
 	:local mVal "";
-	:local self [($MtmFacts->"get") "getTools()->getFileSystem()->getFiles()"];
+	
+	:global MtmToolFs1;
+	:local self ($MtmToolFs1->"files");
+	
 	:if ([($self->"getExists") $0] = false) do={
 		:error ($cPath.": File does not exist: '".$0."'");
 	}
