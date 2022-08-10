@@ -30,5 +30,8 @@
 :set mVal ":return ([/interface/wireless/monitor $MtmId once as-value]->\"status\")";
 :set ($s->"getStatus") [:parse $mVal];
 
+:set mVal ":return ([/interface/wireless/monitor $MtmId once as-value]->\"overall-tx-ccq\")";
+:set ($s->"getTxCcq") [:parse $mVal];
+
 :global MtmIds1;
 :set ($MtmIds1->([:tostr ("wlan".$MtmId)])) $s;
