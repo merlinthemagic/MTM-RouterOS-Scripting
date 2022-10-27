@@ -320,7 +320,6 @@
 	}
 	:set ($s->"lock") do={
 		
-		:global MtmLocks;
 		:local cPath "DCS/Facts.rsc/lock";
 		:if ([:typeof $0] != "str"  || [:len $0] < 1) do={
 			:error ($cPath.": Input lock name invalid type '".[:typeof $0]."'");
@@ -335,12 +334,15 @@
 		}
 		
 		:global MtmFacts;
+		:global MtmLocks;
+		
 		:local key ([/certificate scep-server otp generate minutes-valid=0 as-value]->"password");
 		:local timeTool [($MtmFacts->"get") "getTools()->getTime()->getEpoch()"];
 		:local cTime [($timeTool->"getCurrent")];
 		:local tTime ($cTime + $wait);
-		:local lock;
+		:local lock [:toarray ""];
 		:local isDone 0;
+		
 		:while ($isDone = 0) do={
 			:set lock ($MtmLocks->$0);
 			:if ([:typeof $lock] = "nothing") do={
@@ -365,6 +367,40 @@
 		} else={
 			:error ($cPath.": Failed to obtain lock name '".$0."'");
 		}
+	}
+	:set ($s->"extendlock") do={
+
+		:global MtmFacts;
+		:global MtmLocks;
+		:local cPath "DCS/Facts.rsc/extendlock";
+		:if ([:typeof $0] != "str"  || [:len $0] < 1) do={
+			:error ($cPath.": Input lock name invalid type '".[:typeof $0]."'");
+		}
+		:if ([:typeof $1] != "str"  || [:len $1] < 1) do={
+			:error ($cPath.": Input lock key invalid for lock name '".$0."'");
+		}
+		:if ([:typeof $2] != "str" || [:len $2] < 1) do={
+			:error ($cPath.": Input lock duration for lock name '".$0."'");
+		}
+		
+		:local lock ($MtmLocks->$0);
+		:if ([:typeof $lock] != "nothing") do={
+			
+			:local timeTool [($MtmFacts->"get") "getTools()->getTime()->getEpoch()"];
+			:local cTime [($timeTool->"getCurrent")];
+		
+			:if ($1 != ($lock->"key")) do={
+				:error ($cPath.": Failed to extend lock name '".$0."' key does not match");
+			}
+			:if ((($lock->"expire") - 2) < $cTime) do={
+				:error ($cPath.": Failed to extend lock name '".$0."' expires in less than 2 seconds");
+			}
+			:set ($MtmLocks->$0) {expire=($cTime + [:tonum $2]);key=$1};
+			
+		} else={
+			:error ($cPath.": Failed to extend lock name '".$0."', lock does not exist");
+		}
+		:return true;
 	}
 	:set ($s->"unlock") do={
 		:global MtmLocks;
