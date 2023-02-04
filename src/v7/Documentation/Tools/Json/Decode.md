@@ -12,5 +12,5 @@
 
 ```
 :local data "[\"my\",\"data\",\"and\",\"objects\"]"; #required
-:put ([($toolObj->"getFromArray") $data]); #array my,data,and,objects
+:put ([($toolObj->"getFromString") $data]); #array my,data,and,objects
 ```
