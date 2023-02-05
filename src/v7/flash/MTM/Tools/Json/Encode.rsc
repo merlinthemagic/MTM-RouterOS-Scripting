@@ -53,6 +53,9 @@
 		:set vType [:typeof $value];
 		
 		:if ($vType = "str" || $vType = "time" || $vType = "ip") do={
+			##https://stackoverflow.com/questions/43969649/null-character-within-json
+			##null values are not allowed in json, you can remove with: [($strTool->"replace") $myString ("\00") ""]
+			##too resource intensive to run here on big blobs of text
 			:set rData ($rData."\"$value\"");
 			:set vType "";
 		}
