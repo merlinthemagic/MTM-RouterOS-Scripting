@@ -8,6 +8,7 @@
 		:error ($cPath.": Input has invalid type '".[:typeof $0]."'");
 	}
 	:local input $0;
+	
 	# String message to MD5 Hash
 	# Creates a MD5 hash from a message string
 	# Version 1.00, 6/17/2012, Created by TealFrog
@@ -132,14 +133,13 @@
 		:set lWordCount ($iByteCount / 4)
 		:set lBytePosition (($iByteCount % 4) * 8)
 		:if (($lBytePosition < 0) or ($lBytePosition > 31)) do={
-			:error ( "$progName: Error --	Calculating byte position " . \
-					"# $lBytePosition, must be 0 thru 31." )
+			:error ($cPath.": Error --	Calculating byte position # ".$lBytePosition.", must be 0 thru 31.");
 		}
 		:set ch [ :pick $input $iByteCount ]
 		:if ( [ :len [ :find $arrCharSet $ch ] ] > 0 ) do={
 			:set iCharVal ([ :tonum [ :find $arrCharSet $ch ] ])
 		} else={
-			:error "$progName: Error -- Input contains undefined ASCII value."
+			:error ($cPath.": Error -- Input contains undefined ASCII value.");
 		}
 		:set lShiftedVal ((($iCharVal) << ($lBytePosition)) | \
 									 (($iCharVal) >> (32-($lBytePosition))))

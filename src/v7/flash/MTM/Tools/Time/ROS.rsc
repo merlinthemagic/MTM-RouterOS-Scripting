@@ -61,18 +61,54 @@
 	:if ([:typeof $1] != "str") do={
 		:error ($cPath.": Input format has invalid type '".[:typeof $1]."'");
 	}
-	:local mVal "";
-	:local ilen [:len $0];
+	:local rVal $0;
+	:local mVal 0;
+	:local pos 0;
+	
+	:if ($1 = "WDh:i:s") do={
+		#e.g. uptime=67w1d18:43:21
+		:set pos [:find $rVal "w"];
+		:if ([:typeof $pos] = "num") do={
+			:set mVal ($mVal + ([:tonum [:pick $rVal 0 $pos]] * 604800));
+			:set rVal [:pick $rVal ($pos + 1) [:len $rVal]];
+		}
+		:set pos [:find $rVal "d"];
+		:if ([:typeof $pos] = "num") do={
+			:set mVal ($mVal + [:tonum [:pick $rVal 0 $pos]] * 86400);
+			:set rVal [:pick $rVal ($pos + 1) [:len $rVal]];
+		}
+		:set pos [:find $rVal ":"];
+		:if ([:typeof $pos] = "num") do={
+			:set mVal ($mVal + [:tonum [:pick $rVal 0 $pos]] * 3600);
+			:set rVal [:pick $rVal ($pos + 1) [:len $rVal]];
+		}
+		:set pos [:find $rVal ":"];
+		:if ([:typeof $pos] = "num") do={
+			:set mVal ($mVal + [:tonum [:pick $rVal 0 $pos]] * 60);
+			:set rVal [:pick $rVal ($pos + 1) [:len $rVal]];
+		}
+		:if ([:len $rVal] = 2) do={
+			:set mVal ($mVal + [:tonum $rVal]);
+		}
+	}
 	:if ($1 = "h:i:s") do={
-		:set mVal 0;
-		:if ($ilen > 1) do={
-			:set mVal ($mVal + [:tonum [:pick $0 0 2]] * 3600);
+		#uptime=18:43:21
+		:set pos [:find $rVal ":"];
+		:if ([:typeof $pos] = "num") do={
+			:if ($pos != 2) do={
+				:set rVal [:pick $rVal ($pos - 2) [:len $rVal]];
+			}
+			
+			:set mVal ($mVal + [:tonum [:pick $rVal 0 $pos]] * 3600);
+			:set rVal [:pick $rVal ($pos + 1) [:len $rVal]];
 		}
-		:if ($ilen > 4) do={
-			:set mVal ($mVal + [:tonum [:pick $0 3 5]] * 60);
+		:set pos [:find $rVal ":"];
+		:if ([:typeof $pos] = "num") do={
+			:set mVal ($mVal + [:tonum [:pick $rVal 0 $pos]] * 60);
+			:set rVal [:pick $rVal ($pos + 1) [:len $rVal]];
 		}
-		:if ($ilen > 7) do={
-			:set mVal ($mVal + [:tonum [:pick $0 6 8]]);
+		:if ([:len $rVal] = 2) do={
+			:set mVal ($mVal + [:tonum $rVal]);
 		}
 	}
 	:if (($mVal ~ "^[0-9]+\$") = true) do={

@@ -12,6 +12,5 @@
 
 ```
 :local myStr "My string";
-:local toolObj [($factObj->"getMD5")];
-:put ([($toolObj->"get") $myStr]); #d41d8cd98f00b204e9800998ecf8427e
+:put ([($toolObj->"get") $myStr]); #a537d002d4b595d99b7a2a9db4dfa2ff
 ```

@@ -73,6 +73,16 @@
 	}
 	:return ($MtmTools->"fs");
 }
+:set ($s->"getEncoding") do={
+	:global MtmTools;
+	:if ([:typeof ($MtmTools->"encoding")] = "nothing") do={
+		:global MtmFacts;
+		:local mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Facts/Tools/Encoding.rsc");
+		:set mVal [($MtmFacts->"importFile") $mVal];
+	}
+	:return ($MtmTools->"encoding");
+}
+
 :global MtmTools;
 :set MtmTools [:toarray ""];
 
