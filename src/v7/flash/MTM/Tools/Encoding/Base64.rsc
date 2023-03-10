@@ -52,7 +52,7 @@
 		:set v2 [$chr2int [:pick $v0 1 2] $chars];
 		:set v3 [$chr2int [:pick $v0 2 3] $chars];
 		:set f6bit ($v1 >> 2);
-		:set s6bit ((($v1 &	3) * 16) + ($v2 >> 4));
+		:set s6bit ((($v1 & 3) * 16) + ($v2 >> 4));
 		:set t6bit ((($v2 & 15) * 4) + ($v3 >> 6));
 		:set q6bit	 ($v3 & 63);
 		:if ([:len $v0] < 2) do={
