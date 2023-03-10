@@ -181,5 +181,38 @@
 	}
 	:return $rData;
 }
+:set ($s->"chunk") do={
+	
+	:global MtmFacts;
+	:local cPath "MTM/Tools/DataTypes/Strings.rsc/chunk";
+	:if ([:typeof $0] != "str") do={
+		:error ($cPath.": Input string has invalid type '".[:typeof $0]."'");
+	}
+	:if ([:typeof $1] != "num") do={
+		:error ($cPath.": Input chunk length has invalid type '".[:typeof $1]."'");
+	}
+
+	:local input $0;
+	:local cLen $1;
+	:local mLen [:len $input];
+	:local rData [:toarray ""];
+	:local rLen 0;
+	:if ($mLen = 0 || $cLen = 0) do={
+		:set ($rData->$rLen) $input;
+		:return $rData;
+	}
+	:local cData "";
+	:for x from=0 to=($mLen - 1) do={
+		:if ([:len $cData] = $cLen) do={
+			:set ($rData->$rLen) $cData;
+			:set rLen ($rLen + 1);
+			:set cData "";
+		}
+		:set cData ($cData.[:pick $input $x]);
+	}
+	##add the last
+	:set ($rData->$rLen) $cData;
+	:return $rData;
+}
 :global MtmToolTypes1;
 :set ($MtmToolTypes1->"strs") $s;

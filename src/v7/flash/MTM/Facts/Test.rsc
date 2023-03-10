@@ -4,7 +4,7 @@
 /import flash/MTM/Facts.rsc;
 :global MtmFacts;
 
-[($MtmFacts->"setDebug") true]
+[($MtmFacts->"setDebug") true];
 
 ##remove specific tool from cache
 #:local sysId "tool-time-epoch";
@@ -16,26 +16,22 @@
 #:put ("Current Epoch: ".$result); #epoch time
 
 
-#:local toolObj [($MtmFacts->"get") "getTools()->getEncoding()->getBase16()"];
-#:local myStr "My string";
-#:put ("MD5 hash is: ".[($toolObj->"encode") $myStr]);
 
+:local input "My string";
 
-:local input "My string i want to encode";
-
-:local toolObj [($MtmFacts->"get") "getTools()->getEncoding()->getBase64()"];
+:local toolObj [($MtmFacts->"get") "getTools()->getEncoding()->getBase16()"];
 :local orig $input;
 :local output ""; 
-:put ("Original is: ".$input);
+:put ("Original is: '".$orig."', type: '".[:typeof $orig]."', length: '".[:len $orig]."'");
 
 :set output [($toolObj->"encode") $input];
-:put ("Base64 is: ".$output);
+:put ("Base64 is: '".$output."'");
 
 :set output [($toolObj->"decode") $output];
-:put ("Decoded is : ".$output);
+:put ("Decoded is : '".$output."', type: '".[:typeof $output]."', length: '".[:len $output]."'");
 
 :if ($orig = $output) do={
-	:put ("Its a match");
+	:put ("It is a match");
 } else={
-	:put ("Its NOT a match");
+	:put ("It is NOT a match");
 }
