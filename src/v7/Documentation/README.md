@@ -12,7 +12,7 @@ ROS v7
 
 ## Install:
 
-Upload the 'src/v7/Facts.rsc' and 'src/v7/flash/MtmEnv.rsc' files to a folder on your ROS device. Then edit 'MtmEnv.rsc' so the environmental variable 'mtm.root.path' reflects your path.
+Upload the 'src/v7/flash/Facts.rsc' and 'src/v7/flash/MtmEnv.rsc' files to a folder on your ROS device. Then edit 'MtmEnv.rsc' so the environmental variable 'mtm.root.path' reflects your path.
 
 Example:
 
