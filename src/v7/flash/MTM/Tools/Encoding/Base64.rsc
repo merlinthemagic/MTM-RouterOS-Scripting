@@ -114,13 +114,13 @@
 				:error ("Unexpected character, invalid Base64 sequence");
 		}
 		:if ([:typeof [:pick $v0 1 2]] = "nil") do={
-			:error ("Required 2nd character is missing");
+			:error ($cPath.": Required 2nd character is missing");
 		}
 		:if (([:typeof [:pick $v0 2 3]] = "nil") and (($v2 & 15) != 0)) do={
-			:error ("Required 3rd character is missing");
+			:error ($cPath.": Required 3rd character is missing");
 		}
 		:if (([:typeof [:pick $v0 3 4]] = "nil") and (($v3 & 3) != 0)) do={
-			:error ("Required 4th character is missing");
+			:error ($cPath.": Required 4th character is missing");
 		}
 		:set fchr [:pick $chars	(($v1 << 2) + ($v2 >> 4))];
 		:set schr [:pick $chars ((($v2 & 15) << 4) + ($v3 >> 2))];
@@ -135,7 +135,7 @@
 		}
 		:if ($v2 = 64) do={
 			:set fchr "";
-			:error ("Unexpected padding character =");
+			:error ($cPath.": Unexpected padding character =");
 		}
 		:set output ($output.$fchr.$schr.$tchr);
 		:set pos ($pos + 4)
