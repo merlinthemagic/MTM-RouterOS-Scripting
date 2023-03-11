@@ -31,10 +31,10 @@
 	:local v1 "";
 	:local v2 "";
 	:local v3 "";
-	:local f6bit 0;
-	:local s6bit 0;
-	:local t6bit 0;
-	:local q6bit 0;
+	:local f6bit 0; ##first bit
+	:local s6bit 0; ##second bit
+	:local t6bit 0; ##third bit
+	:local q6bit 0; ##quad bit
 	:local mVal "";
 	:local mLen [:len $input];
 	
@@ -54,7 +54,7 @@
 		:set f6bit ($v1 >> 2);
 		:set s6bit ((($v1 & 3) * 16) + ($v2 >> 4));
 		:set t6bit ((($v2 & 15) * 4) + ($v3 >> 6));
-		:set q6bit	 ($v3 & 63);
+		:set q6bit ($v3 & 63);
 		:if ([:len $v0] < 2) do={
 			:set t6bit 64;
 		}
@@ -98,9 +98,9 @@
 	:local v2 0;
 	:local v3 0;
 	:local v4 0;
-	:local fchr "";
-	:local schr "";
-	:local tchr "";
+	:local fchr ""; ##first chr
+	:local schr ""; ##second chr
+	:local tchr ""; ##thrird chr
 	:local mVal "";
 	:local mLen [:len $input];
 	
@@ -119,7 +119,7 @@
 		:if (([:typeof [:pick $v0 2 3]] = "nil") and (($v2 & 15) != 0)) do={
 			:error ("Required 3rd character is missing");
 		}
-		:if (([:typeof [:pick $v0 3 4]] = "nil") and (($v3 &	3) != 0)) do={
+		:if (([:typeof [:pick $v0 3 4]] = "nil") and (($v3 & 3) != 0)) do={
 			:error ("Required 4th character is missing");
 		}
 		:set fchr [:pick $chars	(($v1 << 2) + ($v2 >> 4))];

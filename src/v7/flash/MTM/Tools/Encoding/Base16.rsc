@@ -70,13 +70,16 @@
 	} else={
 		:error ($cPath.": Invalid input length, must be even");
 	}
+	:local isDone false;
 	:local output "";
 	:set mLen ([:len $rData] - 1);
 	:for x from=0 to=$mLen step=1 do={
+		:set isDone false;
 		:set cData ($rData->$x);
 		:for y from=0 to=255 step=1 do={
-			:if (($hexs->$y) = $cData) do={
+			:if ($isDone = false && ($hexs->$y) = $cData) do={
 				:set output ($output.[:pick $chrs $y]);
+				:set isDone true; ##plz mikrotik can we get break/continue functionallity in loops?
 			}
 		}
 	}

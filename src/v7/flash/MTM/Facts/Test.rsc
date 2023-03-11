@@ -1,5 +1,5 @@
 :global MtmFacts;
-:set MtmFacts;
+#:set MtmFacts;
 
 /import flash/MTM/Facts.rsc;
 :global MtmFacts;
@@ -17,7 +17,7 @@
 
 
 
-:local input "My string";
+:local input ":local v1 [\$chr2int [:pick \$input 0 1] \$charsString]";
 
 :local toolObj [($MtmFacts->"get") "getTools()->getEncoding()->getBase16()"];
 :local orig $input;
