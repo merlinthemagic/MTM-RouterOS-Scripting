@@ -6,6 +6,6 @@ Breaks up functionallity into class like files, Auto loader like functionallity 
 
 Namespace like functionallity placing classes and methods in a hierarchy. Call methods with arguments on a single line
 
-V7: https://github.com/merlinthemagic/MTM-RouterOS-Scripting/tree/main/src/v7/Documentation/README.md
+<a href="https://github.com/merlinthemagic/MTM-RouterOS-Scripting/tree/main/src/v7/Documentation/README.md">V7 Documentation</a>
 
-V6: https://github.com/merlinthemagic/MTM-RouterOS-Scripting/tree/main/src/v6/Documentation/README.md
+<a href="https://github.com/merlinthemagic/MTM-RouterOS-Scripting/tree/main/src/v6/Documentation/README.md">V6 Documentation</a>
