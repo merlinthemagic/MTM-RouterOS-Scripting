@@ -27,7 +27,7 @@ This is the line as it should be in 'MtmEnv.rsc':
 
 ## Remote loading
 
-While 'src/v7/Facts.rsc' and 'src/v7/flash/MtmEnv.rsc' are the only required files, look at MtmEnv.rsc for additional options. You can make a copy of the lib and store it on your own server, then have MTM load files from there whenever they are missing locally. The default config fetches files from master on github. But you dont have to trust me, download, verify and then only use your own copy of the repository on your devices.
+While 'src/v7/flash/Facts.rsc' and 'src/v7/flash/MtmEnv.rsc' are the only required files, look at MtmEnv.rsc for additional options. You can make a copy of the lib and store it on your own server, then have MTM load files from there whenever they are missing locally. The default config fetches files from master on github. But you dont have to trust me, download, verify and then only use your own copy of the repository on your devices.
 
 
 ## Use examples:
