@@ -24,8 +24,8 @@
 	:if ([:typeof $1] != "str") do={
 		:error ($cPath.": Input format has invalid type '".[:typeof $1]."'");
 	}
+	
 	:local mVal "";
-
 	:local mYear 0;
 	:local mMonth 0;
 	:local mDay 0;
