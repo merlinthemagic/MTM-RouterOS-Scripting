@@ -444,7 +444,32 @@
 	}
 	:set MtmFacts $s;
 	
+	#set the current ROS version
+	
 	:local mVal "";
+	:set mVal [($MtmFacts->"setEnv") "major" 0];
+	:set mVal [($MtmFacts->"setEnv") "minor" 0];
+	:set mVal [($MtmFacts->"setEnv") "patch" 0];
+	
+	:local mVer [/system/resource/get version];
+	:local mPos [:find $mVer "."];
+	
+	:set mVal [($MtmFacts->"setEnv") "major" [:tonum [:pick $mVer 0 $mPos]]];
+	:set mVer [:pick $mVer ($mPos + 1) [:len $mVer]];
+
+	:set mPos [:find $mVer "."];
+	:if ([:typeof $mPos] = "num") do={
+		:set mVal [($MtmFacts->"setEnv") "minor" [:tonum [:pick $mVer 0 $mPos]]];
+		:set mVer [:pick $mVer ($mPos + 1) [:len $mVer]];
+	}
+
+	:set mPos [:find $mVer " "];
+	:if ([($MtmFacts->"getEnv") "minor"] > 0) do={
+		:set mVal [($MtmFacts->"setEnv") "patch" [:tonum [:pick $mVer 0 $mPos]]];
+	} else={
+		:set mVal [($MtmFacts->"setEnv") "minor" [:tonum [:pick $mVer 0 $mPos]]];
+	}
+
 	##import the environment variables
 	:set mVal [($MtmFacts->"importFile") $envFile];
 	
