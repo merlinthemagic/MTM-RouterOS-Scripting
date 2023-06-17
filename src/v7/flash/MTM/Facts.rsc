@@ -36,8 +36,8 @@
 		:if ([:len $0] = 0 || [:typeof $0] != "str") do={
 			:error ($cPath.": Key is mandatory, must be string value");
 		}
-		:if ([:typeof $1] != "str") do={
-			:error ($cPath.": Value must be string value");
+		:if ([:typeof $1] != "str" && [:typeof $1] != "num") do={
+			:error ($cPath.": Value must be string or number value");
 		}
 		:set ($MtmFacts->"env"->$0) $1;
 		:return $MtmFacts;
