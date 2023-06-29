@@ -17,7 +17,7 @@
 :set ($s->"getFromFormat") do={
 
 	:global MtmFacts;
-	:local cPath "MTM/Tools/Time/Epoch.rsc/getCurrent";
+	:local cPath "MTM/Tools/Time/Epoch.rsc/getFromFormat";
 	:if ([:typeof $0] != "str") do={
 		:error ($cPath.": Input time has invalid type '".[:typeof $0]."'");
 	}
@@ -57,7 +57,7 @@
 	}
 
 	:if ($mYear < 2000) do={
-		:error ($cPath.": Cannot handle dates before the year 2000");
+		:error ($cPath.": Cannot handle dates before the year 2000: '".$0."'");
 	}
 	
 	#days elapsed since beginning of year at start of month
