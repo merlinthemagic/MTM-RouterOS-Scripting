@@ -82,7 +82,15 @@
 	}
 	:return ($MtmTools->"encoding");
 }
-
+:set ($s->"getParse") do={
+	:global MtmTools;
+	:if ([:typeof ($MtmTools->"parse")] = "nothing") do={
+		:global MtmFacts;
+		:local mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Facts/Tools/Parse.rsc");
+		:set mVal [($MtmFacts->"importFile") $mVal];
+	}
+	:return ($MtmTools->"parse");
+}
 :global MtmTools;
 :set MtmTools [:toarray ""];
 
