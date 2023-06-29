@@ -44,13 +44,15 @@
 	} else={
 		:if ($1 = "m/d/Y h:i:s") do={
 			##pre 7.10 default date format
-			:set mVal {"jan"=1;"feb"=2;"mar"=3;"apr"=4;"may"=5;"jun"=6;"jul"=7;"aug"=8;"sep"=9;"oct"=10;"nov"=11;"dec"=12}
+			:set mVal {"jan"=1;"feb"=2;"mar"=3;"apr"=4;"may"=5;"jun"=6;"jul"=7;"aug"=8;"sep"=9;"oct"=10;"nov"=11;"dec"=12;"Jan"=1;"Feb"=2;"Mar"=3;"Apr"=4;"May"=5;"Jun"=6;"Jul"=7;"Aug"=8;"Sep"=9;"Oct"=10;"Nov"=11;"Dec"=12}
 			:set mYear [:tonum [:pick $0 7 11]];
 			:set mMonth [:tonum ($mVal->([:pick $0 0 3]))];
-			:set mDay [:tonum [:pick $0 8 10]];
-			:set mHour [:tonum [:pick $0 11 13]];
-			:set mMin [:tonum [:pick $0 14 16]];
-			:set mSec [:tonum [:pick $0 17 19]];
+			:set mDay [:tonum [:pick $0 4 6]];
+			:set mHour [:tonum [:pick $0 12 14]];
+			:set mMin [:tonum [:pick $0 15 17]];
+			:set mSec [:tonum [:pick $0 18 20]];
+		} else={
+			:error ($cPath.": Invalid format: '".$1."'");
 		}
 	}
 
