@@ -26,7 +26,7 @@
 		:if ([:len $mVal] > 0) do={
 		
 			:set rObj [:toarray ""];
-			:for i from=0 to=3 do={
+			:for i from=0 to=2 do={
 				:set mPos [:find $mVal " "];
 				:if ([:type $mPos] = "num") do={
 					
@@ -39,12 +39,11 @@
 					:if ($i = 2) do={
 						:set ($rObj->"topics") [($strTool->"split") ([:pick $mVal 0 $mPos]) ","];
 					}
-					:if ($i = 3) do={
-						:set ($rObj->"message") [:pick $mVal 0 $mPos];
-					}
 					:set mVal [:pick $mVal ($mPos + 1) ([:len $mVal])];
 				}
 			}
+			:set ($rObj->"message") $mVal;
+
 			:if ([:type ($rObj->"date")] = "str" && [:type ($rObj->"time")] = "str" && [:type ($rObj->"topics")] = "array" && [:type ($rObj->"message")] = "str") do={
 				:set ($rObjs->([:len $rObjs])) $rObj;
 			} else={
