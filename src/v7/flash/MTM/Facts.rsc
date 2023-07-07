@@ -450,24 +450,53 @@
 	:set mVal [($MtmFacts->"setEnv") "major" 0];
 	:set mVal [($MtmFacts->"setEnv") "minor" 0];
 	:set mVal [($MtmFacts->"setEnv") "patch" 0];
+	:set mVal [($MtmFacts->"setEnv") "preInfo" ""]; #pre release info
 	
 	:local mVer [/system/resource/get version];
-	:local mPos [:find $mVer "."];
+	:local mPos 0;
 	
-	:set mVal [($MtmFacts->"setEnv") "major" [:tonum [:pick $mVer 0 $mPos]]];
-	:set mVer [:pick $mVer ($mPos + 1) [:len $mVer]];
-
+	:local found 0;
+	:if ($found = 0) do={
+		:set mPos [:find $mVer "rc"];
+		:if ([:typeof $mPos] = "num") do={
+			:set mVal [($MtmFacts->"setEnv") "preInfo" ([:pick $mVer $mPos ([:len $mVer])])];
+			
+			:set mVer [:pick $mVer 0 $mPos];
+			:set found 1;
+		}
+	}
+	:if ($found = 0) do={
+		:set mPos [:find $mVer "beta"];
+		:if ([:typeof $mPos] = "num") do={
+			:set mVal [($MtmFacts->"setEnv") "preInfo" ([:pick $mVer $mPos ([:len $mVer])])];
+			:set mVer [:pick $mVer 0 $mPos];
+			:set found 1;
+		}
+	}
+	:if ($found = 0) do={
+		:set mPos [:find $mVer "alpha"];
+		:if ([:typeof $mPos] = "num") do={
+			:set mVal [($MtmFacts->"setEnv") "preInfo" ([:pick $mVer $mPos ([:len $mVer])])];
+			:set mVer [:pick $mVer 0 $mPos];
+			:set found 1;
+		}
+	}
 	:set mPos [:find $mVer "."];
 	:if ([:typeof $mPos] = "num") do={
-		:set mVal [($MtmFacts->"setEnv") "minor" [:tonum [:pick $mVer 0 $mPos]]];
+		:set mVal [($MtmFacts->"setEnv") "major" ([:tonum [:pick $mVer 0 $mPos]])];
 		:set mVer [:pick $mVer ($mPos + 1) [:len $mVer]];
-	}
-
-	:set mPos [:find $mVer " "];
-	:if ([($MtmFacts->"getEnv") "minor"] > 0) do={
-		:set mVal [($MtmFacts->"setEnv") "patch" [:tonum [:pick $mVer 0 $mPos]]];
-	} else={
-		:set mVal [($MtmFacts->"setEnv") "minor" [:tonum [:pick $mVer 0 $mPos]]];
+		:set mPos [:find $mVer "."];
+		:if ([:typeof $mPos] = "num") do={
+			:set mVal [($MtmFacts->"setEnv") "minor" ([:tonum [:pick $mVer 0 $mPos]])];
+			:set mVer [:pick $mVer ($mPos + 1) [:len $mVer]];
+			:if ([:len $mVer] > 0) do={
+				:set mVal [($MtmFacts->"setEnv") "patch" ([:tonum $mVer])];
+			}
+		} else={
+			:if ([:len $mVer] > 0) do={
+				:set mVal [($MtmFacts->"setEnv") "minor" ([:tonum $mVer])];
+			}
+		}
 	}
 
 	##import the environment variables

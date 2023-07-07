@@ -7,31 +7,87 @@
 [($MtmFacts->"setDebug") true];
 
 ##remove specific tool from cache
-:local sysId "tool-time-epoch";
-:local objFact [($MtmFacts->"getObjects")];
-:local sObj [($objFact->"getStore") $sysId];
-:set ($sObj->"obj"->($sObj->"hash"));
+#:local sysId "tool-time-epoch";
+#:local objFact [($MtmFacts->"getObjects")];
+#:local sObj [($objFact->"getStore") $sysId];
+#:set ($sObj->"obj"->($sObj->"hash"));
 
 #:local result [($MtmFacts->"get") "getTools()->getTime()->getEpoch()->getCurrent()"];
 #:put ("Current Epoch: ".$result); #epoch time
 
+:local input "7.11rc5 (development)";##[/system/resource/get version];
+#:local input "7.11.4rc3";
+:local input "7.11.4beta3";
+:local input "7.11";
+:local mVer $input;
+:local mVer [/system/resource/get version];
+:local mPos 0;
 
 
-:local input ":local v1 [\$chr2int [:pick \$input 0 1] \$charsString]";
+:local major "";
+:local minor "na";
+:local patch "na";
+:local preType "na";
 
-:local toolObj [($MtmFacts->"get") "getTools()->getEncoding()->getBase16()"];
-:local orig $input;
-:local output ""; 
-:put ("Original is: '".$orig."', type: '".[:typeof $orig]."', length: '".[:len $orig]."'");
-
-:set output [($toolObj->"encode") $input];
-:put ("Base64 is: '".$output."'");
-
-:set output [($toolObj->"decode") $output];
-:put ("Decoded is : '".$output."', type: '".[:typeof $output]."', length: '".[:len $output]."'");
-
-:if ($orig = $output) do={
-	:put ("It is a match");
-} else={
-	:put ("It is NOT a match");
+:local found 0;
+:if ($found = 0) do={
+	:set mPos [:find $mVer "rc"];
+	:if ([:typeof $mPos] = "num") do={
+		:set preType [:pick $mVer $mPos ([:len $mVer])];
+		:set mVer [:pick $mVer 0 $mPos];
+		:set found 1;
+	}
 }
+:if ($found = 0) do={
+	:set mPos [:find $mVer "beta"];
+	:if ([:typeof $mPos] = "num") do={
+		:set preType [:pick $mVer $mPos ([:len $mVer])];
+		:set mVer [:pick $mVer 0 $mPos];
+		:set found 1;
+	}
+}
+:if ($found = 0) do={
+	:set mPos [:find $mVer "alpha"];
+	:if ([:typeof $mPos] = "num") do={
+		:set preType [:pick $mVer $mPos ([:len $mVer])];
+		:set mVer [:pick $mVer 0 $mPos];
+		:set found 1;
+	}
+}
+
+:set mPos [:find $mVer "."];
+:if ([:typeof $mPos] = "num") do={
+	:set major [:tonum [:pick $mVer 0 $mPos]];
+	:set mVer [:pick $mVer ($mPos + 1) [:len $mVer]];
+	
+	:set mPos [:find $mVer "."];
+	:if ([:typeof $mPos] = "num") do={
+		:set minor [:tonum [:pick $mVer 0 $mPos]];
+		:set mVer [:pick $mVer ($mPos + 1) [:len $mVer]];
+		
+		:if ([:len $mVer] > 0) do={
+			:set patch [:tonum $mVer];
+		}
+	} else={
+		:if ([:len $mVer] > 0) do={
+			:set minor [:tonum $mVer];
+		}
+	}
+}
+
+
+:put ("Full: ".$input);
+:put ("Remain: ".$mVer);
+:put ("major: ".$major);
+:put ("minor: ".$minor);
+:put ("patch: ".$patch);
+:put ("pre: ".$preType);
+
+
+
+
+#:if ([($MtmFacts->"getEnv") "minor"] > 0) do={
+#	:set mVal [($MtmFacts->"setEnv") "patch" [:tonum [:pick $mVer 0 $mPos]]];
+#} else={
+#	:set mVal [($MtmFacts->"setEnv") "minor" [:tonum [:pick $mVer 0 $mPos]]];
+#}
