@@ -454,13 +454,20 @@
 	
 	:local mVer [/system/resource/get version];
 	:local mPos 0;
-	
 	:local found 0;
+	
+	
+	:set mPos [:find $mVer "("];
+	:if ([:typeof $mPos] = "num") do={
+		:set mVal [($MtmFacts->"setEnv") "channel" ([:pick $mVer ($mPos + 1) ([:len $mVer] - 1)])];
+		:set mVer [:pick $mVer 0 ($mPos - 1)]; #-1 to get rid of the space
+		:set found 1;
+	}
+
 	:if ($found = 0) do={
 		:set mPos [:find $mVer "rc"];
 		:if ([:typeof $mPos] = "num") do={
 			:set mVal [($MtmFacts->"setEnv") "preInfo" ([:pick $mVer $mPos ([:len $mVer])])];
-			
 			:set mVer [:pick $mVer 0 $mPos];
 			:set found 1;
 		}
