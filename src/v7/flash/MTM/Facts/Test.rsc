@@ -1,8 +1,9 @@
 :global MtmFacts;
-#:set MtmFacts;
+:set MtmFacts;
 
 /import flash/MTM/Facts.rsc;
 :global MtmFacts;
+
 
 [($MtmFacts->"setDebug") true];
 

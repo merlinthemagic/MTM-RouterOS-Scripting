@@ -34,10 +34,10 @@
 		:local cPath "MTM->Facts->setEnv";
 		:global MtmFacts;
 		:if ([:len $0] = 0 || [:typeof $0] != "str") do={
-			:error ($cPath.": Key is mandatory, must be string value");
+			:error ($cPath.": Key is mandatory, must be string value, not: '".[:typeof $1]."'");
 		}
 		:if ([:typeof $1] != "str" && [:typeof $1] != "num") do={
-			:error ($cPath.": Value must be string or number value");
+			:error ($cPath.": Value for key: '".$0."' must be string or number value, not: '".[:typeof $1]."'");
 		}
 		:set ($MtmFacts->"env"->$0) $1;
 		:return $MtmFacts;
@@ -456,14 +456,14 @@
 	:local mPos 0;
 	:local found 0;
 	
-	
+	##find channel
 	:set mPos [:find $mVer "("];
 	:if ([:typeof $mPos] = "num") do={
 		:set mVal [($MtmFacts->"setEnv") "channel" ([:pick $mVer ($mPos + 1) ([:len $mVer] - 1)])];
 		:set mVer [:pick $mVer 0 ($mPos - 1)]; #-1 to get rid of the space
-		:set found 1;
 	}
-
+	
+	##find pre release type
 	:if ($found = 0) do={
 		:set mPos [:find $mVer "rc"];
 		:if ([:typeof $mPos] = "num") do={
@@ -488,6 +488,7 @@
 			:set found 1;
 		}
 	}
+	
 	:set mPos [:find $mVer "."];
 	:if ([:typeof $mPos] = "num") do={
 		:set mVal [($MtmFacts->"setEnv") "major" ([:tonum [:pick $mVer 0 $mPos]])];
