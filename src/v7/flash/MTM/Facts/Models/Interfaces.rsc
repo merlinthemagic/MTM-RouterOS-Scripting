@@ -7,10 +7,10 @@
 	:if ([:typeof ($MtmModelIfs1->"wlans")] = "nothing") do={
 		:global MtmFacts;
 		:local mVal "";
-		:if ([:len [/system/package/find name~"wifiwave2"]] < 1) do= {
-			:set mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Facts/Models/Interfaces/Wlans.rsc");
-		} else={
+		:if ([:len [/system/package/find name~"wifi-qcom"]] > 0 || [:len [/system/package/find name~"wifiwave2"]] > 0) do= {
 			:set mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Facts/Models/Interfaces/WlansWave2.rsc");
+		} else={
+			:set mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Facts/Models/Interfaces/Wlans.rsc");
 		}
 		:set mVal [($MtmFacts->"importFile") $mVal];
 	}
