@@ -40,7 +40,7 @@ While 'src/v7/flash/Facts.rsc' and 'src/v7/flash/MtmEnv.rsc' are the only requir
 ##md5 hash example
 :local myInput "my string data";
 :local toolObj [($MtmFacts->"get") "getTools()->getHashing()->getMD5()"];
-:put ([($toolObj->"hash") $myInput); #string 8240143bd807e5a52b1f9d7dd5e21ef3
+:put ([($toolObj->"hash") $myInput]); #string 8240143bd807e5a52b1f9d7dd5e21ef3
 
 ##Base64 encode example
 :local myInput "My string i want to encode";
