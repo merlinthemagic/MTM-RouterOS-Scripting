@@ -37,6 +37,15 @@
 	:if ([:typeof $0] != "str") do={
 		:error ($cPath.": Input has invalid type '".[:typeof $0]."'");
 	}
+	
+	:local doThrow true;
+	:if ([:typeof $1] = "str" && $1 = "false") do={
+		:set doThrow false;
+	}
+	
+	:put [:typeof $doThrow];
+	:put ($doThrow);
+	
 	:local mVal "";
 	
 	:global MtmToolFs1;
@@ -58,7 +67,9 @@
 			:set mVal [/file/remove [find where name=$plFile]];
 		}
 	} else={
-		:error ($cPath.": Cannot create, directory exists '".$0."'");
+		:if ($doThrow = true) do={
+			:error ($cPath.": Cannot create, directory exists '".$0."'");
+		}
 	}
 	:return true;
 }

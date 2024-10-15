@@ -192,6 +192,10 @@
 			:error ($cPath.": Input has invalid type '".[:typeof $0]."'");
 		}
 		:local curObj $MtmFacts;
+		:if ([:typeof $1] = "array") do={
+			:set curObj $1;
+		}
+		
 		:local pos;
 		:local pMethod;
 		:local rMethod;

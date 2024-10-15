@@ -42,6 +42,16 @@
 :put ($result); #bool or error
 ```
 
+### getContent:
+
+```
+:local filePath "flash/path/to/my/file.txt";
+:local result [($toolObj->"getContent") $filePath];
+:put ($result); #bla bla bla
+```
+
+
+
 ### getSize:
 
 ```

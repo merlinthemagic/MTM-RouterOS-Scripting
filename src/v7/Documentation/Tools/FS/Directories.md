@@ -22,6 +22,7 @@
 
 ```
 :local dirPath "flash/path/to/my/dir"; ##no trailing /'s for now please
-:local result [($toolObj->"create") $dirPath];
+:local throwErr false; #should the method throw if dir already exists?
+:local result [($toolObj->"create") $dirPath throwErr];
 :put ($result); #bool or error
 ```
