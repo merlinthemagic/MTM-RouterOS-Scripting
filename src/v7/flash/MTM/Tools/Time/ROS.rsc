@@ -33,23 +33,31 @@
 
 	##src: https://forum.mikrotik.com/viewtopic.php?t=124999
 	:local cPath "MTM/Tools/Time/ROS.rsc/getGmtOffset";
-	:local mVal [:totime ([/system clock get gmt-offset ] - (2147483647 * 2) - 2)];
-	:local mIsNeg true;
-	:if (($mVal ~ "^-[0-9]{2}:[0-9]{2}:[0-9]{2}\$") = false) do={
-		:set mVal [:totime ([/system clock get gmt-offset ])];
-		:if (($mVal ~ "^[0-9]{2}:[0-9]{2}:[0-9]{2}\$") = false) do={
-			:error ($cPath.": Failed to produce GMT offset '".$mVal."', for timezone '".([/system clock get time-zone-name])."'");
+	
+	:local mVal [/system clock get gmt-offset];
+	:if (($mVal ~ "^-[0-9]{0,5}\$") = false && ($mVal ~ "^[0-9]{0,5}\$") = false) do={
+		
+		:set mVal [:totime ([/system clock get gmt-offset ] - (2147483647 * 2) - 2)];
+		:local mIsNeg true;
+		:if (($mVal ~ "^-[0-9]{2}:[0-9]{2}:[0-9]{2}\$") = false) do={
+			:set mVal [:totime ([/system clock get gmt-offset ])];
+			:if (($mVal ~ "^[0-9]{2}:[0-9]{2}:[0-9]{2}\$") = false) do={
+				:error ($cPath.": Failed to produce GMT offset '".$mVal."', for timezone '".([/system clock get time-zone-name])."'");
+			}
+			:set mIsNeg false;
 		}
-		:set mIsNeg false;
-	}
-	
-	:global MtmToolTime1;
-	:local self ($MtmToolTime1->"ros");
-	
-	:if ($mIsNeg = false) do={
-		:return ([($self->"getSecondsFromFormat") [:tostr $mVal] "h:i:s"]);
+		
+		:global MtmToolTime1;
+		:local self ($MtmToolTime1->"ros");
+		
+		:if ($mIsNeg = false) do={
+			:return ([($self->"getSecondsFromFormat") [:tostr $mVal] "h:i:s"]);
+		} else={
+			:return ([($self->"getSecondsFromFormat") [:tostr [:pick $mVal 1 ([:len $mVal] - 1)]] "h:i:s"] * -1);
+		}
+		
 	} else={
-		:return ([($self->"getSecondsFromFormat") [:tostr [:pick $mVal 1 ([:len $mVal] - 1)]] "h:i:s"] * -1);
+		:return $mVal;
 	}
 }
 :set ($s->"getSecondsFromFormat") do={
