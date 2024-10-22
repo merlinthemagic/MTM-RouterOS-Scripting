@@ -324,14 +324,23 @@
 	}
 	:set ($s->"lock") do={
 		
-		:local cPath "DCS/Facts.rsc/lock";
+		:local cPath "MTM/Facts.rsc/lock";
 		:if ([:typeof $0] != "str"  || [:len $0] < 1) do={
 			:error ($cPath.": Input lock name invalid type '".[:typeof $0]."'");
 		}
-		:if ([:typeof $1] != "str" || [:len $1] < 1) do={
-			:error ($cPath.": Input lock duration for lock name '".$0."'");
+		
+		:local hold 0;
+		:if ([:typeof $1] = "num") do={
+			:set hold $1;
+		} else={
+			:if ([:typeof $1] = "str" && [:len $1] > 0) do={
+				:set hold [:tonum $1];
+			}
 		}
-		:local hold [:tonum $1];
+		:if ($hold < 2) do={
+			:error ($cPath.": Input lock duration for lock name '".$0."' too short");
+		}
+		
 		:local wait 2; ##minimum 2 seconds
 		:if ([:typeof $2] = "str" && [:len $2] > 0) do={
 			:set wait [:tonum $2];
@@ -376,7 +385,7 @@
 
 		:global MtmFacts;
 		:global MtmLocks;
-		:local cPath "DCS/Facts.rsc/extendlock";
+		:local cPath "MTM/Facts.rsc/extendlock";
 		:if ([:typeof $0] != "str"  || [:len $0] < 1) do={
 			:error ($cPath.": Input lock name invalid type '".[:typeof $0]."'");
 		}
@@ -406,9 +415,25 @@
 		}
 		:return true;
 	}
+	:set ($s->"lockremain") do={
+
+		:global MtmLocks;
+		:local cPath "MTM/Facts.rsc/checklock";
+		:if ([:typeof $0] != "str"  || [:len $0] < 1) do={
+			:error ($cPath.": Input lock name invalid type '".[:typeof $0]."'");
+		}
+		:local remain 0;
+		:local lock ($MtmLocks->$0);
+		:if ([:typeof $lock] != "nothing") do={
+			:global MtmFacts;
+			:local timeTool [($MtmFacts->"get") "getTools()->getTime()->getEpoch()"];
+			:set remain (($lock->"expire") - [($timeTool->"getCurrent")]);
+		}
+		:return $remain;
+	}
 	:set ($s->"unlock") do={
 		:global MtmLocks;
-		:local cPath "DCS/Facts.rsc/unlock";
+		:local cPath "MTM/Facts.rsc/unlock";
 		:if ([:typeof $0] != "str"  || [:len $0] < 1) do={
 			:error ($cPath.": Input lock name invalid type '".[:typeof $0]."'");
 		}
