@@ -42,10 +42,7 @@
 	:if ([:typeof $1] = "str" && $1 = "false") do={
 		:set doThrow false;
 	}
-	
-	:put [:typeof $doThrow];
-	:put ($doThrow);
-	
+
 	:local mVal "";
 	
 	:global MtmToolFs1;

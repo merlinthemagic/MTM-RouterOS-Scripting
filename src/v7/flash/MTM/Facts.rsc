@@ -341,11 +341,18 @@
 			:error ($cPath.": Input lock duration for lock name '".$0."' too short");
 		}
 		
-		:local wait 2; ##minimum 2 seconds
-		:if ([:typeof $2] = "str" && [:len $2] > 0) do={
-			:set wait [:tonum $2];
+		:local wait 0;
+		:if ([:typeof $2] = "num") do={
+			:set wait $1;
+		} else={
+			:if ([:typeof $2] = "str" && [:len $2] > 0) do={
+				:set wait [:tonum $2];
+			}
 		}
-		
+		:if ($hold < 0) do={
+			:error ($cPath.": Input lock wait for lock name '".$0."' cannot be negative");
+		}
+
 		:global MtmFacts;
 		:global MtmLocks;
 		
@@ -392,10 +399,19 @@
 		:if ([:typeof $1] != "str"  || [:len $1] < 1) do={
 			:error ($cPath.": Input lock key invalid for lock name '".$0."'");
 		}
-		:if ([:typeof $2] != "str" || [:len $2] < 1) do={
-			:error ($cPath.": Input lock duration for lock name '".$0."'");
-		}
 		
+		:local hold 0;
+		:if ([:typeof $2] = "num") do={
+			:set hold $2;
+		} else={
+			:if ([:typeof $2] = "str" && [:len $2] > 0) do={
+				:set hold [:tonum $2];
+			}
+		}
+		:if ($hold < 2) do={
+			:error ($cPath.": Input lock duration for lock name '".$0."' too short");
+		}
+
 		:local lock ($MtmLocks->$0);
 		:if ([:typeof $lock] != "nothing") do={
 			
@@ -408,7 +424,7 @@
 			:if ((($lock->"expire") - 2) < $cTime) do={
 				:error ($cPath.": Failed to extend lock name '".$0."' expires in less than 2 seconds");
 			}
-			:set ($MtmLocks->$0) {expire=($cTime + [:tonum $2]);key=$1};
+			:set ($MtmLocks->$0) {expire=($cTime + $hold);key=$1};
 			
 		} else={
 			:error ($cPath.": Failed to extend lock name '".$0."', lock does not exist");
