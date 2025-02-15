@@ -74,7 +74,7 @@
 		:if ($mThrow = true) do={
 			:error ($cPath.": Attribute: '".$0."' does not exist");
 		} else={
-			:return nil;
+			:return [:nothing];
 		}
 	}
 }
