@@ -91,6 +91,15 @@
 	}
 	:return ($MtmTools->"parse");
 }
+:set ($s->"getAvps") do={
+	:global MtmTools;
+	:if ([:typeof ($MtmTools->"avp")] = "nothing") do={
+		:global MtmFacts;
+		:local mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Facts/Tools/AVP.rsc");
+		:set mVal [($MtmFacts->"importFile") $mVal];
+	}
+	:return ($MtmTools->"avp");
+}
 :global MtmTools;
 :set MtmTools [:toarray ""];
 

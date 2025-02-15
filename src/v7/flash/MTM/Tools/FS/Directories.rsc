@@ -39,7 +39,7 @@
 	}
 	
 	:local doThrow true;
-	:if ([:typeof $1] = "str" && $1 = "false") do={
+	:if (([:typeof $1] = "bool" && $1 = false) || ([:typeof $1] = "str" && $1 = "false")) do={
 		:set doThrow false;
 	}
 
@@ -69,6 +69,38 @@
 		}
 	}
 	:return true;
+}
+:set ($s->"list") do={
+
+	:global MtmFacts;
+	:local cPath "MTM/Tools/FS/Directories.rsc/list";
+	:if ([:typeof $0] != "str") do={
+		:error ($cPath.": Input has invalid type '".[:typeof $0]."'");
+	}
+	:global MtmToolFs1;
+	:local self ($MtmToolFs1->"dirs");
+	
+	:if ([($self->"getExists") $0] = true) do={
+		
+		:local rObjs [:toarray ""];
+		:local rObj [:toarray ""];
+		:local mPos ([:len $0] + 1);
+		:local mVal "";
+		:foreach id in=[/file/find where name~"^$0"] do={
+			:set mVal [/file/get $id name];
+			:set mVal [:pick $mVal $mPos [:len $mVal]];
+			:if ([:typeof [:find $mVal "/"]] != "num" && [:len $mVal] > 0) do={
+				:set rObj [:toarray ""];
+				:set ($rObj->"name") $mVal;
+				:set ($rObj->"type") [/file/get $id type];
+				:set ($rObjs->([:len $rObjs])) $rObj;
+			}
+		}
+		:return $rObjs;
+		
+	} else={
+		:error ($cPath.": Cannot list, directory does not exist '".$0."'");
+	}
 }
 
 

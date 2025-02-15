@@ -2,6 +2,7 @@
 :global MtmFacts;
 :if ([:typeof $MtmFacts] = "nothing") do={
 
+	:local mVal "";
 	:local s [:toarray ""];
 	:set ($s->"env") [:toarray ""];
 	
@@ -22,7 +23,7 @@
 		:if ($0 != "true" && $0 != "false") do={
 			:error ($cPath.": Parameter must be true or false");
 		}
-		:local mVal [($MtmFacts->"setEnv") "mtm.debug.enabled" $0];
+		:set mVal [($MtmFacts->"setEnv") "mtm.debug.enabled" $0];
 		:if ($0 = true) do={
 			:set mVal [($MtmFacts->"echo") ("Debug set ON")];
 		} else={
