@@ -134,7 +134,7 @@
 		:error ($cPath.": Input file name has invalid type '".[:typeof $0]."'");
 	}
 	:if ([:typeof $1] != "str") do={
-		:error ($cPath.": Input content has invalid type '".[:typeof $0]."'");
+		:error ($cPath.": Input content has invalid type '".[:typeof $1]."'");
 	}
 	:local mVal "";
 
