@@ -205,13 +205,18 @@
 		:return true;
 	
 	} on-error={
-		:set mVal [($MtmFacts->"unlock") $procName $lockKey];
 		:if ([($fileTool->"getExists") $filePath] = false) do={
-			##If any of the AVP files are deleted seperate from this class we fail each time the cache is used, need this check so a missing file does not permanetly block
-			:set ($MtmAvpPersist->$iAttr);
+			##If any of the AVP files are deleted seperate from this class we fail each time the cache is used, need this logic so a missing file does not permanetly block
+			:foreach key,avp in=$MtmAvpPersist do={
+				:if (($avp->"file") = $fileName) do={
+					:set ($MtmAvpPersist->$key);
+				}
+			}
+			:set mVal [($MtmFacts->"unlock") $procName $lockKey];
 			:error ($cPath." AVP file: '".$filePath."' was deleted by someone outside this class");
 		} else={
-			:log/error ($cPath. ": Encountered an error");
+			:set mVal [($MtmFacts->"unlock") $procName $lockKey];
+			:log/error ($cPath.": Encountered an error");
 		}
 	}
 }
@@ -302,12 +307,18 @@
 		:return true;
 	
 	} on-error={
-		:set mVal [($MtmFacts->"unlock") $procName $lockKey];
 		:if ([($fileTool->"getExists") $filePath] = false) do={
-			##If any of the AVP files are deleted seperate from this class we fail each time the cache is used, need this check so a missing file does not permanetly block
-			:set ($MtmAvpPersist->$iAttr);
+			##If any of the AVP files are deleted seperate from this class we fail each time the cache is used, need this logic so a missing file does not permanetly block
+			:local fileName ($MtmAvpPersist->$iAttr->"file");
+			:foreach key,avp in=$MtmAvpPersist do={
+				:if (($avp->"file") = $fileName) do={
+					:set ($MtmAvpPersist->$key);
+				}
+			}
+			:set mVal [($MtmFacts->"unlock") $procName $lockKey];
 			:error ($cPath." AVP file: '".$filePath."' was deleted by someone outside this class");
 		} else={
+			:set mVal [($MtmFacts->"unlock") $procName $lockKey];
 			:log/error ($cPath.": Encountered an error");
 		}
 	}
