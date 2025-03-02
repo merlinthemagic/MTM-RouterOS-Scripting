@@ -7,10 +7,10 @@
 	:if ([:typeof ($MtmModelIfs1->"wlans")] = "nothing") do={
 		:global MtmFacts;
 		:local mVal "";
-		:if ([:len [/system/package/find name~"wifi-qcom"]] > 0 || [:len [/system/package/find name~"wifiwave2"]] > 0) do= {
+		:if ([:len [/system/package/find where name~"wifi-qcom" && disabled=no]] > 0 || [:len [/system/package/find where name~"wifiwave2" && disabled=no]] > 0) do= {
 			:set mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Facts/Models/Interfaces/WlansWave2.rsc");
 		} else={
-			:if ([:len [/system/package/find name~"wireless"]] > 0) do= {
+			:if ([:len [/system/package/find where name~"wireless" && disabled=no]] > 0) do= {
 				:set mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Facts/Models/Interfaces/Wlans.rsc");
 			} else={
 				:set mVal ([($MtmFacts->"getEnv") "mtm.root.path"]."/Facts/Models/Interfaces/NoWlans.rsc");
