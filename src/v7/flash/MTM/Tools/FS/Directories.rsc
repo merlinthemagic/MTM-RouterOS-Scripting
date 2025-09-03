@@ -24,6 +24,7 @@
 		:if ([/file/get [find where name=$0] type] = "directory") do={
 			:return true;
 		} else={
+			##have seen dir exists, but ROS returns '' for the type on CHR 7.19.4 in AWS... rebooted and all was ok
 			:error ($cPath.": Exists, but not a directory. '".$0."' is a '".[/file/get [find where name=$0] type]."'");
 		}
 	} else={
