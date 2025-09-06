@@ -20,7 +20,7 @@ Or just these 4x files if you want to dynamically load the lib each time a tool 
 src/v7/flash/MTM/Facts.rsc
 src/v7/flash/MTM/MtmEnv.env
 src/v7/flash/MTM/mtmRoot.hint
-src/v7/flash/MTM/Enable.hint
+src/v7/flash/MTM/Enable.rsc
 ```
 
 Files to a folder on your ROS device. Then edit 'MtmEnv.env' if needed. The defaults will work fine
