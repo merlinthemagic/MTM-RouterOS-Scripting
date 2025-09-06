@@ -33,7 +33,7 @@ While Facts.rsc, MtmEnv.env, Enable.rsc and mtmRoot.hint are the only required f
 ## Initialize MTM:
 
 You can load MTM by specifying the path to the Enable.rsc file, or dynamically using the code block below.
-In mos environments you know where the lib is located, so just load it statically
+In most environments you know where the lib is located, so just load it statically
 
 ### Static load (replace with your path)
 
