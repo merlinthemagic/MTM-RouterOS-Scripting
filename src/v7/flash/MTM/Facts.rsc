@@ -2,21 +2,12 @@
 :global MtmFacts;
 :if ([:typeof $MtmFacts] = "nothing") do={
 
+	##Load the Enable.rsc file before using MtmFacts
+	
 	:local mVal "";
 	:local s [:toarray ""];
 	:set ($s->"env") [:toarray ""];
-	
-	:local envFile "MtmEnv.rsc";
-	:set envFile [/file/find where name~$envFile];
-	:if ([:len $envFile] > 0) do={
-		:if ([:typeof $envFile] = "array") do={
-			:set envFile ($envFile->0);
-		}
-		:set envFile [/file/get $envFile name];
-		
-	} else={
-		:error ($cPath.": Cannot find environment file 'MtmEnv.rsc'");
-	}
+
 	:set ($s->"setDebug") do={
 		:local cPath "MTM->Facts->setDebug";
 		:global MtmFacts;
@@ -28,6 +19,52 @@
 			:set mVal [($MtmFacts->"echo") ("Debug set ON")];
 		} else={
 			:set mVal [($MtmFacts->"echo") ("Debug set OFF")];
+		}
+		:return $MtmFacts;
+	}
+	:set ($s->"loadEnvFile") do={
+		##takes a file of AVPs and loads into the MTM environment
+		##file can have blank lines and comments leading with #
+		##attribute value pairs must be in the format: string = string
+		##e.g. myapp.secret.password=verySecret
+
+		:local cPath "MTM->Facts->loadEnvFile";
+		:global MtmFacts;
+		:if ([:len $0] = 0 || [:typeof $0] != "str") do={
+			:error ($cPath.": File path is mandatory, must be string value, not: '".[:typeof $1]."'");
+		}
+		:if ([:len [/file/find name=$0]] = 0) do={
+			:error ($cPath.": Environment file does not exist: '".$0."'");
+		}
+		:local filePath $0;
+		:local override true;
+		:if ([:typeof $1] = "bool") do={
+			##if this is failing for you call this method with the bool in parentheses e.g. (false)
+			:set override $1;
+		}
+		
+		:local fileTool [($MtmFacts->"get") "getTools()->getFileSystem()->getFiles()"];
+		:local strTool [($MtmFacts->"get") "getTools()->getTypes()->getStrings()"];
+
+		:local mVal "";
+		:local mAttr "";
+		:local mValue "";
+		:local pos 0;
+		:local raw [($fileTool->"getContent") $filePath];
+		:local lines [($strTool->"split") $raw ("\n")];
+		:foreach line in=$lines do={
+			:set line [($strTool->"trim") $line];
+			:if ([:len $line] > 0 && [:pick $line 0 1] != "#") do={
+			
+				:set pos [:find $line "=" 0];
+				:if ([:typeof $pos] = "num") do={
+					:set mAttr [:pick $line 0 $pos];
+					:set mValue [:pick $line ($pos + 1) ([:len $line])];
+					:if ($override = true || [:typeof [($MtmFacts->"getEnv") $mAttr (false)]] = "nil") do={
+						:set mVal [($MtmFacts->"setEnv") $mAttr $mValue];
+					}
+				}
+			}
 		}
 		:return $MtmFacts;
 	}
@@ -553,9 +590,6 @@
 		}
 	}
 
-	##import the environment variables
-	:set mVal [($MtmFacts->"importFile") $envFile];
-	
 	#static "objects"
 	:global MtmFaObjs;
 	:set MtmFaObjs [:toarray ""];
