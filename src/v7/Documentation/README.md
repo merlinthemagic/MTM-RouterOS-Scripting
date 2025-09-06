@@ -12,11 +12,22 @@ ROS v7
 
 ## Install:
 
-Upload the 'src/v7/flash/Facts.rsc', 'src/v7/flash/MtmEnv.env' and 'src/v7/flash/mtmRoot.hint' files to a folder on your ROS device. Then edit 'MtmEnv.env' if needed. The defaults will work fine
+Upload the entire src/v7/flash/MTM source folder to a dir on your routeros device.
+
+Or just these 4x files if you want to dynamically load the lib each time a tool is needed
+
+```
+src/v7/flash/MTM/Facts.rsc
+src/v7/flash/MTM/MtmEnv.env
+src/v7/flash/MTM/mtmRoot.hint
+src/v7/flash/MTM/Enable.hint
+```
+
+Files to a folder on your ROS device. Then edit 'MtmEnv.env' if needed. The defaults will work fine
 
 ## Remote loading
 
-While Facts.rsc, MtmEnv.env and mtmRoot.hint are the only required files, look at MtmEnv.env for additional options. You can make a copy of the lib and store it on your own server, then have MTM load files from there whenever they are missing locally. The default config fetches files from master on github. But you dont have to trust me, download, verify and then only use your own copy of the repository on your devices.
+While Facts.rsc, MtmEnv.env, Enable.rsc and mtmRoot.hint are the only required files, look in MtmEnv.env for additional options. You can make a copy of the lib and store it on your own server, then have MTM load files from there whenever they are missing locally. The default config fetches files from master on github. But you dont have to trust me, download, verify and then only use your own copy of the repository on your devices.
 
 
 ## Initialize MTM:
@@ -50,7 +61,8 @@ In mos environments you know where the lib is located, so just load it staticall
 ## Use examples:
 
 ```
-#initialize by importing the Enable.rsc file 
+#initialize by importing the Enable.rsc file
+/import file-name="flash/MTM/Enable.rsc" verbose=no;
 :global MtmFacts;
 
 ##md5 hash example
