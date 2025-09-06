@@ -1,7 +1,7 @@
 #initialize
 
 ```
-/import flash/MTM/Facts.rsc;
+/import flash/MTM/Enable.rsc;
 :global MtmFacts;
 :local name "lte1";
 :local nsStr "getInterfaces()->getLTE()->getByName(name='$name')";

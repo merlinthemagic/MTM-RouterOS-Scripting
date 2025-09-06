@@ -1,7 +1,7 @@
 #initialize
 
 ```
-/import flash/MTM/Facts.rsc;
+/import flash/MTM/Enable.rsc;
 :global MtmFacts;
 :local interface "ether42";
 :local nsStr "getInterfaces()->getDot1x()->getServers()->getByInterface(name='$interface')";

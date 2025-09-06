@@ -1,7 +1,7 @@
 #initialize
 
 ```
-/import flash/MTM/Facts.rsc;
+/import flash/MTM/Enable.rsc;
 :global MtmFacts;
 :local nsStr "getInterfaces()->getLTE()";
 :local factObj [($MtmFacts->"execute") nsStr=$nsStr];

@@ -23,11 +23,6 @@
 		:return $MtmFacts;
 	}
 	:set ($s->"loadEnvFile") do={
-		##takes a file of AVPs and loads into the MTM environment
-		##file can have blank lines and comments leading with #
-		##attribute value pairs must be in the format: string = string
-		##e.g. myapp.secret.password=verySecret
-
 		:local cPath "MTM->Facts->loadEnvFile";
 		:global MtmFacts;
 		:if ([:len $0] = 0 || [:typeof $0] != "str") do={

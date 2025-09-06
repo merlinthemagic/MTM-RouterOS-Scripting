@@ -1,7 +1,7 @@
 #initialize
 
 ```
-/import flash/MTM/Facts.rsc;
+/import flash/MTM/Enable.rsc;
 :global MtmFacts;
 :local nsStr "getSystem()->getResources()";
 :local sysObj [($MtmFacts->"execute") nsStr=$nsStr];

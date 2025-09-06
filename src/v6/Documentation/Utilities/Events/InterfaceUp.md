@@ -1,7 +1,7 @@
 #initialize
 
 ```
-/import flash/MTM/Facts.rsc;
+/import flash/MTM/Enable.rsc;
 :global MtmFacts;
 :local nsStr "getUtilities()->getEvents()->getInterfaceUp()";
 :local utilObj [($MtmFacts->"execute") nsStr=$nsStr];

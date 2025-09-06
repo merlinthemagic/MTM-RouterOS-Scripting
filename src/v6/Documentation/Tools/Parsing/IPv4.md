@@ -1,7 +1,7 @@
 #initialize
 
 ```
-/import flash/MTM/Facts.rsc;
+/import flash/MTM/Enable.rsc;
 :global MtmFacts;
 :local nsStr "getTools()->getParsing()->getIPv4()";
 :local toolObj [($MtmFacts->"execute") nsStr=$nsStr];

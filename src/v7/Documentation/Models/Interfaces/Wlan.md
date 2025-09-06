@@ -1,7 +1,7 @@
 #initialize
 
 ```
-/import flash/MTM/Facts.rsc;
+/import flash/MTM/Enable.rsc;
 :global MtmFacts;
 ##picking first hardware interface
 :local mObj (([($MtmFacts->"get") "getModels()->getInterfaces()->getWlans()->getAllHardware()"])->0);

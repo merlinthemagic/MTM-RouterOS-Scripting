@@ -1,6 +1,6 @@
 ## /import file-name=flash/tests/Tools/JsonDecode/Test.rsc;
 
-/import flash/MTM/Facts.rsc;
+/import flash/MTM/Enable.rsc;
 :global MtmFacts;
 :local sTime [($MtmFacts->"execute") nsStr="getTools()->getTime()->getEpoch()->getCurrent()"];
 

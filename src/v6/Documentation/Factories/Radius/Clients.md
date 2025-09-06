@@ -1,7 +1,7 @@
 #initialize
 
 ```
-/import flash/MTM/Facts.rsc;
+/import flash/MTM/Enable.rsc;
 :global MtmFacts;
 :local nsStr "getRadius()->getClients()";
 :local factObj [($MtmFacts->"execute") nsStr=$nsStr];

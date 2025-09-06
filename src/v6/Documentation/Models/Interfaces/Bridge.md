@@ -1,7 +1,7 @@
 #initialize
 
 ```
-/import flash/MTM/Facts.rsc;
+/import flash/MTM/Enable.rsc;
 :global MtmFacts;
 :local name "bridge1";
 :local nsStr "getInterfaces()->getBridges()->getByName(name='$name')";

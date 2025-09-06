@@ -2,7 +2,7 @@
 [:len [/system script environment find]] > 0) do={
 	#/system script environment remove [ find ];
 }
-/import flash/MTM/Facts.rsc;
+/import flash/MTM/Enable.rsc;
 :global MtmFacts;
 
 ##remove specific tool from cache

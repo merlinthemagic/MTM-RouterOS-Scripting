@@ -12,7 +12,7 @@
 	/system script environment remove [ find ];
 }
 
-/import flash/MTM/Facts.rsc;
+/import flash/MTM/Enable.rsc;
 :global MtmFacts;
 
 [($MtmFacts->"setDebug") true];

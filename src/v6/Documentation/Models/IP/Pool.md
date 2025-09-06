@@ -1,7 +1,7 @@
 #initialize
 
 ```
-/import flash/MTM/Facts.rsc;
+/import flash/MTM/Enable.rsc;
 :global MtmFacts;
 :local name "dhcp_pool0";
 :local nsStr "getIP()->getPools()->getByName(name='$name')";

@@ -1,7 +1,7 @@
 # Initialize
 
 ```
-/import flash/MTM/Facts.rsc;
+/import flash/MTM/Enable.rsc;
 :global MtmFacts;
 :local name "ether42";
 :local nsStr "getInterfaces()->getEthernet()->getByName(name='$name')";

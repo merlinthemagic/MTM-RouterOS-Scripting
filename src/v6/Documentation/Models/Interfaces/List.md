@@ -1,7 +1,7 @@
 #initialize
 
 ```
-/import flash/MTM/Facts.rsc;
+/import flash/MTM/Enable.rsc;
 :global MtmFacts;
 :local name "myEdgePorts";
 :local nsStr "getInterfaces()->getLists()->getByName(name='$name')";
