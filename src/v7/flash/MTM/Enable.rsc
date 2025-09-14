@@ -7,8 +7,12 @@
 	:local hintFile "mtmRoot.hint";
 	:local rootPath "";
 	:set mVal [/file/find name~$hintFile];
-	:if ([:len $mVal] = 0) do={
-		:error ($cPath.": Hint file: '".$hintFile."' does not exist");
+	:if ([:len $mVal] != 1) do={
+		:if ([:len $mVal] = 0) do={
+			:error ($cPath.": Hint file: '".$hintFile."' does not exist");
+		} else={
+			:error ($cPath.": Hint file: '".$hintFile."' multiple exist");
+		}
 	}
 	:set mVal [/file/get $mVal name];
 	:set rootPath [:pick $mVal 0 ([:len $mVal] - 13)];
