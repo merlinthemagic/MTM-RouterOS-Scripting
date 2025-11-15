@@ -77,7 +77,7 @@
 	:local self ($MtmToolFs1->"files");
 	
 	:if ([($self->"getExists") $0] = false) do={
-		:set mVal [/file print file=$0];
+		:set mVal [/file/print file=$0];
 		#wait for the file to be created
 		:if ([($self->"getExists") $0 [:tonum 1500]] = false) do={
 			:error ($cPath.": Failed to create file: '".$0."'");

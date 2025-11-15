@@ -17,17 +17,17 @@ Upload the entire src/v7/flash/MTM source folder to a dir on your routeros devic
 Or just these 4x files if you want to dynamically load the lib each time a tool is needed
 
 ```
-src/v7/flash/MTM/Facts.rsc
-src/v7/flash/MTM/MtmEnv.env
-src/v7/flash/MTM/mtmRoot.hint
-src/v7/flash/MTM/Enable.rsc
+src/v7/flash/MTM/Utilities/Facts.rsc
+src/v7/flash/MTM/Utilities/mtmUtilitiesRoot.hint
+src/v7/flash/MTM/Utilities/Enable.rsc
+src/v7/flash/MTM/Utilities/Envs/MtmEnv.env
 ```
 
 Files to a folder on your ROS device. Then edit 'MtmEnv.env' if needed. The defaults will work fine
 
 ## Remote loading
 
-While Facts.rsc, MtmEnv.env, Enable.rsc and mtmRoot.hint are the only required files, look in MtmEnv.env for additional options. You can make a copy of the lib and store it on your own server, then have MTM load files from there whenever they are missing locally. The default config fetches files from master on github. But you dont have to trust me, download, verify and then only use your own copy of the repository on your devices.
+While Facts.rsc, MtmEnv.env, Enable.rsc and mtmUtilitiesRoot.hint are the only required files, look in MtmEnv.env for additional options. You can make a copy of the lib and store it on your own server, then have MTM load files from there whenever they are missing locally. The default config fetches files from master on github. But you dont have to trust me, download, verify and then only use your own copy of the repository on your devices.
 
 
 ## Initialize MTM:
@@ -38,7 +38,7 @@ In most environments you know where the lib is located, so just load it statical
 ### Static load (replace with your path)
 
 ```
-/import file-name="flash/MTM/Enable.rsc" verbose=no;
+/import file-name="flash/MTM/Utilities/Enable.rsc" verbose=no;
 
 ```
 
@@ -46,13 +46,13 @@ In most environments you know where the lib is located, so just load it statical
 
 ```
 :local rootPath "";
-:local hintFile "mtmRoot.hint";
+:local hintFile "mtmUtilitiesRoot.hint";
 :local mVal [/file/find name~$hintFile];
 :if ([:len $mVal] = 0) do={
 	:error ("Hint file: '".$hintFile."' does not exist");
 }
 :set mVal [/file/get $mVal name];
-:set rootPath [:pick $mVal 0 ([:len $mVal] - 13)];
+:set rootPath [:pick $mVal 0 ([:len $mVal] - 22)];
 /import file-name=($rootPath."/Enable.rsc") verbose=no;
 
 ```
