@@ -171,7 +171,7 @@
 		:error ($cPath.": Cannot get content, file does not exists '".$0."'");
 	}
 	:if ([($self->"getSize") $0] < 4096) do={
-		:return [/file get [find where name=$0] content];
+		:return [/file/get [find where name=$0] content];
 	} else={
 		:error ($cPath.": Cannot get content, file is too large '".$0."'");
 		#:local rObj [($self->"getFetchUser")];
