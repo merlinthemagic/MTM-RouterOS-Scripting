@@ -1,132 +1,55 @@
-:local cPath "MTM/Utilities/Facts.rsc";
-:local mVal "";
-
-:global MtmUtilitiesLoaded;
-:if ([:typeof $MtmUtilitiesLoaded] = "nothing") do={
-	##Load the Enable.rsc file before using Facts
-	:local hintFile "mtmUtilitiesRoot.hint";
-	:local mVal [/file/find name~$hintFile];
-	:if ([:len $mVal] != 1) do={
-	    :error ($cPath.": Hint file: '".$hintFile."' is invalid");
-	}
-	:set mVal [/file/get $mVal name];
-	:set mVal [/import file-name=([:pick $mVal 0 ([:len $mVal] - (([:len $hintFile]) + 1))]."/Enable.rsc") verbose=no];
-}
-
+:local cPath "MTM/Facts.rsc";
 :global MtmFacts;
 :if ([:typeof $MtmFacts] = "nothing") do={
 
-	#static "objects"
-	:global MtmFaObjs;
-	:set MtmFaObjs [:toarray ""];
-	
-	:global MtmEnvs;
-	:set MtmEnvs [:toarray ""];
-	:set ($MtmEnvs->"mtm.debug.enabled") false; ##pre loading env file default value, if MTM fails to load at all set to true
-	
-	:global MtmId;
-	:set MtmId [:nothing];
-	
-	:global MtmIds1;
-	:set MtmIds1 [:toarray ""];
-	
-	:global MtmIds2;
-	:set MtmIds2 [:toarray ""];
-	
-	##Setup function
+	:local mVal "";
 	:local s [:toarray ""];
-
+	:set ($s->"env") [:toarray ""];
+	
+	:local envFile "MtmEnv.rsc";
+	:set envFile [/file/find where name~$envFile];
+	:if ([:len $envFile] > 0) do={
+		:if ([:typeof $envFile] = "array") do={
+			:set envFile ($envFile->0);
+		}
+		:set envFile [/file/get $envFile name];
+		
+	} else={
+		:error ($cPath.": Cannot find environment file 'MtmEnv.rsc'");
+	}
 	:set ($s->"setDebug") do={
-		:local cPath "MTM/Utilities/Facts.rsc/setDebug";
-		:if ([:typeof $0] != "bool") do={
+		:local cPath "MTM->Facts->setDebug";
+		:global MtmFacts;
+		:if ($0 != "true" && $0 != "false") do={
 			:error ($cPath.": Parameter must be true or false");
 		}
-		:global MtmFacts;
-		:local mVal [($MtmFacts->"setEnv") "mtm.debug.enabled" ($0)];
+		:local mVal [($MtmFacts->"setEnv") "mtm.debug.enabled" $0];
 		:if ($0 = true) do={
 			:set mVal [($MtmFacts->"echo") ("Debug set ON")];
 		} else={
 			:set mVal [($MtmFacts->"echo") ("Debug set OFF")];
 		}
-		:return true;
-	}
-	:set ($s->"getDebug") do={
-		:local cPath "MTM/Utilities/Facts.rsc/getDebug";
-		:global MtmFacts;
-		:return [($MtmFacts->"getEnv") "mtm.debug.enabled"];
-	}
-	:set ($s->"loadEnvFile") do={
-		:local cPath "MTM/Utilities/Facts.rsc/loadEnvFile";
-		:if ([:len $0] = 0 || [:typeof $0] != "str") do={
-			:error ($cPath.": File path is mandatory, must be string value, not: '".[:typeof $1]."'");
-		}
-		:if ([:len [/file/find name=$0]] = 0) do={
-			:error ($cPath.": Environment file does not exist: '".$0."'");
-		}
-		:local filePath $0;
-		:local override true;
-		:if ([:typeof $1] = "bool") do={
-			##if this is failing for you call this method with the bool in parentheses e.g. (false)
-			:set override $1;
-		}
-		
-		:global MtmFacts;
-		:local fileTool [($MtmFacts->"get") "getTools()->getFileSystem()->getFiles()"];
-		:local strTool [($MtmFacts->"get") "getTools()->getTypes()->getStrings()"];
-
-		:local mVal "";
-		:local mAttr "";
-		:local mValue "";
-		:local pos 0;
-		:local raw [($fileTool->"getContent") $filePath];
-		:local lines [($strTool->"split") $raw ("\n")];
-
-		:foreach line in=$lines do={
-			:set line [($strTool->"trim") $line];
-			:if ([:len $line] > 0 && [:pick $line 0 1] != "#") do={
-			
-				:set pos [:find $line "=" 0];
-				:if ([:typeof $pos] = "num") do={
-					:set mAttr [:pick $line 0 $pos];
-					:set mValue [:pick $line ($pos + 1) ([:len $line])];
-					
-					:if ([:typeof $mValue] = "str") do={
-						##string bool from env files should be converted to boolean
-						:if ($mValue = "true") do={
-							:set mValue true;
-						} else={
-							:if ($mValue = "false") do={
-								:set mValue false;
-							}
-						}
-					}
-					:if ($override = true || [:typeof [($MtmFacts->"getEnv") $mAttr (false)]] = "nil") do={
-						:set mVal [($MtmFacts->"setEnv") $mAttr $mValue];
-					}
-				}
-			}
-		}
-		:return true;
+		:return $MtmFacts;
 	}
 	:set ($s->"setEnv") do={
-		:local cPath "MTM/Utilities/Facts.rsc/setEnv";
-		:global MtmEnvs;
+		:local cPath "MTM->Facts->setEnv";
+		:global MtmFacts;
 		:if ([:len $0] = 0 || [:typeof $0] != "str") do={
 			:error ($cPath.": Key is mandatory, must be string value, not: '".[:typeof $1]."'");
 		}
-		:if ([:typeof $1] != "str" && [:typeof $1] != "num" && [:typeof $1] != "bool") do={
-			:error ($cPath.": Value for key: '".$0."' must be a string, number or boolean value, not: '".[:typeof $1]."'");
+		:if ([:typeof $1] != "str" && [:typeof $1] != "num") do={
+			:error ($cPath.": Value for key: '".$0."' must be string or number value, not: '".[:typeof $1]."'");
 		}
-		:set ($MtmEnvs->$0) $1;
-		:return true;
+		:set ($MtmFacts->"env"->$0) $1;
+		:return $MtmFacts;
 	}
 	:set ($s->"getEnv") do={
-		:local cPath "MTM/Utilities/Facts.rsc/getEnv";
-		:global MtmEnvs;
+		:local cPath "MTM->Facts->getEnv";
+		:global MtmFacts;
 		:if ([:len $0] = 0 || [:typeof $0] != "str") do={
 			:error ($cPath.": Key is mandatory, must be string value");
 		}
-		:local mVal ($MtmEnvs->$0);
+		:local mVal ($MtmFacts->"env"->$0);
 		:if ([:typeof $mVal] = "nothing" && $1 != false) do={
 			:error ($cPath.": Key '".$0."' does not exist");
 		}
@@ -137,46 +60,24 @@
 		:return true;
 	}
 	:set ($s->"getNullFile") do={
-		:local cPath "MTM/Utilities/Facts.rsc/getNullFile";
-		:local fName "mtmNull.txt";
-		:if ([:len [/file/find where name=$fName]] < 1) do= {
-			##Cannot use file tool as it depends on this file
-			:local mVal [/file/print file=$fName];
-			:local isDone false;
-			:local mCount 0;
-			:while ($isDone = false) do={
-				:if ([:len [/file/find where name=$fName]] < 1) do= {
-					:if ($mCount < 6) do= {
-						:delay 0.5s;
-					} else={
-						:error ($cPath.": Failed to create null file");
-					}
-				} else={
-					:set isDone true;
-				}
-				:set mCount ($mCount + 1);
-			}
+		:local mVal "mtmNull.txt";
+		:if ([:len [/file find where name=$mVal]] < 1) do= {
+			/file print file=$mVal;
+			:delay 2s;
 		}
-		:return $fName;
+		:return $mVal;
 	}
 	:set ($s->"importFile") do={
-		:local cPath "MTM/Utilities/Facts.rsc/importFile";
+		:global MtmFacts;
+		:local cPath "MTM/Facts.rsc/importFile";
 		:if ([:len $0] = 0 || [:typeof $0] != "str") do={
 			:error ($cPath.": File path is mandatory, must be string value");
 		}
-		:global MtmFacts;
-		:local isDebug [($MtmFacts->"getDebug")];
 		:local mVal "";
 		
-		:if ($isDebug = true) do={
-			#debugging mode
-			:set mVal [($MtmFacts->"echo") ("Starting file import: '".$0."'")];
-		}
-		:if ([:len [/file/find where name=$0]] = 0) do={
-			:if ($isDebug = true) do={
-				:set mVal [($MtmFacts->"echo") ("File: '".$0."' does not exist locally")];
-			}
-			:set mVal [($MtmFacts->"getEnv") "mtm.remote.enabled" (false)];
+		:if ([:len [/file find where name=$0]] = 0) do={
+			
+			:set mVal [($MtmFacts->"getEnv") "mtm.remote.enabled" false];
 			:if ($mVal != true) do={
 				:error ($cPath.": Cannot import '".$0."' file does not exist locally and remote fetching is not enabled");
 			} else={
@@ -185,9 +86,12 @@
 			}
 			
 		} else= {
-			:if ($isDebug = true) do={
-				##dont do verbose or it will print the script
+			:set mVal [($MtmFacts->"getEnv") "mtm.debug.enabled" false];
+			:if ($mVal = true) do={
+				#debugging mode
+				[($MtmFacts->"echo") ("Starting file import: '".$0."'")];
 				/import file-name=$0 verbose=no;
+				[($MtmFacts->"echo") ("Completed file import: '".$0."'")];
 			} else={
 			
 				#delegate job to sub process
@@ -212,16 +116,11 @@
 				}
 			}
 		}
-		
-		:if ($isDebug = true) do={
-			#debugging mode
-			:set mVal [($MtmFacts->"echo") ("Completed file import: '".$0."'")];
-		}
-		:return true;
+		:return $MtmFacts;
 	}
 	:set ($s->"importRemoteFile") do={
-		:local cPath "MTM/Utilities/Facts.rsc/importRemoteFile";
 		:global MtmFacts;
+		:local cPath "MTM/Facts.rsc/importRemoteFile";
 		:if ([:len $0] = 0 || [:typeof $0] != "str") do={
 			:error ($cPath.": File path is mandatory, must be string value");
 		}
@@ -240,18 +139,18 @@
 		:set url ($url.[($MtmFacts->"getEnv") "mtm.remote.host"]);
 		:set url ($url."/".[($MtmFacts->"getEnv") "mtm.remote.url"]);
 		:set url ($url."/".$0);
-
-		:set mVal [($MtmFacts->"getEnv") "mtm.remote.save.enabled" (false)];
+		
+		:set mVal [($MtmFacts->"getEnv") "mtm.remote.save.enabled" false];
 		:if ($mVal = true) do={
-			:set dstPath [($MtmFacts->"getEnv") "mtm.remote.save.path" (false)];
-			:set dstPath ($dstPath."/".$0);
+			:set dstPath [($MtmFacts->"getEnv") "mtm.remote.save.path" false];
+			:set dstPath ($dstPath.$0);
 		} else={
 			:set dstPath "remoteLoad.rsc";
 		}
 		
-		:if ($dstPath = "remoteLoad.rsc" || [:len [/file/find where name=$dstPath]] = 0) do={
+		:if ($dstPath = "remoteLoad.rsc" || [:len [/file find where name=$dstPath]] = 0) do={
 			#file does not exist in the local cache, get it
-			:set mVal [:tostr [($MtmFacts->"getEnv") "mtm.remote.port" (false)]];
+			:set mVal [:tostr [($MtmFacts->"getEnv") "mtm.remote.port" false]];
 			:if ($mVal = "") do={
 				:if (([($MtmFacts->"getEnv") "mtm.remote.host"]) ~ "^https") do={
 					:set port 443;
@@ -264,7 +163,7 @@
 			:if (([($MtmFacts->"getEnv") "mtm.remote.host"]) ~ "^https") do={
 				
 				:set mode "https";
-				:set mVal [($MtmFacts->"getEnv") "mtm.remote.cert.valid" (false)];
+				:set mVal [($MtmFacts->"getEnv") "mtm.remote.cert.valid" false];
 				:if ($mVal = true) do={
 					:set chkCert "yes";
 				} else={
@@ -277,21 +176,19 @@
 			}
 			
 			:do {
-				:set mVal [/tool/fetch check-certificate=$chkCert url=$url mode=$mode port=$port user=$user password=$pass http-method=get output=file as-value dst-path=$dstPath];
+				:set mVal [/tool fetch check-certificate=$chkCert url=$url mode=$mode port=$port user="$user" password="$pass" http-method=get output=file as-value dst-path=$dstPath];
 				#success
 			} on-error={
 				##there is no error catching possible..
-				:error ($cPath.": Failed to load remote file '".$0."'");
+				:error ($cPath.": Fetching '".$url."' to import file '".$0."' failed");
 			}
-		} else={
-			#file exists on the system in the remove save folder
 		}
-		:set mVal [($MtmFacts->"importFile") $dstPath];
-		:return true;
+		:return [($MtmFacts->"importFile") $dstPath];
 	}
 	:set ($s->"get") do={
-		:local cPath "MTM/Utilities/Facts.rsc/get";
+		
 		:global MtmFacts;
+		:local cPath "MTM/Facts.rsc/get";
 		:if ([:typeof $0] != "str") do={
 			:error ($cPath.": Input has invalid type '".[:typeof $0]."'");
 		}
@@ -357,8 +254,9 @@
 		:return $curObj;
 	}
 	:set ($s->"parseCall") do={
-		:local cPath "MTM/Utilities/Facts.rsc/parseCall";
+		
 		:global MtmFacts;
+		:local cPath "MTM/Facts.rsc/parseCall";
 		:if ([:typeof $0] != "str") do={
 			:error ($cPath.": Input has invalid type '".[:typeof $0]."'");
 		}
@@ -426,7 +324,8 @@
 		:return $rData;
 	}
 	:set ($s->"lock") do={
-		:local cPath "MTM/Utilities/Facts.rsc/lock";
+		
+		:local cPath "MTM/Facts.rsc/lock";
 		:if ([:typeof $0] != "str"  || [:len $0] < 1) do={
 			:error ($cPath.": Input lock name invalid type '".[:typeof $0]."'");
 		}
@@ -491,9 +390,10 @@
 		}
 	}
 	:set ($s->"extendlock") do={
-		:local cPath "MTM/Utilities/Facts.rsc/extendlock";
+
 		:global MtmFacts;
 		:global MtmLocks;
+		:local cPath "MTM/Facts.rsc/extendlock";
 		:if ([:typeof $0] != "str"  || [:len $0] < 1) do={
 			:error ($cPath.": Input lock name invalid type '".[:typeof $0]."'");
 		}
@@ -533,8 +433,9 @@
 		:return true;
 	}
 	:set ($s->"lockremain") do={
-		:local cPath "MTM/Utilities/Facts.rsc/lockremain";
+
 		:global MtmLocks;
+		:local cPath "MTM/Facts.rsc/checklock";
 		:if ([:typeof $0] != "str"  || [:len $0] < 1) do={
 			:error ($cPath.": Input lock name invalid type '".[:typeof $0]."'");
 		}
@@ -548,8 +449,8 @@
 		:return $remain;
 	}
 	:set ($s->"unlock") do={
-		:local cPath "MTM/Utilities/Facts.rsc/unlock";
 		:global MtmLocks;
+		:local cPath "MTM/Facts.rsc/unlock";
 		:if ([:typeof $0] != "str"  || [:len $0] < 1) do={
 			:error ($cPath.": Input lock name invalid type '".[:typeof $0]."'");
 		}
@@ -588,7 +489,7 @@
 		:return ($MtmFaObjs->"models");
 	}
 	:set MtmFacts $s;
-
+	
 	#set the current ROS version
 	
 	:local mVal "";
@@ -651,4 +552,20 @@
 			}
 		}
 	}
+
+	##import the environment variables
+	:set mVal [($MtmFacts->"importFile") $envFile];
+	
+	#static "objects"
+	:global MtmFaObjs;
+	:set MtmFaObjs [:toarray ""];
+	
+	:global MtmId;
+	:set MtmId [:nothing];
+	
+	:global MtmIds1;
+	:set MtmIds1 [:toarray ""];
+	
+	:global MtmIds2;
+	:set MtmIds2 [:toarray ""];
 }

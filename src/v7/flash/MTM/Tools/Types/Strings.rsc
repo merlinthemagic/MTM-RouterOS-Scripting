@@ -26,11 +26,7 @@
 	:global MtmFacts;
 	:local cPath "MTM/Tools/DataTypes/Strings.rsc/trim";
 	:if ([:typeof $0] != "str") do={
-		:if ([:typeof $0] = "nil") do={
-			:return "";
-		} else={
-			:error ($cPath.": Input has invalid type '".[:typeof $0]."'");
-		}
+		:error ($cPath.": Input has invalid type '".[:typeof $0]."'");
 	}
 	:local p0 $0;
 	:local l0 [:len $p0];
@@ -151,11 +147,7 @@
 	:global MtmFacts;
 	:local cPath "MTM/Tools/DataTypes/Strings.rsc/split";
 	:if ([:typeof $0] != "str") do={
-		:if ([:typeof $0] = "nil") do={
-			:return [:toarray ""];
-		} else={
-			:error ($cPath.": Input has invalid type '".[:typeof $0]."'");
-		}
+		:error ($cPath.": Input string has invalid type '".[:typeof $0]."'");
 	}
 	:if ([:typeof $1] != "str") do={
 		:error ($cPath.": Input pattern has invalid type '".[:typeof $1]."'");

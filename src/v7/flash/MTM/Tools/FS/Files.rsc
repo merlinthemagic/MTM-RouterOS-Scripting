@@ -77,7 +77,7 @@
 	:local self ($MtmToolFs1->"files");
 	
 	:if ([($self->"getExists") $0] = false) do={
-		:set mVal [/file/print file=$0];
+		:set mVal [/file print file=$0];
 		#wait for the file to be created
 		:if ([($self->"getExists") $0 [:tonum 1500]] = false) do={
 			:error ($cPath.": Failed to create file: '".$0."'");
@@ -171,7 +171,7 @@
 		:error ($cPath.": Cannot get content, file does not exists '".$0."'");
 	}
 	:if ([($self->"getSize") $0] < 4096) do={
-		:return [/file/get [find where name=$0] content];
+		:return [/file get [find where name=$0] content];
 	} else={
 		:error ($cPath.": Cannot get content, file is too large '".$0."'");
 		#:local rObj [($self->"getFetchUser")];

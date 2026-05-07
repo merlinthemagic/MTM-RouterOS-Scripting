@@ -1,7 +1,7 @@
 :global MtmFacts;
 :set MtmFacts;
 
-/import flash/MTM/Enable.rsc;
+/import flash/MTM/Facts.rsc;
 :global MtmFacts;
 
 

@@ -1,0 +1,10 @@
+rma.if.wifi2-unique.enabled=down
+rma.if.wifi2-mpsk.enabled=up
+rma.if.wifi2-ipsk.enabled=down
+rma.if.wifi2-guest.enabled=down
+rma.if.wifi2-eap.enabled=down
+rma.if.wifi1-unique.enabled=down
+rma.if.wifi1-mpsk.enabled=up
+rma.if.wifi1-ipsk.enabled=down
+rma.if.wifi1-guest.enabled=down
+rma.if.wifi1-eap.enabled=down
